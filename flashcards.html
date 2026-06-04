@@ -100,7 +100,7 @@
   }
 
   /* ── Layout ── */
-  main { max-width: 680px; margin: 0 auto; padding: 24px 16px; }
+  main { max-width: 1024px; margin: 0 auto; padding: 24px 24px; }
 
   /* ── Duolingo 3-D button ── */
   .btn {
@@ -202,6 +202,10 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
+    position: sticky;
+    top: 64px;
+    z-index: 80;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .letter-range label { font-size: 0.8rem; font-weight: 800; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
   .letter-range select {
@@ -278,21 +282,13 @@
   .stats-strip { display: flex; gap: 10px; margin-bottom: 20px; }
   .stat-box {
     flex: 1;
+    background: var(--white);
     border-radius: var(--radius-md);
     border: 2px solid var(--gray-200);
-    border-bottom-width: 4px;
     padding: 12px 8px;
     text-align: center;
-    background: var(--white);
   }
-  .stat-box.green  { background: var(--green-bg);  border-color: var(--green);  }
-  .stat-box.red    { background: var(--red-bg);    border-color: var(--red);    }
-  .stat-box.blue   { background: var(--blue-bg);   border-color: var(--blue);   }
-  .stat-box.yellow { background: var(--yellow-bg); border-color: var(--yellow); border-bottom-color: var(--yellow-dk); }
   .stat-num { font-size: 1.5rem; font-weight: 800; color: var(--green); }
-  .stat-box.red   .stat-num { color: var(--red); }
-  .stat-box.blue  .stat-num { color: var(--blue-dk); }
-  .stat-box.yellow .stat-num { color: #7a5c00; }
   .stat-label { font-size: 0.68rem; font-weight: 800; color: var(--gray-400); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
 
   /* ── Flashcard ── */
@@ -321,7 +317,7 @@
   }
   .card-front { background: var(--white); }
   .card-back {
-    background: linear-gradient(145deg, #58CC02 0%, #2D9E00 100%);
+    background: var(--green);
     color: white;
     border-color: var(--green-dk);
     transform: rotateY(180deg);
@@ -443,62 +439,19 @@
   }
   .option:disabled { cursor: default; }
 
-  /* ── Duolingo bottom feedback panel ── */
-  .quiz-feedback-panel {
-    display: none;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: 20px 24px 24px;
-    margin: 16px -0px -0px;
-    border-top: 3px solid transparent;
-  }
-  .quiz-feedback-panel.visible { display: block; }
-  .quiz-feedback-panel.correct {
-    background: var(--green-bg);
-    border-color: var(--green);
-  }
-  .quiz-feedback-panel.wrong {
-    background: var(--red-bg);
-    border-color: var(--red);
-  }
-  .feedback-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .feedback-header .icon {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-  }
-  .correct .feedback-header { color: var(--green-dk); }
-  .correct .feedback-header .icon { background: var(--green); color: white; }
-  .wrong .feedback-header { color: var(--red-dk); }
-  .wrong .feedback-header .icon { background: var(--red); color: white; }
-  .feedback-detail { font-size: 0.88rem; font-weight: 700; color: inherit; opacity: 0.85; margin-bottom: 16px; line-height: 1.5; }
-  .feedback-continue {
-    width: 100%;
-    padding: 15px;
+  /* Feedback */
+  .quiz-feedback {
     border-radius: var(--radius-md);
-    border: none;
-    border-bottom: 4px solid transparent;
     font-size: 1rem;
     font-weight: 800;
-    cursor: pointer;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    font-family: inherit;
+    min-height: 32px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 0.2px;
   }
-  .correct .feedback-continue { background: var(--green); color: white; border-bottom-color: var(--green-dk); }
-  .wrong   .feedback-continue { background: var(--red);   color: white; border-bottom-color: var(--red-dk); }
-  .feedback-continue:active { transform: translateY(2px); border-bottom-width: 2px; }
-
-  /* legacy (keep for empty state) */
-  .quiz-feedback { display: none; }
+  .quiz-feedback:not(:empty) { color: var(--green-dk); }
+  .quiz-feedback.wrong:not(:empty) { color: var(--red-dk); }
 
   /* ── Score / Finish ── */
   .finish-screen {
@@ -559,15 +512,15 @@
     padding: 14px 18px;
     border: 2px solid var(--gray-200);
     display: grid;
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: 180px 1fr auto;
     gap: 10px 20px;
-    align-items: start;
+    align-items: center;
     transition: border-color 0.15s;
   }
   .learn-item:hover { border-color: var(--green); }
   .learn-item.is-known { border-left: 5px solid var(--green); }
   @media (max-width: 520px) { .learn-item { grid-template-columns: 1fr; gap: 6px; } }
-  .learn-word { font-size: 1.1rem; font-weight: 800; color: var(--green-dk); word-break: break-word; }
+  .learn-word { font-size: 1.4rem; font-weight: 800; color: var(--green-dk); word-break: break-word; }
   .learn-known-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-left: 6px; vertical-align: middle; }
   .learn-right { display: flex; flex-direction: column; gap: 4px; }
   .learn-def { font-size: 0.92rem; color: var(--text); line-height: 1.5; font-weight: 600; }
@@ -730,15 +683,15 @@
   <div id="study-section">
 
     <div class="stats-strip">
-      <div class="stat-box blue">
+      <div class="stat-box">
         <div class="stat-num" id="stat-total">500</div>
         <div class="stat-label">Total</div>
       </div>
-      <div class="stat-box green">
+      <div class="stat-box">
         <div class="stat-num" id="stat-known">0</div>
         <div class="stat-label">Known ✓</div>
       </div>
-      <div class="stat-box yellow">
+      <div class="stat-box">
         <div class="stat-num" id="stat-remaining">500</div>
         <div class="stat-label">Remaining</div>
       </div>
@@ -826,15 +779,15 @@
   <div id="quiz-section">
 
     <div class="stats-strip">
-      <div class="stat-box green">
+      <div class="stat-box">
         <div class="stat-num" id="q-score">0</div>
         <div class="stat-label">Correct</div>
       </div>
-      <div class="stat-box red">
+      <div class="stat-box">
         <div class="stat-num" id="q-wrong-count">0</div>
         <div class="stat-label">Wrong</div>
       </div>
-      <div class="stat-box blue">
+      <div class="stat-box">
         <div class="stat-num" id="q-remaining">20</div>
         <div class="stat-label">Left</div>
       </div>
@@ -877,44 +830,37 @@
     </div>
 
     <div id="quiz-active">
-      <div style="background:white;border-radius:var(--radius-lg);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);overflow:hidden;margin-bottom:20px;">
-        <div style="padding:28px 28px 20px;">
-          <!-- question type badge -->
-          <div id="q-type-badge" style="font-size:0.72rem;font-weight:800;letter-spacing:0.5px;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:16px;text-transform:uppercase;"></div>
+      <div style="background:white;border-radius:var(--radius-lg);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);padding:28px;margin-bottom:20px;">
+        <!-- question type badge -->
+        <div id="q-type-badge" style="font-size:0.72rem;font-weight:800;letter-spacing:0.5px;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:16px;text-transform:uppercase;"></div>
 
-          <!-- Type 1 & 2: word or definition shown as heading -->
-          <div class="quiz-word" id="q-word" style="display:none">—</div>
+        <!-- Type 1 & 2: word or definition shown as heading -->
+        <div class="quiz-word" id="q-word" style="display:none">—</div>
 
-          <!-- Type 3: fill-in-the-blank sentence -->
-          <div id="q-sentence-wrap" style="display:none;margin-bottom:18px;">
-            <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Fill in the blank:</div>
-            <div id="q-sentence" style="font-size:1.15rem;line-height:1.8;background:var(--gray-100);border-radius:var(--radius-md);padding:16px 20px;font-style:italic;font-weight:600;border:2px solid var(--gray-200);"></div>
-          </div>
+        <!-- Type 3: fill-in-the-blank sentence -->
+        <div id="q-sentence-wrap" style="display:none;margin-bottom:18px;">
+          <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Fill in the blank:</div>
+          <div id="q-sentence" style="font-size:1.15rem;line-height:1.8;background:var(--gray-100);border-radius:var(--radius-md);padding:16px 20px;font-style:italic;font-weight:600;border:2px solid var(--gray-200);"></div>
+        </div>
 
-          <div class="quiz-instruction" id="q-instruction">Choose the correct definition:</div>
+        <div class="quiz-instruction" id="q-instruction">Choose the correct definition:</div>
 
-          <!-- Multiple choice options -->
-          <div class="options" id="options-grid" style="margin-top:14px;"></div>
+        <!-- Multiple choice options -->
+        <div class="options" id="options-grid" style="margin-top:14px;"></div>
 
-          <!-- Fill-in input -->
-          <div id="fill-wrap" style="display:none;margin-top:14px;">
-            <input id="fill-input" type="text" placeholder="Type the missing word…"
-              style="width:100%;padding:14px 20px;border-radius:var(--radius-md);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);font-size:1.1rem;outline:none;font-family:inherit;font-weight:700;"
-              onkeydown="if(event.key==='Enter')submitFill()">
-            <div style="text-align:center;margin-top:14px;">
-              <button class="btn btn-accent" onclick="submitFill()" style="width:100%;padding:15px;">Check ✓</button>
-            </div>
+        <!-- Fill-in input -->
+        <div id="fill-wrap" style="display:none;margin-top:14px;">
+          <input id="fill-input" type="text" placeholder="Type the missing word…"
+            style="width:100%;padding:14px 20px;border-radius:var(--radius-md);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);font-size:1.1rem;outline:none;font-family:inherit;font-weight:700;"
+            onkeydown="if(event.key==='Enter')submitFill()">
+          <div style="text-align:center;margin-top:14px;">
+            <button class="btn btn-accent" onclick="submitFill()" style="width:100%;max-width:360px;padding:15px;">Check ✓</button>
           </div>
         </div>
 
-        <!-- Duolingo-style bottom feedback panel -->
-        <div class="quiz-feedback-panel" id="quiz-feedback-panel">
-          <div class="feedback-header">
-            <div class="icon" id="feedback-icon"></div>
-            <span id="feedback-title"></span>
-          </div>
-          <div class="feedback-detail" id="feedback-detail"></div>
-          <button class="feedback-continue" onclick="nextQuestion()">Continue</button>
+        <div class="quiz-feedback" id="quiz-feedback" style="margin-top:14px;"></div>
+        <div style="text-align:center;margin-top:4px;">
+          <button class="btn btn-primary" id="q-next-btn" onclick="nextQuestion()" disabled style="width:100%;max-width:360px;padding:15px;">Continue →</button>
         </div>
       </div>
     </div>
@@ -1570,6 +1516,7 @@ function setMode(m) {
   document.getElementById('learn-section').style.display = m==='learn' ? 'block' : 'none';
   document.getElementById('quiz-section').style.display  = m==='quiz'  ? 'block' : 'none';
   document.getElementById('stats-section').style.display = m==='stats' ? 'block' : 'none';
+  document.querySelector('.letter-range').style.display  = m==='stats' ? 'none' : '';
   if (m === 'quiz')  startQuiz();
   if (m === 'learn') renderLearnList();
   if (m === 'stats') renderStats();
@@ -1727,7 +1674,9 @@ function renderQuestion() {
   const qtype = pickQType();
 
   // Reset UI
-  document.getElementById('quiz-feedback-panel').className = 'quiz-feedback-panel';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('q-next-btn').disabled = true;
   document.getElementById('options-grid').innerHTML = '';
   document.getElementById('fill-wrap').style.display = 'none';
   document.getElementById('options-grid').style.display = '';
@@ -1805,15 +1754,6 @@ function renderQuestion() {
   updateQuizStats();
 }
 
-function showFeedbackPanel(correct, entry, detail) {
-  const panel = document.getElementById('quiz-feedback-panel');
-  panel.className = 'quiz-feedback-panel visible ' + (correct ? 'correct' : 'wrong');
-  document.getElementById('feedback-icon').textContent  = correct ? '✓' : '✗';
-  document.getElementById('feedback-title').textContent = correct ? 'Correct!' : 'Incorrect';
-  document.getElementById('feedback-detail').textContent = detail;
-  updateQuizStats();
-}
-
 function resolveMultiChoice(correct, entry, clickedBtn, mode) {
   if (quizAnswered) return;
   quizAnswered = true;
@@ -1824,17 +1764,22 @@ function resolveMultiChoice(correct, entry, clickedBtn, mode) {
     if (isCorrect) btn.classList.add('correct');
   });
 
+  const feedback = document.getElementById('quiz-feedback');
   if (correct) {
     quizScore++;
     clickedBtn.classList.add('correct');
-    showFeedbackPanel(true, entry, `"${entry.e}"`);
+    feedback.textContent = '✓ Correct! Well done!';
+    feedback.className = 'quiz-feedback';
   } else {
     quizWrong++;
     clickedBtn.classList.add('wrong');
     quizMissed.push(entry);
-    const ans = mode === 'def' ? entry.d : entry.w;
-    showFeedbackPanel(false, entry, `Correct answer: ${ans}`);
+    const hint = mode === 'def' ? `The answer is: "${entry.d}"` : `The answer is: "${entry.w}"`;
+    feedback.textContent = '✗ Not quite — ' + hint;
+    feedback.className = 'quiz-feedback wrong';
   }
+  updateQuizStats();
+  document.getElementById('q-next-btn').disabled = false;
 }
 
 function submitFill() {
@@ -1846,20 +1791,25 @@ function submitFill() {
   quizAnswered = true;
   const entry = quizDeck[quizIndex];
   const correct = typed === entry.w.toLowerCase();
+  const feedback = document.getElementById('quiz-feedback');
   inp.disabled = true;
 
   if (correct) {
     quizScore++;
     inp.style.borderColor = 'var(--green)';
     inp.style.background = 'var(--green-bg)';
-    showFeedbackPanel(true, entry, `"${entry.e}"`);
+    feedback.textContent = '✓ Correct! Well done!';
+    feedback.className = 'quiz-feedback';
   } else {
     quizWrong++;
     quizMissed.push(entry);
     inp.style.borderColor = 'var(--red)';
     inp.style.background = 'var(--red-bg)';
-    showFeedbackPanel(false, entry, `Correct answer: "${entry.w}"`);
+    feedback.textContent = `✗ The answer is "${entry.w}".`;
+    feedback.className = 'quiz-feedback wrong';
   }
+  updateQuizStats();
+  document.getElementById('q-next-btn').disabled = false;
 }
 
 function nextQuestion() {
@@ -1968,14 +1918,12 @@ function renderLearnList() {
     item.className = 'learn-item' + (known ? ' is-known' : '');
     item.id = 'learn-item-' + entry.w;
     item.innerHTML = `
-      <div>
-        <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
-        <button class="learn-mark-btn ${known ? 'known' : ''}" onclick="learnToggleKnown('${entry.w}')">${known ? '✓ Known' : 'Mark known'}</button>
-      </div>
+      <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
       <div class="learn-right">
         <div class="learn-def">${entry.d}</div>
         <div class="learn-ex">${entry.e}</div>
-      </div>`;
+      </div>
+      <button class="learn-mark-btn ${known ? 'known' : ''}" onclick="learnToggleKnown('${entry.w}')">${known ? '✓ Known' : 'Mark known'}</button>`;
     list.appendChild(item);
   });
 }
@@ -1996,6 +1944,7 @@ function learnToggleKnown(word) {
     item.className = 'learn-item' + (known ? ' is-known' : '');
     const wordEl = item.querySelector('.learn-word');
     wordEl.innerHTML = word + (known ? '<span class="learn-known-dot" title="Known"></span>' : '');
+
     const btn = item.querySelector('.learn-mark-btn');
     btn.className = 'learn-mark-btn' + (known ? ' known' : '');
     btn.textContent = known ? '✓ Known' : 'Mark known';
