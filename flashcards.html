@@ -321,7 +321,7 @@
   }
   .card-front { background: var(--white); }
   .card-back {
-    background: var(--green);
+    background: linear-gradient(145deg, #58CC02 0%, #2D9E00 100%);
     color: white;
     border-color: var(--green-dk);
     transform: rotateY(180deg);
@@ -443,19 +443,62 @@
   }
   .option:disabled { cursor: default; }
 
-  /* Feedback bar (Duolingo-style bottom panel) */
-  .quiz-feedback {
+  /* ── Duolingo bottom feedback panel ── */
+  .quiz-feedback-panel {
+    display: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 20px 24px 24px;
+    margin: 16px -0px -0px;
+    border-top: 3px solid transparent;
+  }
+  .quiz-feedback-panel.visible { display: block; }
+  .quiz-feedback-panel.correct {
+    background: var(--green-bg);
+    border-color: var(--green);
+  }
+  .quiz-feedback-panel.wrong {
+    background: var(--red-bg);
+    border-color: var(--red);
+  }
+  .feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .feedback-header .icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .correct .feedback-header { color: var(--green-dk); }
+  .correct .feedback-header .icon { background: var(--green); color: white; }
+  .wrong .feedback-header { color: var(--red-dk); }
+  .wrong .feedback-header .icon { background: var(--red); color: white; }
+  .feedback-detail { font-size: 0.88rem; font-weight: 700; color: inherit; opacity: 0.85; margin-bottom: 16px; line-height: 1.5; }
+  .feedback-continue {
+    width: 100%;
+    padding: 15px;
     border-radius: var(--radius-md);
+    border: none;
+    border-bottom: 4px solid transparent;
     font-size: 1rem;
     font-weight: 800;
-    min-height: 32px;
-    padding: 10px 16px;
-    margin-bottom: 12px;
-    text-align: center;
-    letter-spacing: 0.2px;
+    cursor: pointer;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-family: inherit;
   }
-  .quiz-feedback:not(:empty) { background: var(--green-bg); color: var(--green-dk); border: 2px solid var(--green); }
-  .quiz-feedback.wrong:not(:empty) { background: var(--red-bg); color: var(--red-dk); border: 2px solid var(--red); }
+  .correct .feedback-continue { background: var(--green); color: white; border-bottom-color: var(--green-dk); }
+  .wrong   .feedback-continue { background: var(--red);   color: white; border-bottom-color: var(--red-dk); }
+  .feedback-continue:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+  /* legacy (keep for empty state) */
+  .quiz-feedback { display: none; }
 
   /* ── Score / Finish ── */
   .finish-screen {
@@ -687,16 +730,16 @@
   <div id="study-section">
 
     <div class="stats-strip">
-      <div class="stat-box">
+      <div class="stat-box blue">
         <div class="stat-num" id="stat-total">500</div>
         <div class="stat-label">Total</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="stat-known" style="color:var(--accent)">0</div>
+      <div class="stat-box green">
+        <div class="stat-num" id="stat-known">0</div>
         <div class="stat-label">Known ✓</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="stat-remaining" style="color:var(--secondary)">500</div>
+      <div class="stat-box yellow">
+        <div class="stat-num" id="stat-remaining">500</div>
         <div class="stat-label">Remaining</div>
       </div>
     </div>
@@ -783,15 +826,15 @@
   <div id="quiz-section">
 
     <div class="stats-strip">
-      <div class="stat-box">
-        <div class="stat-num" id="q-score" style="color:var(--accent)">0</div>
+      <div class="stat-box green">
+        <div class="stat-num" id="q-score">0</div>
         <div class="stat-label">Correct</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="q-wrong-count" style="color:var(--secondary)">0</div>
+      <div class="stat-box red">
+        <div class="stat-num" id="q-wrong-count">0</div>
         <div class="stat-label">Wrong</div>
       </div>
-      <div class="stat-box">
+      <div class="stat-box blue">
         <div class="stat-num" id="q-remaining">20</div>
         <div class="stat-label">Left</div>
       </div>
@@ -834,37 +877,44 @@
     </div>
 
     <div id="quiz-active">
-      <div style="background:white;border-radius:24px;padding:32px;box-shadow:var(--shadow);margin-bottom:20px;">
-        <!-- question type badge -->
-        <div id="q-type-badge" style="font-size:0.78rem;font-weight:700;letter-spacing:0.5px;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:14px;"></div>
+      <div style="background:white;border-radius:var(--radius-lg);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);overflow:hidden;margin-bottom:20px;">
+        <div style="padding:28px 28px 20px;">
+          <!-- question type badge -->
+          <div id="q-type-badge" style="font-size:0.72rem;font-weight:800;letter-spacing:0.5px;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:16px;text-transform:uppercase;"></div>
 
-        <!-- Type 1 & 2: word or definition shown as heading -->
-        <div class="quiz-word" id="q-word" style="display:none">—</div>
+          <!-- Type 1 & 2: word or definition shown as heading -->
+          <div class="quiz-word" id="q-word" style="display:none">—</div>
 
-        <!-- Type 3: fill-in-the-blank sentence -->
-        <div id="q-sentence-wrap" style="display:none;margin-bottom:18px;">
-          <div style="font-size:0.9rem;font-weight:600;color:#888;margin-bottom:8px;">Fill in the blank:</div>
-          <div id="q-sentence" style="font-size:1.2rem;line-height:1.7;background:#f8f9ff;border-radius:14px;padding:16px 20px;font-style:italic;"></div>
-        </div>
+          <!-- Type 3: fill-in-the-blank sentence -->
+          <div id="q-sentence-wrap" style="display:none;margin-bottom:18px;">
+            <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Fill in the blank:</div>
+            <div id="q-sentence" style="font-size:1.15rem;line-height:1.8;background:var(--gray-100);border-radius:var(--radius-md);padding:16px 20px;font-style:italic;font-weight:600;border:2px solid var(--gray-200);"></div>
+          </div>
 
-        <div class="quiz-instruction" id="q-instruction">Choose the correct definition:</div>
+          <div class="quiz-instruction" id="q-instruction">Choose the correct definition:</div>
 
-        <!-- Multiple choice options (type 1 & 2) -->
-        <div class="options" id="options-grid" style="margin-top:14px;"></div>
+          <!-- Multiple choice options -->
+          <div class="options" id="options-grid" style="margin-top:14px;"></div>
 
-        <!-- Fill-in input (type 3) -->
-        <div id="fill-wrap" style="display:none;margin-top:14px;">
-          <input id="fill-input" type="text" placeholder="Type the missing word…"
-            style="width:100%;padding:13px 18px;border-radius:14px;border:2px solid #dde0ff;font-size:1.1rem;outline:none;font-family:inherit;"
-            onkeydown="if(event.key==='Enter')submitFill()">
-          <div style="text-align:center;margin-top:12px;">
-            <button class="btn btn-accent" onclick="submitFill()">Check ✓</button>
+          <!-- Fill-in input -->
+          <div id="fill-wrap" style="display:none;margin-top:14px;">
+            <input id="fill-input" type="text" placeholder="Type the missing word…"
+              style="width:100%;padding:14px 20px;border-radius:var(--radius-md);border:2px solid var(--gray-200);border-bottom:4px solid var(--gray-200);font-size:1.1rem;outline:none;font-family:inherit;font-weight:700;"
+              onkeydown="if(event.key==='Enter')submitFill()">
+            <div style="text-align:center;margin-top:14px;">
+              <button class="btn btn-accent" onclick="submitFill()" style="width:100%;padding:15px;">Check ✓</button>
+            </div>
           </div>
         </div>
 
-        <div class="quiz-feedback" id="quiz-feedback" style="margin-top:14px;"></div>
-        <div style="text-align:center;margin-top:4px;">
-          <button class="btn btn-primary" id="q-next-btn" onclick="nextQuestion()" disabled>Next →</button>
+        <!-- Duolingo-style bottom feedback panel -->
+        <div class="quiz-feedback-panel" id="quiz-feedback-panel">
+          <div class="feedback-header">
+            <div class="icon" id="feedback-icon"></div>
+            <span id="feedback-title"></span>
+          </div>
+          <div class="feedback-detail" id="feedback-detail"></div>
+          <button class="feedback-continue" onclick="nextQuestion()">Continue</button>
         </div>
       </div>
     </div>
@@ -1677,14 +1727,14 @@ function renderQuestion() {
   const qtype = pickQType();
 
   // Reset UI
-  document.getElementById('quiz-feedback').textContent = '';
-  document.getElementById('quiz-feedback').className = 'quiz-feedback';
-  document.getElementById('q-next-btn').disabled = true;
+  document.getElementById('quiz-feedback-panel').className = 'quiz-feedback-panel';
   document.getElementById('options-grid').innerHTML = '';
   document.getElementById('fill-wrap').style.display = 'none';
   document.getElementById('options-grid').style.display = '';
   document.getElementById('q-word').style.display = 'none';
   document.getElementById('q-sentence-wrap').style.display = 'none';
+  const inp = document.getElementById('fill-input');
+  inp.disabled = false; inp.style.borderColor = ''; inp.style.background = '';
 
   const badge = document.getElementById('q-type-badge');
 
@@ -1755,33 +1805,36 @@ function renderQuestion() {
   updateQuizStats();
 }
 
+function showFeedbackPanel(correct, entry, detail) {
+  const panel = document.getElementById('quiz-feedback-panel');
+  panel.className = 'quiz-feedback-panel visible ' + (correct ? 'correct' : 'wrong');
+  document.getElementById('feedback-icon').textContent  = correct ? '✓' : '✗';
+  document.getElementById('feedback-title').textContent = correct ? 'Correct!' : 'Incorrect';
+  document.getElementById('feedback-detail').textContent = detail;
+  updateQuizStats();
+}
+
 function resolveMultiChoice(correct, entry, clickedBtn, mode) {
   if (quizAnswered) return;
   quizAnswered = true;
 
-  const buttons = document.querySelectorAll('.option');
-  buttons.forEach(btn => {
+  document.querySelectorAll('.option').forEach(btn => {
     btn.disabled = true;
     const isCorrect = mode === 'def' ? btn.textContent === entry.d : btn.textContent === entry.w;
     if (isCorrect) btn.classList.add('correct');
   });
 
-  const feedback = document.getElementById('quiz-feedback');
   if (correct) {
     quizScore++;
     clickedBtn.classList.add('correct');
-    feedback.textContent = '✓ Correct! Well done!';
-    feedback.className = 'quiz-feedback';
+    showFeedbackPanel(true, entry, `"${entry.e}"`);
   } else {
     quizWrong++;
     clickedBtn.classList.add('wrong');
     quizMissed.push(entry);
-    const hint = mode === 'def' ? `The answer is: "${entry.d}"` : `The answer is: "${entry.w}"`;
-    feedback.textContent = '✗ Not quite — ' + hint;
-    feedback.className = 'quiz-feedback wrong';
+    const ans = mode === 'def' ? entry.d : entry.w;
+    showFeedbackPanel(false, entry, `Correct answer: ${ans}`);
   }
-  updateQuizStats();
-  document.getElementById('q-next-btn').disabled = false;
 }
 
 function submitFill() {
@@ -1793,26 +1846,20 @@ function submitFill() {
   quizAnswered = true;
   const entry = quizDeck[quizIndex];
   const correct = typed === entry.w.toLowerCase();
-
-  const feedback = document.getElementById('quiz-feedback');
   inp.disabled = true;
 
   if (correct) {
     quizScore++;
-    inp.style.borderColor = '#2a7a5a';
-    inp.style.background = '#d4f5e9';
-    feedback.textContent = '✓ Correct! Well done!';
-    feedback.className = 'quiz-feedback';
+    inp.style.borderColor = 'var(--green)';
+    inp.style.background = 'var(--green-bg)';
+    showFeedbackPanel(true, entry, `"${entry.e}"`);
   } else {
     quizWrong++;
     quizMissed.push(entry);
-    inp.style.borderColor = 'var(--secondary)';
-    inp.style.background = '#fde8ef';
-    feedback.textContent = `✗ The answer is "${entry.w}".`;
-    feedback.className = 'quiz-feedback wrong';
+    inp.style.borderColor = 'var(--red)';
+    inp.style.background = 'var(--red-bg)';
+    showFeedbackPanel(false, entry, `Correct answer: "${entry.w}"`);
   }
-  updateQuizStats();
-  document.getElementById('q-next-btn').disabled = false;
 }
 
 function nextQuestion() {
