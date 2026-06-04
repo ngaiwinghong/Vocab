@@ -790,8 +790,8 @@
     </div>
   </div>
   <div class="mode-tabs">
-    <button class="mode-tab" onclick="setMode('learn')">📋 Learn</button>
-    <button class="mode-tab active" onclick="setMode('study')">📖 Study</button>
+    <button class="mode-tab active" onclick="setMode('learn')">📋 Learn</button>
+    <button class="mode-tab" onclick="setMode('study')">📖 Study</button>
     <button class="mode-tab" onclick="setMode('quiz')">🎯 Quiz</button>
     <button class="mode-tab" onclick="setMode('stats')">📊 Stats</button>
   </div>
@@ -2288,6 +2288,9 @@ document.getElementById('stat-total').textContent = WORDS.length;
 document.getElementById('stat-known').textContent = knownSet.size;
 document.getElementById('stat-remaining').textContent = WORDS.length - knownSet.size;
 
+// Default to Learn tab
+setMode('learn');
+
 // ═══════════════════════════════════════════════════════════════
 // FIREBASE  –  auth + Firestore sync
 // ═══════════════════════════════════════════════════════════════
@@ -2336,6 +2339,13 @@ function cloudSave() {
 // ── Load progress from Firestore ────────────────────────────────
 async function loadCloudData(uid) {
   try {
+    // Clear any previous user's local data before loading the new user's
+    localStorage.removeItem('known11plus');
+    localStorage.removeItem('quiz_history');
+    localStorage.removeItem('miss_counts');
+    localStorage.removeItem('streak');
+    knownSet = new Set();
+
     const doc = await db.collection('users').doc(uid).get();
     if (!doc.exists) return;
     const d = doc.data();
@@ -2403,6 +2413,11 @@ async function signInGoogle() {
 
 async function doSignOut() {
   if (!confirm('Sign out?')) return;
+  localStorage.removeItem('known11plus');
+  localStorage.removeItem('quiz_history');
+  localStorage.removeItem('miss_counts');
+  localStorage.removeItem('streak');
+  knownSet = new Set();
   await auth.signOut();
 }
 
