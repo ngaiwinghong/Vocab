@@ -26,9 +26,9 @@
     --purple-dk:  #9C52CC;
     --purple-bg:  #F3E6FF;
     --gray-100:   #F3F0FF;
-    --gray-200:   #E5E5E5;
-    --gray-400:   #AFAFAF;
-    --gray-600:   #777;
+    --gray-200:   #DDD8F5;
+    --gray-400:   #9E8FC0;
+    --gray-600:   #6B5D8A;
     --text:       #3C3C3C;
     --white:      #FFFFFF;
     --shadow:     0 4px 0;
@@ -102,7 +102,7 @@
     border-bottom-color: var(--green);
   }
   .mode-tab:hover:not(.active) {
-    color: var(--text);
+    color: var(--green);
     background: var(--gray-100);
   }
 
@@ -267,21 +267,23 @@
 
   /* ── Filter bar ── */
   .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-bar { position: relative; }
+  .filter-bar svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
   .filter-bar input {
     flex: 1;
-    min-width: 180px;
-    padding: 10px 18px;
+    width: 100%;
+    padding: 8px 14px 8px 36px;
     border-radius: 99px;
-    border: 2px solid var(--gray-200);
-    border-bottom: 3px solid var(--gray-200);
-    font-size: 0.9rem;
-    font-weight: 700;
+    border: 1.5px solid var(--gray-200);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-600);
     outline: none;
     font-family: inherit;
     transition: border-color 0.2s;
-    background: var(--white);
+    background: var(--gray-100);
   }
-  .filter-bar input:focus { border-color: var(--blue); }
+  .filter-bar input:focus { border-color: var(--green); background: var(--white); }
 
   /* ── Stats strip (in-mode) ── */
   .stats-strip { display: flex; gap: 10px; margin-bottom: 20px; }
@@ -381,10 +383,10 @@
   }
   .qtype-chip input:checked + span {
     background: var(--green-bg);
-    border-color: var(--green);
+    border-color: #a78bfa;
     color: var(--green-dk);
   }
-  .qtype-chip:hover span { border-color: var(--green); }
+  .qtype-chip:hover span { border-color: #a78bfa; }
 
   /* ── Quiz ── */
   #quiz-section { display: none; }
@@ -486,21 +488,22 @@
   /* ── Learn mode ── */
   #learn-section { display: none; }
   .learn-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .learn-search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .learn-search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
   .learn-search {
-    flex: 1;
-    min-width: 180px;
-    padding: 10px 18px;
+    width: 100%;
+    padding: 8px 14px 8px 36px;
     border-radius: 99px;
-    border: 2px solid var(--gray-200);
-    border-bottom: 3px solid var(--gray-200);
-    font-size: 0.9rem;
-    font-weight: 700;
+    border: 1.5px solid var(--gray-200);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gray-600);
     outline: none;
     transition: border-color 0.2s;
     font-family: inherit;
-    background: var(--white);
+    background: var(--gray-100);
   }
-  .learn-search:focus { border-color: var(--blue); }
+  .learn-search:focus { border-color: var(--green); background: var(--white); }
   .learn-count {
     font-size: 0.75rem;
     font-weight: 800;
@@ -762,7 +765,7 @@
     letter-spacing: 0.3px;
     font-family: inherit;
   }
-  .signout-btn:hover { border-color: var(--red); color: var(--red); }
+  .signout-btn:hover { border-color: var(--green); color: var(--green); }
   .sync-indicator {
     font-size: 0.68rem;
     font-weight: 800;
@@ -796,7 +799,7 @@
       <button class="auth-btn auth-btn-google" onclick="signInGoogle()">Continue with Google</button>
       <div class="auth-toggle">No account? <a onclick="showSignUp()">Sign up free</a></div>
       <div style="margin-top:20px;padding-top:20px;border-top:2px solid var(--gray-100);">
-        <button class="auth-btn auth-btn-secondary" onclick="continueAsGuest()" style="color:#666666;">Try as Guest</button>
+        <button class="auth-btn auth-btn-secondary" onclick="continueAsGuest()" style="color:#666666;background:#EEEEEE;border-color:#EEEEEE;">Try as Guest</button>
         <div style="font-size:0.75rem;color:var(--gray-400);font-weight:600;margin-top:8px;">Progress saved on this device only</div>
       </div>
     </div>
@@ -852,21 +855,19 @@
   <div class="letter-range">
     <label class="letter-range-label">Show words:</label>
     <label style="font-weight:500;color:#444;">From</label>
-    <select id="letter-from" onchange="applyLetterRange()">
-    </select>
+    <select id="letter-from" onchange="applyLetterRange()"></select>
     <label style="font-weight:500;color:#444;">to</label>
-    <select id="letter-to" onchange="applyLetterRange()">
-    </select>
+    <select id="letter-to" onchange="applyLetterRange()"></select>
+    <div style="width:1px;height:20px;background:var(--gray-200);margin:0 4px;"></div>
+    <select id="word-start" onchange="applyWordRange()" style="font-size:0.82rem;padding:5px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
+    <label style="font-weight:500;color:#444;font-size:0.82rem;">–</label>
+    <select id="word-end" onchange="applyWordRange()" style="font-size:0.82rem;padding:5px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
     <button class="btn btn-secondary" onclick="resetLetterRange()" style="padding:6px 16px;font-size:0.82rem;">Reset</button>
     <div class="range-info" id="range-info">500 words</div>
   </div>
 
   <!-- ═══════════════ STUDY MODE ═══════════════ -->
   <div id="study-section">
-
-    <div class="filter-bar">
-      <input type="text" id="search-input" placeholder="🔍  Search words…" oninput="applyFilter()">
-    </div>
 
     <div class="progress-wrap">
       <div class="progress-label">
@@ -922,7 +923,10 @@
   <!-- ═══════════════ LEARN MODE ═══════════════ -->
   <div id="learn-section">
     <div class="learn-controls">
-      <input class="learn-search" type="text" id="learn-search" placeholder="🔍  Search words…" oninput="renderLearnList()">
+      <div class="learn-search-wrap">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.8"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input class="learn-search" type="text" id="learn-search" placeholder="Search words…" oninput="renderLearnList()">
+      </div>
       <label class="toggle-wrap">
         <span>Known only</span>
         <label class="toggle">
@@ -966,21 +970,14 @@
           <!-- Word range -->
           <div>
             <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Word range</div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">From</span>
-              <select id="q-letter-from" onchange="updateSetupRange()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">to</span>
-              <select id="q-letter-to" onchange="updateSetupRange()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <div style="font-size:0.78rem;font-weight:800;color:var(--gray-400);background:var(--gray-100);padding:5px 12px;border-radius:99px;" id="q-setup-count">500 words</div>
-            </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-              <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;color:var(--gray-600);cursor:pointer;">
-                <input type="checkbox" id="q-limit-toggle" onchange="updateSetupRange()" style="accent-color:var(--green);width:15px;height:15px;">
-                First
-              </label>
-              <input type="number" id="q-limit-count" value="15" min="1" max="500" onchange="updateSetupRange()" disabled
-                style="width:64px;padding:6px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.95rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;text-align:center;opacity:0.4;">
-              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">words only</span>
+              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">From</span>
+              <select id="q-letter-from" onchange="buildQuizWordDropdowns()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
+              <select id="q-word-start" onchange="updateSetupRange()" style="padding:7px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.9rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
+              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">–</span>
+              <select id="q-letter-to" onchange="buildQuizWordDropdowns()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
+              <select id="q-word-end" onchange="updateSetupRange()" style="padding:7px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.9rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
+              <div style="font-size:0.78rem;font-weight:800;color:var(--gray-400);background:var(--gray-100);padding:5px 12px;border-radius:99px;" id="q-setup-count">500 words</div>
             </div>
           </div>
 
@@ -1660,6 +1657,8 @@ let deck = [...WORDS];
 let filteredDeck = [...WORDS];
 let letterFrom = 'A';
 let letterTo   = 'Z';
+let wordStartIdx = 0;       // index within the letter-range pool
+let wordEndIdx   = Infinity; // index within the letter-range pool
 let currentIndex = 0;
 let knownSet = new Set(JSON.parse(localStorage.getItem('known11plus') || '[]'));
 let shuffled = false;
@@ -1677,16 +1676,74 @@ let quizAnswered = false;
 // UTILITY
 // ═══════════════════════════════════════════════════════════════
 function wordsInRange() {
-  return WORDS.filter(w => {
+  const base = WORDS.filter(w => {
     const c = w.w[0].toUpperCase();
     return c >= letterFrom && c <= letterTo;
   });
+  const end = Math.min(wordEndIdx + 1, base.length);
+  return base.slice(wordStartIdx, end);
+}
+
+function buildWordDropdowns() {
+  const base = WORDS.filter(w => {
+    const c = w.w[0].toUpperCase();
+    return c >= letterFrom && c <= letterTo;
+  });
+
+  const startSel = document.getElementById('word-start');
+  const endSel   = document.getElementById('word-end');
+  if (!startSel || !endSel) return;
+
+  startSel.innerHTML = '';
+  endSel.innerHTML   = '';
+
+  // Start dropdown: only words from letterFrom
+  let fromCount = 0;
+  base.forEach((w, i) => {
+    if (w.w[0].toUpperCase() !== letterFrom) return;
+    fromCount++;
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = letterFrom + fromCount;
+    startSel.appendChild(opt);
+  });
+
+  // End dropdown: only words from letterTo
+  let toCount = 0;
+  base.forEach((w, i) => {
+    if (w.w[0].toUpperCase() !== letterTo) return;
+    toCount++;
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = letterTo + toCount;
+    endSel.appendChild(opt);
+  });
+
+  // Default: first of From letter, last of To letter
+  startSel.selectedIndex = 0;
+  endSel.selectedIndex   = endSel.options.length - 1;
+  wordStartIdx = parseInt(startSel.value);
+  wordEndIdx   = parseInt(endSel.value);
+}
+
+function applyWordRange() {
+  wordStartIdx = parseInt(document.getElementById('word-start').value);
+  wordEndIdx   = parseInt(document.getElementById('word-end').value);
+  // When same letter, ensure start ≤ end
+  if (letterFrom === letterTo && wordStartIdx > wordEndIdx) {
+    wordEndIdx = wordStartIdx;
+    document.getElementById('word-end').value = String(wordStartIdx);
+  }
+  const count = wordsInRange().length;
+  document.getElementById('range-info').textContent = count + ' word' + (count !== 1 ? 's' : '');
+  applyFilter();
+  renderLearnList();
 }
 
 function resetLetterRange() {
   document.getElementById('letter-from').value = presentLetters[0];
   document.getElementById('letter-to').value   = presentLetters[presentLetters.length - 1];
-  applyLetterRange();
+  applyLetterRange(); // rebuilds word dropdowns and resets to full range
 }
 
 function applyLetterRange() {
@@ -1697,6 +1754,7 @@ function applyLetterRange() {
     document.getElementById('letter-to').value = letterFrom;
     letterTo = letterFrom;
   }
+  buildWordDropdowns();
   const inRange = wordsInRange();
   document.getElementById('range-info').textContent = inRange.length + ' word' + (inRange.length !== 1 ? 's' : '');
   applyFilter();
@@ -1844,26 +1902,55 @@ function resetKnown() {
 // ═══════════════════════════════════════════════════════════════
 // QUIZ MODE
 // ═══════════════════════════════════════════════════════════════
+function buildQuizWordDropdowns() {
+  const from = document.getElementById('q-letter-from').value;
+  const to   = document.getElementById('q-letter-to').value;
+  if (from > to) { document.getElementById('q-letter-to').value = from; }
+  const qFrom = document.getElementById('q-letter-from').value;
+  const qTo   = document.getElementById('q-letter-to').value;
+
+  const base = WORDS.filter(w => { const c = w.w[0].toUpperCase(); return c >= qFrom && c <= qTo; });
+  const startSel = document.getElementById('q-word-start');
+  const endSel   = document.getElementById('q-word-end');
+  startSel.innerHTML = '';
+  endSel.innerHTML   = '';
+
+  let fromCount = 0;
+  base.forEach((w, i) => {
+    if (w.w[0].toUpperCase() !== qFrom) return;
+    fromCount++;
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = qFrom + fromCount;
+    startSel.appendChild(opt);
+  });
+
+  let toCount = 0;
+  base.forEach((w, i) => {
+    if (w.w[0].toUpperCase() !== qTo) return;
+    toCount++;
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = qTo + toCount;
+    endSel.appendChild(opt);
+  });
+
+  startSel.selectedIndex = 0;
+  endSel.selectedIndex   = endSel.options.length - 1;
+  updateSetupRange();
+}
+
 function getSetupPool() {
-  const from    = document.getElementById('q-letter-from').value;
-  const to      = document.getElementById('q-letter-to').value;
-  const limited = document.getElementById('q-limit-toggle').checked;
-  const limit   = parseInt(document.getElementById('q-limit-count').value) || 15;
-  let pool = WORDS.filter(w => { const c = w.w[0].toUpperCase(); return c >= from && c <= to; });
-  if (limited) pool = pool.slice(0, limit);
-  return pool;
+  const qFrom    = document.getElementById('q-letter-from').value;
+  const qTo      = document.getElementById('q-letter-to').value;
+  const startIdx = parseInt(document.getElementById('q-word-start').value) || 0;
+  const endIdx   = parseInt(document.getElementById('q-word-end').value);
+  const base = WORDS.filter(w => { const c = w.w[0].toUpperCase(); return c >= qFrom && c <= qTo; });
+  const end  = isNaN(endIdx) ? base.length : endIdx + 1;
+  return base.slice(startIdx, end);
 }
 
 function updateSetupRange() {
-  const from = document.getElementById('q-letter-from').value;
-  const to   = document.getElementById('q-letter-to').value;
-  if (from > to) document.getElementById('q-letter-to').value = from;
-  const limited = document.getElementById('q-limit-toggle').checked;
-  const limitInput = document.getElementById('q-limit-count');
-  limitInput.disabled = !limited;
-  limitInput.style.opacity = limited ? '1' : '0.4';
   const pool = getSetupPool();
-  document.getElementById('q-setup-count').textContent = pool.length + ' words';
+  document.getElementById('q-setup-count').textContent = pool.length + ' word' + (pool.length !== 1 ? 's' : '');
 }
 
 function backToSetup() {
@@ -2432,6 +2519,9 @@ const presentLetters = [...new Set(WORDS.map(w => w.w[0].toUpperCase()))].sort()
   });
 });
 document.getElementById('range-info').textContent = WORDS.length + ' words';
+letterFrom = presentLetters[0];
+letterTo   = presentLetters[presentLetters.length - 1];
+buildWordDropdowns();
 
 // Populate quiz setup letter dropdowns
 ['q-letter-from', 'q-letter-to'].forEach((id, i) => {
@@ -2444,6 +2534,7 @@ document.getElementById('range-info').textContent = WORDS.length + ' words';
     sel.appendChild(opt);
   });
 });
+buildQuizWordDropdowns();
 
 renderCard();
 // stat boxes removed from study tab — no-op
