@@ -21,6 +21,8 @@ const els = {
   learningPercent: document.getElementById("learningPercent"),
   searchInput: document.getElementById("searchInput"),
   studyFilter: document.getElementById("studyFilter"),
+  letterStart: document.getElementById("letterStart"),
+  letterEnd: document.getElementById("letterEnd"),
   deckCount: document.getElementById("deckCount"),
   wordList: document.getElementById("wordList"),
   flashcard: document.getElementById("flashcard"),
@@ -76,17 +78,26 @@ function getEntry(index = state.activeIndex) {
 function getFilteredIndexes() {
   const query = els.searchInput.value.trim().toLowerCase();
   const filter = els.studyFilter.value;
+  const [rangeStart, rangeEnd] = getLetterRange();
   return entries
     .filter((entry) => {
+      const firstLetter = entry.word.charAt(0).toUpperCase();
       const matchesSearch = !query || entry.word.toLowerCase().includes(query);
+      const matchesLetterRange = firstLetter >= rangeStart && firstLetter <= rangeEnd;
       const matchesFilter =
         filter === "all" ||
         (filter === "practice" && state.store.practice[entry.id]) ||
         (filter === "known" && state.store.known[entry.id]) ||
         (filter === "starred" && state.store.starred[entry.id]);
-      return matchesSearch && matchesFilter;
+      return matchesSearch && matchesLetterRange && matchesFilter;
     })
     .map((entry) => entry.index);
+}
+
+function getLetterRange() {
+  const start = els.letterStart.value;
+  const end = els.letterEnd.value;
+  return start <= end ? [start, end] : [end, start];
 }
 
 function renderStats() {
@@ -119,7 +130,9 @@ function renderWordList() {
     return;
   }
 
-  els.deckCount.textContent = `📚 ${state.deckOrder.length} word${state.deckOrder.length === 1 ? "" : "s"} shown`;
+  const [rangeStart, rangeEnd] = getLetterRange();
+  const rangeLabel = rangeStart === "A" && rangeEnd === "Z" ? "A-Z" : `${rangeStart}-${rangeEnd}`;
+  els.deckCount.textContent = `📚 ${state.deckOrder.length} word${state.deckOrder.length === 1 ? "" : "s"} shown · ${rangeLabel}`;
   let currentLetter = "";
   state.deckOrder.forEach((index) => {
     const entry = entries[index];
@@ -371,6 +384,8 @@ function bindEvents() {
 
   els.searchInput.addEventListener("input", render);
   els.studyFilter.addEventListener("change", render);
+  els.letterStart.addEventListener("change", render);
+  els.letterEnd.addEventListener("change", render);
   els.flashcard.addEventListener("click", () => {
     state.flipped = !state.flipped;
     renderCard();

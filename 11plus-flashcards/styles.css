@@ -484,6 +484,7 @@ textarea {
   box-shadow: 0 18px 0 #d3e9cb, var(--shadow);
   color: var(--ink);
   display: grid;
+  grid-template-rows: 1fr auto 1fr;
   min-height: 456px;
   padding: 34px;
   position: relative;
@@ -492,15 +493,7 @@ textarea {
 }
 
 .flashcard::before {
-  background:
-    linear-gradient(90deg, var(--green), var(--gold), var(--blue), var(--coral));
-  border-radius: 999px;
-  content: "";
-  height: 8px;
-  left: 28px;
-  position: absolute;
-  right: 28px;
-  top: 24px;
+  content: none;
 }
 
 .flashcard:hover {
@@ -509,15 +502,15 @@ textarea {
 }
 
 .card-hint {
-  align-self: start;
+  align-self: end;
   background: var(--blue-soft);
   border-radius: 999px;
   color: #0b6f9d;
   display: inline-block;
   font-size: 14px;
   font-weight: 900;
+  grid-row: 3;
   justify-self: center;
-  margin-top: 10px;
   padding: 8px 13px;
 }
 
@@ -525,6 +518,7 @@ textarea {
   color: #26333d;
   font-size: clamp(50px, 8vw, 92px);
   font-weight: 900;
+  grid-row: 2;
   line-height: 1;
 }
 
@@ -533,6 +527,7 @@ textarea {
   color: #050505;
   font-size: clamp(22px, 2.4vw, 34px);
   font-weight: 800;
+  grid-row: 2;
   line-height: 1.28;
   margin: auto;
   max-width: 920px;

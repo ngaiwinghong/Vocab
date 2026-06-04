@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>11+ Vocabulary Flashcards</title>
-    <link rel="stylesheet" href="styles.css?v=20260604-ipad-text">
+    <link rel="stylesheet" href="styles.css?v=20260604-centered-card">
   </head>
   <body>
     <div class="app-shell">
@@ -74,6 +74,72 @@
                 <option value="known">🏆 Known words</option>
                 <option value="starred">⭐ Starred words</option>
               </select>
+
+              <label>🔠 Letter range</label>
+              <div class="letter-range">
+                <div>
+                  <span>From</span>
+                  <select id="letterStart" aria-label="Deck starts from letter">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                    <option value="L">L</option>
+                    <option value="M">M</option>
+                    <option value="N">N</option>
+                    <option value="O">O</option>
+                    <option value="P">P</option>
+                    <option value="Q">Q</option>
+                    <option value="R">R</option>
+                    <option value="S">S</option>
+                    <option value="T">T</option>
+                    <option value="U">U</option>
+                    <option value="V">V</option>
+                    <option value="W">W</option>
+                    <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option>
+                  </select>
+                </div>
+                <div>
+                  <span>To</span>
+                  <select id="letterEnd" aria-label="Deck ends at letter">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                    <option value="L">L</option>
+                    <option value="M">M</option>
+                    <option value="N">N</option>
+                    <option value="O">O</option>
+                    <option value="P">P</option>
+                    <option value="Q">Q</option>
+                    <option value="R">R</option>
+                    <option value="S">S</option>
+                    <option value="T">T</option>
+                    <option value="U">U</option>
+                    <option value="V">V</option>
+                    <option value="W">W</option>
+                    <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z" selected>Z</option>
+                  </select>
+                </div>
+              </div>
 
               <p class="deck-count" id="deckCount">📚 500 words shown</p>
               <div class="word-list" id="wordList" aria-label="Word list"></div>
@@ -155,7 +221,7 @@
       </main>
     </div>
 
-    <script src="vocab-data.js?v=20260604-flashcard-back"></script>
-    <script src="app.js?v=20260604-flashcard-back"></script>
+    <script src="vocab-data.js?v=20260604-letter-range"></script>
+    <script src="app.js?v=20260604-letter-range"></script>
   </body>
 </html>
