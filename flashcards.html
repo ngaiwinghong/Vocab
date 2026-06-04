@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11+ Vocabulary Flashcards</title>
+<style>
+  :root {
+    --primary: #6c63ff;
+    --secondary: #ff6584;
+    --accent: #43b89c;
+    --bg: #f0f2ff;
+    --card-front: #ffffff;
+    --card-back: #6c63ff;
+    --text: #2d2d2d;
+    --light: #f8f9ff;
+    --shadow: 0 8px 32px rgba(108,99,255,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(108,99,255,0.3);
+  }
+  header h1 { font-size: 1.4rem; letter-spacing: 0.5px; }
+  header .subtitle { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+  .mode-tabs {
+    display: flex;
+    gap: 8px;
+  }
+  .mode-tab {
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 2px solid rgba(255,255,255,0.6);
+    background: transparent;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-tab.active {
+    background: white;
+    color: var(--primary);
+    border-color: white;
+  }
+  .mode-tab:hover:not(.active) { background: rgba(255,255,255,0.2); }
+
+  /* ── Layout ── */
+  main { max-width: 700px; margin: 0 auto; padding: 28px 16px; }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    margin-bottom: 20px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: #dde0ff;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn {
+    padding: 9px 20px;
+    border-radius: 50px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: #5a52d5; transform: translateY(-1px); }
+  .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-secondary:hover { background: #f0eeff; }
+  .btn-accent { background: var(--accent); color: white; }
+  .btn-accent:hover { background: #35a389; }
+  .btn-danger { background: var(--secondary); color: white; }
+  .btn-danger:hover { background: #e55577; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .toggle {
+    position: relative;
+    width: 42px;
+    height: 22px;
+  }
+  .toggle input { display: none; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; top: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: var(--primary); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-bar input {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 16px;
+    border-radius: 50px;
+    border: 2px solid #dde0ff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .filter-bar input:focus { border-color: var(--primary); }
+
+  /* ── Letter range ── */
+  .letter-range {
+    background: white;
+    border-radius: 16px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .letter-range label { font-size: 0.85rem; font-weight: 600; color: #555; white-space: nowrap; }
+  .letter-range select {
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 2px solid #dde0ff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .letter-range select:focus { border-color: var(--primary); }
+  .letter-range .range-info {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: #888;
+    background: #f0eeff;
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+
+  /* ── Flashcard ── */
+  .card-area {
+    perspective: 1200px;
+    margin-bottom: 24px;
+  }
+  .card {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px;
+    box-shadow: var(--shadow);
+  }
+  .card-front {
+    background: var(--card-front);
+  }
+  .card-back {
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    color: white;
+    transform: rotateY(180deg);
+  }
+  .card-hint {
+    position: absolute;
+    bottom: 18px;
+    font-size: 0.75rem;
+    opacity: 0.45;
+    letter-spacing: 0.5px;
+  }
+  .card-word {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .card-pos {
+    font-size: 0.85rem;
+    background: #f0eeff;
+    color: var(--primary);
+    padding: 3px 12px;
+    border-radius: 99px;
+    font-style: italic;
+  }
+  .card-definition {
+    font-size: 1.15rem;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .card-example {
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.9;
+    font-style: italic;
+  }
+  .card-example::before { content: '"'; }
+  .card-example::after  { content: '"'; }
+
+  /* ── Nav ── */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .nav .btn { min-width: 100px; }
+  .nav-counter { font-size: 1rem; font-weight: 600; color: #555; min-width: 90px; text-align: center; }
+
+  /* ── Known badge ── */
+  .known-badge {
+    display: none;
+    background: #d4f5e9;
+    color: #2a7a5a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 99px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Question type toggles ── */
+  .qtype-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+  }
+  .qtype-label input { cursor: pointer; accent-color: currentColor; }
+
+  /* ── Quiz ── */
+  #quiz-section { display: none; }
+  .quiz-word {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+  .quiz-instruction {
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 500px) { .options { grid-template-columns: 1fr; } }
+  .option {
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 2px solid #dde0ff;
+    background: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.4;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .option:hover:not(:disabled) { border-color: var(--primary); background: #f0eeff; }
+  .option.correct { background: #d4f5e9; border-color: #2a7a5a; color: #1a5c40; }
+  .option.wrong   { background: #fde8ef; border-color: var(--secondary); color: #8b1a30; }
+  .option:disabled { cursor: default; }
+  .quiz-feedback {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 28px;
+    margin-bottom: 16px;
+    color: var(--accent);
+  }
+  .quiz-feedback.wrong { color: var(--secondary); }
+
+  /* ── Score / Finish ── */
+  .finish-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .finish-screen.visible { display: block; }
+  .finish-emoji { font-size: 4rem; margin-bottom: 16px; }
+  .finish-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .finish-score { font-size: 1.2rem; color: #555; margin-bottom: 24px; }
+  .missed-list { text-align: left; margin-top: 20px; }
+  .missed-list h3 { color: var(--secondary); margin-bottom: 10px; }
+  .missed-item {
+    background: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--secondary);
+    font-size: 0.9rem;
+  }
+  .missed-item strong { color: var(--primary); font-size: 1rem; }
+
+  /* ── Learn mode ── */
+  #learn-section { display: none; }
+  .learn-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .learn-search {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 16px;
+    border-radius: 50px;
+    border: 2px solid #dde0ff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .learn-search:focus { border-color: var(--primary); }
+  .learn-count {
+    font-size: 0.85rem;
+    color: #888;
+    background: #f0eeff;
+    padding: 5px 14px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .learn-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .learn-item {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.07);
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 12px 20px;
+    align-items: start;
+    transition: box-shadow 0.15s;
+  }
+  .learn-item:hover { box-shadow: 0 4px 16px rgba(108,99,255,0.14); }
+  .learn-item.is-known { border-left: 4px solid var(--accent); }
+  @media (max-width: 520px) {
+    .learn-item { grid-template-columns: 1fr; gap: 6px; }
+  }
+  .learn-word {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    word-break: break-word;
+  }
+  .learn-known-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .learn-right { display: flex; flex-direction: column; gap: 4px; }
+  .learn-def { font-size: 0.95rem; color: #333; line-height: 1.5; }
+  .learn-ex {
+    font-size: 0.85rem;
+    color: #777;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .learn-ex::before { content: '"'; }
+  .learn-ex::after  { content: '"'; }
+  .learn-mark-btn {
+    margin-top: 6px;
+    padding: 3px 12px;
+    border-radius: 99px;
+    border: 1.5px solid #ccc;
+    background: transparent;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.15s;
+    align-self: flex-start;
+  }
+  .learn-mark-btn.known {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: #d4f5e9;
+  }
+  .learn-letter-divider {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--primary);
+    padding: 8px 4px 2px;
+    border-bottom: 2px solid #dde0ff;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Stats strip ── */
+  .stats-strip {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    flex: 1;
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+  }
+  .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+  .stat-label { font-size: 0.75rem; color: #888; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>✨ 11+ Vocabulary</h1>
+    <div class="subtitle">500 words · Study &amp; Quiz</div>
+  </div>
+  <div class="mode-tabs">
+    <button class="mode-tab" onclick="setMode('learn')">📋 Learn</button>
+    <button class="mode-tab active" onclick="setMode('study')">📖 Study</button>
+    <button class="mode-tab" onclick="setMode('quiz')">🎯 Quiz</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── Shared letter range filter ── -->
+  <div class="letter-range">
+    <label>Show words:</label>
+    <label style="font-weight:500;color:#444;">From</label>
+    <select id="letter-from" onchange="applyLetterRange()">
+    </select>
+    <label style="font-weight:500;color:#444;">to</label>
+    <select id="letter-to" onchange="applyLetterRange()">
+    </select>
+    <button class="btn btn-secondary" onclick="resetLetterRange()" style="padding:6px 16px;font-size:0.82rem;">Reset</button>
+    <div class="range-info" id="range-info">500 words</div>
+  </div>
+
+  <!-- ═══════════════ STUDY MODE ═══════════════ -->
+  <div id="study-section">
+
+    <div class="stats-strip">
+      <div class="stat-box">
+        <div class="stat-num" id="stat-total">500</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-known" style="color:var(--accent)">0</div>
+        <div class="stat-label">Known ✓</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="stat-remaining" style="color:var(--secondary)">500</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="search-input" placeholder="🔍  Search words…" oninput="applyFilter()">
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Card 1 of 500</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="markKnown()">✓ Known</button>
+      <button class="btn btn-secondary" onclick="resetKnown()">Reset All</button>
+      <label class="toggle-wrap">
+        <span>Shuffle</span>
+        <label class="toggle">
+          <input type="checkbox" id="shuffle-toggle" onchange="toggleShuffle()">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+      <label class="toggle-wrap">
+        <span>Skip known</span>
+        <label class="toggle">
+          <input type="checkbox" id="skip-toggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+    </div>
+
+    <div class="card-area" onclick="flipCard()">
+      <div class="card" id="flashcard">
+        <div class="card-face card-front">
+          <div class="known-badge" id="known-badge">✓ Known</div>
+          <div class="card-word" id="card-word">—</div>
+          <div class="card-pos" id="card-pos"></div>
+          <div class="card-hint">Tap to reveal definition</div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-definition" id="card-def">—</div>
+          <div class="card-example" id="card-ex">—</div>
+          <div class="card-hint">Tap to flip back</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-secondary" id="prev-btn" onclick="navigate(-1)">← Prev</button>
+      <div class="nav-counter" id="nav-counter">1 / 500</div>
+      <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">Next →</button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ LEARN MODE ═══════════════ -->
+  <div id="learn-section">
+    <div class="learn-controls">
+      <input class="learn-search" type="text" id="learn-search" placeholder="🔍  Search words…" oninput="renderLearnList()">
+      <label class="toggle-wrap">
+        <span>Known only</span>
+        <label class="toggle">
+          <input type="checkbox" id="learn-known-only" onchange="renderLearnList()">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+      <label class="toggle-wrap">
+        <span>Hide known</span>
+        <label class="toggle">
+          <input type="checkbox" id="learn-hide-known" onchange="renderLearnList()">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+      <div class="learn-count" id="learn-count">500 words</div>
+    </div>
+    <div class="learn-list" id="learn-list"></div>
+  </div>
+
+  <!-- ═══════════════ QUIZ MODE ═══════════════ -->
+  <div id="quiz-section">
+
+    <div class="stats-strip">
+      <div class="stat-box">
+        <div class="stat-num" id="q-score" style="color:var(--accent)">0</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="q-wrong-count" style="color:var(--secondary)">0</div>
+        <div class="stat-label">Wrong</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="q-remaining">20</div>
+        <div class="stat-label">Left</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="q-progress-text">Question 1 of 20</span>
+        <span id="q-progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="q-progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="controls" style="flex-wrap:wrap;gap:10px;">
+      <label style="font-size:0.9rem;color:#555;font-weight:600;">Questions:</label>
+      <select id="q-count-select" style="padding:7px 14px;border-radius:50px;border:2px solid #dde0ff;font-size:0.9rem;outline:none;">
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="30">30</option>
+        <option value="50">50</option>
+        <option value="500">All 500</option>
+      </select>
+      <button class="btn btn-primary" onclick="startQuiz()">New Quiz</button>
+      <label class="toggle-wrap" style="margin-left:auto;">
+        <span>Only unknowns</span>
+        <label class="toggle">
+          <input type="checkbox" id="q-unknown-only">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+    </div>
+
+    <div style="background:#f8f9ff;border-radius:14px;padding:12px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+      <span style="font-size:0.85rem;font-weight:700;color:#555;margin-right:4px;">Question types:</span>
+      <label class="qtype-label" style="background:#ede9ff;color:#5b21b6;">
+        <input type="checkbox" id="qt1" checked> 📖 Word → Meaning
+      </label>
+      <label class="qtype-label" style="background:#fce7f3;color:#9d174d;">
+        <input type="checkbox" id="qt2" checked> 🔤 Meaning → Word
+      </label>
+      <label class="qtype-label" style="background:#d1fae5;color:#065f46;">
+        <input type="checkbox" id="qt3" checked> ✏️ Fill in the blank
+      </label>
+    </div>
+
+    <div id="quiz-active">
+      <div style="background:white;border-radius:24px;padding:32px;box-shadow:var(--shadow);margin-bottom:20px;">
+        <!-- question type badge -->
+        <div id="q-type-badge" style="font-size:0.78rem;font-weight:700;letter-spacing:0.5px;padding:4px 14px;border-radius:99px;display:inline-block;margin-bottom:14px;"></div>
+
+        <!-- Type 1 & 2: word or definition shown as heading -->
+        <div class="quiz-word" id="q-word" style="display:none">—</div>
+
+        <!-- Type 3: fill-in-the-blank sentence -->
+        <div id="q-sentence-wrap" style="display:none;margin-bottom:18px;">
+          <div style="font-size:0.9rem;font-weight:600;color:#888;margin-bottom:8px;">Fill in the blank:</div>
+          <div id="q-sentence" style="font-size:1.2rem;line-height:1.7;background:#f8f9ff;border-radius:14px;padding:16px 20px;font-style:italic;"></div>
+        </div>
+
+        <div class="quiz-instruction" id="q-instruction">Choose the correct definition:</div>
+
+        <!-- Multiple choice options (type 1 & 2) -->
+        <div class="options" id="options-grid" style="margin-top:14px;"></div>
+
+        <!-- Fill-in input (type 3) -->
+        <div id="fill-wrap" style="display:none;margin-top:14px;">
+          <input id="fill-input" type="text" placeholder="Type the missing word…"
+            style="width:100%;padding:13px 18px;border-radius:14px;border:2px solid #dde0ff;font-size:1.1rem;outline:none;font-family:inherit;"
+            onkeydown="if(event.key==='Enter')submitFill()">
+          <div style="text-align:center;margin-top:12px;">
+            <button class="btn btn-accent" onclick="submitFill()">Check ✓</button>
+          </div>
+        </div>
+
+        <div class="quiz-feedback" id="quiz-feedback" style="margin-top:14px;"></div>
+        <div style="text-align:center;margin-top:4px;">
+          <button class="btn btn-primary" id="q-next-btn" onclick="nextQuestion()" disabled>Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="finish-screen" id="finish-screen">
+      <div class="finish-emoji" id="finish-emoji">🎉</div>
+      <div class="finish-title" id="finish-title">Well done!</div>
+      <div class="finish-score" id="finish-score"></div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="margin:0 auto;">Play Again</button>
+      <div class="missed-list" id="missed-list"></div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// WORD DATA  –  definition + example sentence, 11+ level
+// ═══════════════════════════════════════════════════════════════
+const WORDS = [
+  {w:"abandon",d:"To leave someone or something completely, with no intention of returning.",e:"The crew had to abandon the sinking ship and swim to shore."},
+  {w:"absence",d:"The state of being away from a place or person.",e:"Her absence from school was due to a severe cold."},
+  {w:"absurd",d:"So unreasonable or silly that it is difficult to take seriously.",e:"It seemed absurd to walk two miles to buy a single apple."},
+  {w:"abundant",d:"Existing in very large quantities; more than enough.",e:"After the heavy rain, wildflowers were abundant across the hillside."},
+  {w:"accommodate",d:"To provide space or a place for someone; to adjust to suit someone's needs.",e:"The new classroom was large enough to accommodate thirty pupils."},
+  {w:"accompany",d:"To go somewhere or do something with another person.",e:"She asked her friend to accompany her to the dentist."},
+  {w:"according",d:"As stated or shown by someone or something.",e:"According to the map, the village was just over the hill."},
+  {w:"accuse",d:"To say that someone has done something wrong or illegal.",e:"The teacher did not accuse anyone without first checking the facts."},
+  {w:"accustomed",d:"Familiar with something through long experience; used to it.",e:"After a week, he was accustomed to the early morning alarm."},
+  {w:"achieve",d:"To succeed in doing or completing something, especially by effort.",e:"She trained every day to achieve her goal of running a marathon."},
+  {w:"acquainted",d:"Familiar with someone or something; having some knowledge of them.",e:"He was already acquainted with the rules of the game."},
+  {w:"acquire",d:"To obtain or gain something, often through effort or experience.",e:"She hoped to acquire a good knowledge of French before her trip."},
+  {w:"address",d:"To speak to a person or group; or to deal with a problem directly.",e:"The head teacher stood up to address the whole school in assembly."},
+  {w:"adhere",d:"To stick firmly to a surface, rule, or belief.",e:"All pupils must adhere to the school's code of conduct."},
+  {w:"admission",d:"The act of being allowed to enter a place, or confessing something.",e:"Admission to the museum was free for children under twelve."},
+  {w:"advance",d:"To move forward or make progress.",e:"The explorers had to advance carefully through the thick jungle."},
+  {w:"affectionate",d:"Showing warm and loving feelings towards others.",e:"The affectionate puppy greeted everyone at the door with a wagging tail."},
+  {w:"aggressive",d:"Behaving in a forceful, threatening, or hostile way.",e:"The aggressive dog barked loudly and showed its teeth."},
+  {w:"alert",d:"Quick to notice and react to things; watchful and attentive.",e:"The alert guard spotted the stranger the moment he entered the gate."},
+  {w:"altitude",d:"The height of something above sea level or above the ground.",e:"At such a high altitude, the air was thin and cold."},
+  {w:"amateur",d:"A person who does something for enjoyment rather than as a profession.",e:"Although he was an amateur, his paintings were displayed in a gallery."},
+  {w:"ambition",d:"A strong desire to achieve something, such as success or power.",e:"Her ambition was to become the first person in her family to attend university."},
+  {w:"ample",d:"More than enough in quantity or size.",e:"There was ample time to finish the test before the bell rang."},
+  {w:"ancient",d:"Belonging to or from a very long time ago.",e:"The ancient ruins in the valley were over three thousand years old."},
+  {w:"anxious",d:"Worried or nervous about something that may happen.",e:"He was anxious about his results and could hardly sleep the night before."},
+  {w:"apparent",d:"Clearly seen or understood; obvious.",e:"It was apparent from her smile that she had passed the exam."},
+  {w:"appeal",d:"To make an urgent request; or to be attractive and interesting.",e:"The charity made an appeal for donations after the flood disaster."},
+  {w:"appearance",d:"The way someone or something looks.",e:"Despite his untidy appearance, he gave an excellent presentation."},
+  {w:"applicable",d:"Relevant or suitable to a particular situation.",e:"The discount was only applicable to students with a valid identity card."},
+  {w:"appreciate",d:"To recognise the value or quality of something; to be grateful for it.",e:"She did not fully appreciate how hard her parents worked until she was older."},
+  {w:"apprehensive",d:"Worried or nervous about something that is going to happen.",e:"He was apprehensive about starting at his new school on Monday."},
+  {w:"approve",d:"To agree that something is good or acceptable.",e:"The council voted to approve the plans for the new library."},
+  {w:"argument",d:"A disagreement between people, often involving heated discussion.",e:"The two friends had a brief argument but soon made up."},
+  {w:"article",d:"A piece of writing in a newspaper or magazine; or a particular object.",e:"She wrote an article for the school newsletter about the science fair."},
+  {w:"assemble",d:"To gather people or things together in one place.",e:"The pupils were asked to assemble in the hall for the morning announcement."},
+  {w:"assistance",d:"Help given to someone.",e:"She offered her assistance to the elderly man who was struggling with his bags."},
+  {w:"attempt",d:"To try to do something, especially something difficult.",e:"He made a brave attempt to climb the steep rock face."},
+  {w:"available",d:"Able to be obtained or used; free to do something.",e:"The last copy of the book was still available on the top shelf."},
+  {w:"average",d:"The typical or usual amount, level, or quality.",e:"Her score was above average, which made her parents very proud."},
+  {w:"avoid",d:"To keep away from someone or something deliberately.",e:"He tried to avoid the muddy puddles on the way to school."},
+  {w:"avowed",d:"Openly declared or admitted.",e:"She was an avowed lover of classical music and never missed a concert."},
+  {w:"awkward",d:"Causing difficulty or embarrassment; not graceful.",e:"There was an awkward silence after she accidentally knocked over the vase."},
+  {w:"banish",d:"To send someone away as a punishment; to get rid of something.",e:"The king decided to banish the traitor from the kingdom forever."},
+  {w:"bargain",d:"An agreement to buy or sell something at a good price; a good deal.",e:"She found a real bargain at the market — a beautiful coat for only five pounds."},
+  {w:"barren",d:"(Of land) too poor to produce plants or crops; empty and lifeless.",e:"The barren desert stretched for miles without a single tree or blade of grass."},
+  {w:"beautiful",d:"Pleasing to the eye or the senses; very attractive.",e:"The sunset over the sea was one of the most beautiful sights she had ever seen."},
+  {w:"because",d:"For the reason that; since.",e:"She stayed indoors because the rain was too heavy for a walk."},
+  {w:"believe",d:"To accept that something is true; to have confidence in someone.",e:"I believe that hard work always leads to improvement."},
+  {w:"belligerent",d:"Hostile and aggressive; quick to start a fight or argument.",e:"The belligerent pupil refused to listen to the teacher's instructions."},
+  {w:"bemused",d:"Confused and puzzled, unable to understand something.",e:"She looked bemused when told the party had been on the previous day."},
+  {w:"benefit",d:"An advantage or something helpful that you get from something.",e:"One benefit of reading widely is that your vocabulary grows rapidly."},
+  {w:"besieged",d:"Surrounded by an enemy or overwhelmed by people or problems.",e:"The castle was besieged for three months before the defenders surrendered."},
+  {w:"betray",d:"To be disloyal to someone who trusts you.",e:"It was a shock to discover that his closest friend would betray his secret."},
+  {w:"bewildered",d:"Completely confused and unable to understand what is happening.",e:"She was bewildered by the maze of corridors in the enormous building."},
+  {w:"brief",d:"Lasting only a short time; using few words.",e:"The teacher gave a brief explanation before handing out the test papers."},
+  {w:"Britain",d:"The island containing England, Scotland, and Wales.",e:"The Romans invaded Britain nearly two thousand years ago."},
+  {w:"bruise",d:"A dark mark on the skin caused by a knock or fall.",e:"He had a large bruise on his knee after falling off his bicycle."},
+  {w:"burden",d:"A heavy load or a responsibility that is difficult to bear.",e:"Looking after the whole house on her own was a great burden for her."},
+  {w:"business",d:"Work done to earn money; a company or commercial activity.",e:"Her parents ran a small business selling home-made bread."},
+  {w:"caffeine",d:"A natural substance found in tea and coffee that makes you feel more alert.",e:"Too much caffeine can stop you from sleeping properly at night."},
+  {w:"calamity",d:"An event causing great harm or distress; a disaster.",e:"The sudden flood was a calamity that destroyed dozens of homes."},
+  {w:"candidate",d:"A person who applies for a job or takes part in an exam or election.",e:"Every candidate sat quietly and waited for the signal to begin the exam."},
+  {w:"category",d:"A group of things that share the same qualities.",e:"The librarian sorted the books into categories such as fiction and non-fiction."},
+  {w:"caution",d:"Care taken to avoid danger or mistakes.",e:"She crossed the icy road with great caution, watching each step."},
+  {w:"cease",d:"To stop happening or doing something.",e:"The rain finally ceased and the sun began to break through the clouds."},
+  {w:"ceiling",d:"The upper surface of a room; the highest limit of something.",e:"The old farmhouse had a low ceiling that tall adults had to duck under."},
+  {w:"cemetery",d:"A place where dead people are buried.",e:"The quiet cemetery was surrounded by tall oak trees."},
+  {w:"changeable",d:"Likely to change frequently; not staying the same.",e:"The weather in spring is very changeable — one moment sunny, the next rainy."},
+  {w:"chaos",d:"A state of complete disorder and confusion.",e:"When the teacher left the room, the classroom descended into chaos."},
+  {w:"charred",d:"Blackened and partly burned by fire.",e:"The charred remains of the old building were still smouldering the next morning."},
+  {w:"coarse",d:"Rough in texture; or rude and unpleasant in manner.",e:"The coarse sand scraped against his feet as he walked along the beach."},
+  {w:"coax",d:"To gently persuade someone to do something.",e:"She managed to coax the frightened kitten out from under the bed."},
+  {w:"college",d:"An institution for higher or further education.",e:"She hoped to study art at college after finishing her GCSEs."},
+  {w:"combination",d:"A mixture of two or more different things.",e:"The cake's flavour was a delicious combination of lemon and ginger."},
+  {w:"commence",d:"To begin or start something.",e:"The ceremony will commence at precisely ten o'clock in the morning."},
+  {w:"committee",d:"A group of people chosen to make decisions on behalf of a larger group.",e:"The school committee met every month to discuss activities and improvements."},
+  {w:"communicate",d:"To share or exchange information with another person.",e:"It is important to communicate clearly when working as part of a team."},
+  {w:"community",d:"A group of people living in the same area or sharing common interests.",e:"The whole community came together to help rebuild after the fire."},
+  {w:"companion",d:"A person or animal you spend time with regularly; a friend.",e:"His dog had been his loyal companion for the past ten years."},
+  {w:"competition",d:"An event or situation where people try to beat each other.",e:"She entered the spelling competition and came first in her year group."},
+  {w:"completely",d:"Totally; to the fullest extent possible.",e:"He was completely exhausted after running the cross-country race."},
+  {w:"complex",d:"Made of many different parts and difficult to understand.",e:"The puzzle was extremely complex, with over a thousand tiny pieces."},
+  {w:"composition",d:"A piece of music, art, or writing; the way something is put together.",e:"His composition for the school concert was admired by everyone who heard it."},
+  {w:"comprehend",d:"To fully understand something.",e:"It was difficult to comprehend just how vast the universe really is."},
+  {w:"conceal",d:"To hide something so it cannot be seen or found.",e:"She tried to conceal her disappointment with a polite smile."},
+  {w:"conceited",d:"Too proud of yourself and your own abilities.",e:"He was so conceited that he refused to believe anyone else could do better."},
+  {w:"conceive",d:"To form an idea in the mind; to become pregnant.",e:"It was hard to conceive of a plan that would satisfy everyone."},
+  {w:"conclusion",d:"The end of something; the decision reached after thinking carefully.",e:"At the conclusion of the story, all the mysteries were explained."},
+  {w:"condemn",d:"To strongly disapprove of something; to officially sentence someone.",e:"The judge moved to condemn the cruel treatment of the animals."},
+  {w:"confidential",d:"Meant to be kept secret and not shared with others.",e:"The letter was marked confidential and was not meant to be read by anyone else."},
+  {w:"confine",d:"To keep someone or something within limits; to restrict.",e:"During the storm, the children were confined to the house for safety."},
+  {w:"conspire",d:"To secretly plan with others to do something harmful or illegal.",e:"The two characters in the novel conspired to steal the ancient treasure."},
+  {w:"conscience",d:"The inner sense of right and wrong that guides your behaviour.",e:"Her conscience told her she should own up, even though it felt scary."},
+  {w:"conscious",d:"Aware of and able to think about your surroundings and actions.",e:"He was conscious of the fact that everyone in the room was watching him."},
+  {w:"consent",d:"Permission or agreement to do something.",e:"Parents must give their consent before pupils can go on the school trip."},
+  {w:"conserve",d:"To protect something from being wasted, damaged, or destroyed.",e:"It is important to conserve water during periods of drought."},
+  {w:"consideration",d:"Careful thought about something; concern for other people's feelings.",e:"She showed great consideration by offering her seat to the elderly passenger."},
+  {w:"consist",d:"To be made up of particular parts or elements.",e:"The exam will consist of three sections: reading, writing, and comprehension."},
+  {w:"constant",d:"Happening all the time without stopping; not changing.",e:"The constant noise from the construction site made it hard to concentrate."},
+  {w:"consume",d:"To eat or drink something; to use up a resource completely.",e:"The bonfire would consume a whole pile of wood within an hour."},
+  {w:"contemporary",d:"Existing or happening at the same time; modern and up to date.",e:"The exhibition featured both ancient artefacts and contemporary artwork."},
+  {w:"contempt",d:"A strong feeling that someone or something is worthless or unworthy.",e:"She regarded the bully's behaviour with utter contempt."},
+  {w:"content",d:"Happy and satisfied with your situation; the subject matter of a text.",e:"The children were perfectly content to play in the garden all afternoon."},
+  {w:"contest",d:"A competition or a disagreement between two sides.",e:"The poetry contest attracted entries from schools all over the county."},
+  {w:"contract",d:"A formal written agreement; or to become smaller.",e:"Both parties signed the contract before any work was started."},
+  {w:"contrast",d:"A noticeable difference between two things.",e:"The contrast between the noisy city and the peaceful countryside was striking."},
+  {w:"contribute",d:"To give something (money, time, or ideas) to help achieve something.",e:"Every pupil was asked to contribute a poem for the school anthology."},
+  {w:"controversy",d:"A lot of public disagreement and debate about a subject.",e:"The new road plans caused considerable controversy among local residents."},
+  {w:"convenience",d:"The quality of being easy to use or fitting in well with one's plans.",e:"The convenience of the corner shop meant she didn't need to travel far."},
+  {w:"conventional",d:"Following what is traditional or normal; not unusual or original.",e:"His conventional approach to the task was reliable, if not very exciting."},
+  {w:"convert",d:"To change from one form, use, or belief to another.",e:"They decided to convert the old barn into a comfortable cottage."},
+  {w:"convey",d:"To communicate an idea or feeling; to carry something from one place to another.",e:"Her voice conveyed genuine excitement as she described her adventure."},
+  {w:"convict",d:"To officially find someone guilty of a crime; a person serving a prison sentence.",e:"The court managed to convict the thief with the help of security footage."},
+  {w:"convince",d:"To persuade someone that something is true or to do something.",e:"She used three strong arguments to convince the panel to choose her idea."},
+  {w:"correspond",d:"To write letters or emails to someone regularly; to match or be similar.",e:"The two scientists decided to correspond by letter for several years."},
+  {w:"coy",d:"Pretending to be shy or unwilling to give information.",e:"She gave a coy smile when asked who had given her the birthday gift."},
+  {w:"criticise",d:"To say what is wrong or bad about something or someone.",e:"A good teacher will criticise your work kindly and help you improve."},
+  {w:"cultivate",d:"To grow plants by preparing the soil; to develop a skill or relationship.",e:"He worked hard to cultivate a friendship with his new classmates."},
+  {w:"cunning",d:"Clever at getting what you want, often in a slightly dishonest way.",e:"The cunning fox stole the chicken before the farmer could notice."},
+  {w:"curb",d:"To control or limit something; the edge of a pavement.",e:"She had to curb her excitement and wait patiently for the announcement."},
+  {w:"curiosity",d:"A strong desire to know or learn about something.",e:"Her curiosity about how engines worked led her to take apart an old clock."},
+  {w:"curious",d:"Eager to know or find out about something; strange or unusual.",e:"The curious child peered through the telescope at the stars above."},
+  {w:"curt",d:"Rude or brief in a way that shows you are impatient.",e:"His curt reply made her feel she had asked a foolish question."},
+  {w:"custom",d:"A traditional way of behaving that a group of people has followed for a long time.",e:"It is a custom in our family to eat together every Sunday evening."},
+  {w:"debate",d:"A formal discussion in which people give different opinions on a subject.",e:"The class held a debate about whether school uniforms should be abolished."},
+  {w:"debrief",d:"To question someone carefully about a task or mission they have completed.",e:"The astronauts were debriefed by scientists for several hours after landing."},
+  {w:"deceit",d:"The act of making someone believe something that is not true.",e:"The villain's plan relied entirely on deceit and false promises."},
+  {w:"declare",d:"To say something officially or publicly in a clear way.",e:"The judge was about to declare the winner of the competition."},
+  {w:"decline",d:"To politely refuse; or to become smaller or weaker over time.",e:"She had to decline the invitation as she had a prior commitment."},
+  {w:"definite",d:"Clearly stated, certain, and unlikely to change.",e:"There was no definite answer about whether the trip would go ahead."},
+  {w:"deliberate",d:"Done on purpose and carefully planned; not by accident.",e:"The mistake was deliberate — he had removed the clue on purpose."},
+  {w:"demolished",d:"Completely pulled down or destroyed.",e:"The old factory was demolished to make way for a new park."},
+  {w:"deny",d:"To say that something is not true; to refuse to give something.",e:"He tried to deny that he had cheated, but the evidence was clear."},
+  {w:"dependable",d:"Able to be trusted and relied upon.",e:"She was a dependable friend who always kept her promises."},
+  {w:"deposit",d:"An amount of money paid as a first part of a larger payment; to place something.",e:"They paid a deposit to secure their holiday cottage for the summer."},
+  {w:"derelict",d:"In very poor condition because it has been abandoned and left without care.",e:"The derelict house at the end of the lane had broken windows and a crumbling roof."},
+  {w:"description",d:"A written or spoken account of what someone or something is like.",e:"The author's description of the forest made the reader feel truly there."},
+  {w:"despair",d:"A complete loss of hope.",e:"She felt utter despair when she saw that the bridge had been washed away."},
+  {w:"desperately",d:"In a way that shows you urgently need or want something.",e:"He desperately searched his bag for the missing ticket."},
+  {w:"destitute",d:"Without money, food, or a place to live; extremely poor.",e:"After the war, many families were left destitute and homeless."},
+  {w:"determine",d:"To discover something by investigation; to decide firmly.",e:"Scientists worked for years to determine the cause of the disease."},
+  {w:"develop",d:"To gradually grow, change, or improve over time.",e:"It takes time to develop the confidence to speak in front of a large audience."},
+  {w:"devote",d:"To give all your time and energy to something.",e:"She chose to devote her weekends to volunteering at the animal shelter."},
+  {w:"digest",d:"To break down food in the stomach; to slowly think about and understand information.",e:"It took her a while to digest the shock of the unexpected news."},
+  {w:"dilapidated",d:"Old and in a very bad condition due to neglect.",e:"The dilapidated cottage had not been lived in for over twenty years."},
+  {w:"diluted",d:"Made weaker or thinner by adding water or another liquid.",e:"The orange juice was diluted with water so it wasn't too sweet."},
+  {w:"disappear",d:"To go out of sight or to stop existing.",e:"The magician made the rabbit disappear beneath the silk cloth."},
+  {w:"disappointed",d:"Sad because something did not happen as hoped or expected.",e:"She was disappointed to find that the museum was closed on Mondays."},
+  {w:"disarray",d:"A state of great disorder and untidiness.",e:"After the party, the garden was left in complete disarray."},
+  {w:"disastrous",d:"Causing great harm or damage; extremely bad.",e:"The heavy flooding had a disastrous effect on the local farmland."},
+  {w:"disclose",d:"To reveal information that was previously kept secret.",e:"The reporter was reluctant to disclose the identity of her source."},
+  {w:"discontent",d:"Dissatisfaction with one's situation.",e:"There was growing discontent among the villagers about the new development plans."},
+  {w:"dishevelled",d:"Untidy in appearance, with hair or clothes in a mess.",e:"He arrived at the party looking dishevelled after cycling in the rain."},
+  {w:"dismal",d:"Causing or showing sadness; gloomy and without hope.",e:"The weather was dismal — grey skies and constant drizzle all day."},
+  {w:"disperse",d:"To spread out in different directions; to make a crowd separate.",e:"The police asked the crowd to disperse calmly after the event ended."},
+  {w:"dispute",d:"A disagreement or argument, often an official one.",e:"The two countries entered into a dispute over the rights to the fishing grounds."},
+  {w:"distasteful",d:"Unpleasant or offensive.",e:"She found his rude jokes distasteful and asked him to stop."},
+  {w:"distinct",d:"Clearly different or separate; easy to recognise.",e:"The twins had distinct personalities despite looking almost identical."},
+  {w:"distinguished",d:"Very successful and widely respected; looking impressive.",e:"The distinguished professor had written over fifty books on the subject."},
+  {w:"distress",d:"Extreme worry, sadness, or pain.",e:"The child's cries of distress could be heard from the other end of the corridor."},
+  {w:"divine",d:"Relating to God or a god; extraordinarily good.",e:"The explorer described the view from the mountaintop as absolutely divine."},
+  {w:"domestic",d:"Relating to the home or family; not foreign.",e:"She had a talent for all kinds of domestic tasks, especially cooking."},
+  {w:"dose",d:"A measured amount of medicine taken at one time.",e:"The doctor prescribed a small dose of medicine to be taken after each meal."},
+  {w:"drought",d:"A long period without enough rainfall, causing water shortages.",e:"The prolonged drought caused crops to fail across the entire region."},
+  {w:"dwelling",d:"A place where someone lives; a house or home.",e:"The tiny dwelling was barely large enough for a family of four."},
+  {w:"earnest",d:"Serious and sincere in what you say or do.",e:"She made an earnest promise to return the borrowed book by Friday."},
+  {w:"economical",d:"Using no more of something than is necessary; not wasteful.",e:"She was very economical with her words, always saying exactly what she meant."},
+  {w:"elect",d:"To choose someone for a position by voting.",e:"The pupils voted to elect a new form captain at the start of term."},
+  {w:"elude",d:"To escape from someone or avoid being found or understood.",e:"The solution to the problem continued to elude her for several days."},
+  {w:"embarrass",d:"To make someone feel awkward, self-conscious, or ashamed.",e:"Tripping on stage in front of everyone was enough to embarrass anyone."},
+  {w:"embrace",d:"To hold someone in your arms affectionately; to accept something willingly.",e:"She was overjoyed to embrace her grandmother after months apart."},
+  {w:"emerge",d:"To come out of a place or difficult situation.",e:"A fox emerged from the undergrowth and stared at us in the moonlight."},
+  {w:"empire",d:"A group of countries ruled by a single monarch or government.",e:"At its peak, the British Empire covered almost a quarter of the world's land."},
+  {w:"endeavour",d:"To try hard to do something; a serious attempt to do something.",e:"She would endeavour to answer every question in the exam as fully as possible."},
+  {w:"endure",d:"To suffer something painful or difficult without giving up.",e:"The soldiers had to endure many weeks of bitter cold in the mountains."},
+  {w:"enterprise",d:"A bold or difficult project; a business or company.",e:"Setting up a school newspaper was quite an enterprise for a group of ten-year-olds."},
+  {w:"environment",d:"The natural world around us; the surroundings in which a person lives.",e:"We must all do our part to protect the environment for future generations."},
+  {w:"equipment",d:"The tools and objects needed for a particular activity.",e:"She checked her equipment carefully before setting off on the camping trip."},
+  {w:"errand",d:"A short journey made to do a particular task, such as delivering something.",e:"His mother sent him on an errand to collect a parcel from the post office."},
+  {w:"especially",d:"More than usual or more than others; particularly.",e:"She loved all animals but was especially fond of horses."},
+  {w:"estimate",d:"An approximate calculation or judgement of something.",e:"The builder gave an estimate of how much the repairs would cost."},
+  {w:"evaluation",d:"A careful assessment of the value, quality, or importance of something.",e:"The teacher asked each pupil to write a self-evaluation after the project."},
+  {w:"evident",d:"Easy to see or understand; obvious.",e:"It was evident from her expression that she was not pleased with the result."},
+  {w:"exaggerate",d:"To make something seem larger, better, or worse than it really is.",e:"He always tended to exaggerate his achievements when telling stories."},
+  {w:"excellent",d:"Extremely good; of the highest quality.",e:"The restaurant received excellent reviews for its food and friendly service."},
+  {w:"excitement",d:"The state of feeling very enthusiastic and eager about something.",e:"The excitement in the classroom was obvious when the results were announced."},
+  {w:"exciting",d:"Causing feelings of enthusiasm and eagerness.",e:"The final chapter of the book was so exciting that she couldn't put it down."},
+  {w:"exclaim",d:"To say something suddenly and with strong feeling.",e:'"That\'s incredible!" she exclaimed when she saw the size of the whale.'},
+  {w:"existence",d:"The fact of being real or present in the world.",e:"Scientists have long debated the existence of life on other planets."},
+  {w:"expel",d:"To officially make someone leave a school or organisation.",e:"The school threatened to expel any pupil who was caught cheating."},
+  {w:"expense",d:"The cost of something; money spent on something.",e:"The family kept their holiday costs low to avoid too much expense."},
+  {w:"explanation",d:"A reason given for why something happened or why it is the way it is.",e:"The teacher asked her for an explanation for handing in her work so late."},
+  {w:"extended",d:"Made longer or larger than usual; stretched out.",e:"The school offered an extended library session every Tuesday evening."},
+  {w:"exterior",d:"The outer surface or part of something.",e:"The exterior of the ancient castle was covered in ivy and moss."},
+  {w:"extinction",d:"The state of no longer existing, especially of a species of animal or plant.",e:"The dodo became one of the most famous examples of extinction caused by humans."},
+  {w:"extract",d:"To remove or take out something; a short passage taken from a book.",e:"Scientists were able to extract DNA from the ancient bones."},
+  {w:"extremely",d:"To a very great degree; very.",e:"The wind was extremely strong, making it difficult to walk upright."},
+  {w:"familiar",d:"Well known or easily recognised because of previous experience.",e:"The tune was familiar, but she couldn't quite remember where she had heard it."},
+  {w:"famine",d:"A severe shortage of food, causing widespread hunger.",e:"The famine affected millions of people across the region for several years."},
+  {w:"fatal",d:"Causing death; leading to complete failure.",e:"The explorer had made a fatal error by not carrying enough water."},
+  {w:"fatigue",d:"Extreme tiredness, especially after physical or mental effort.",e:"After six hours of hiking, fatigue set in and the group stopped to rest."},
+  {w:"favourite",d:"The thing or person you like most.",e:"The book was her favourite because it combined mystery with adventure."},
+  {w:"feeble",d:"Lacking strength or force; not convincing.",e:"The feeble old man could barely lift the heavy shopping bag."},
+  {w:"feign",d:"To pretend to have a feeling or illness that you do not really have.",e:"She tried to feign surprise, even though she had already heard the news."},
+  {w:"fertile",d:"(Of land) capable of producing a lot of crops; able to produce offspring.",e:"The fertile soil of the valley made it perfect for growing vegetables."},
+  {w:"flamboyant",d:"Confident and lively in a way that attracts attention.",e:"The flamboyant actor arrived at the premiere in a bright red suit."},
+  {w:"flawless",d:"Without any faults, mistakes, or blemishes; perfect.",e:"Her flawless performance in the recital earned a standing ovation."},
+  {w:"fleet",d:"A group of ships, aircraft, or vehicles; moving quickly.",e:"The fleet of warships sailed silently out of the harbour at dawn."},
+  {w:"flora",d:"The plants that grow naturally in a particular area.",e:"The island was home to a remarkable variety of exotic flora."},
+  {w:"flourish",d:"To grow and develop well; to wave something dramatically.",e:"With the right support, even the most struggling pupil can flourish."},
+  {w:"foe",d:"An enemy or opponent.",e:"The knight faced his foe bravely on the battlefield."},
+  {w:"forbid",d:"To officially say that something must not be done.",e:"School rules forbid the use of mobile phones during lessons."},
+  {w:"foreign",d:"From or relating to a country other than your own.",e:"She had always dreamed of visiting a foreign country and learning its language."},
+  {w:"forty",d:"The number 40.",e:"There were forty pupils competing in the county spelling bee."},
+  {w:"foundation",d:"The base on which something is built; the basis of an idea or belief.",e:"Hard work and good reading habits form the foundation of academic success."},
+  {w:"fragment",d:"A small piece broken off from something larger.",e:"She found a fragment of ancient pottery while digging in the garden."},
+  {w:"fragrant",d:"Having a pleasant or sweet smell.",e:"The garden was filled with fragrant roses and lavender."},
+  {w:"frequent",d:"Happening or appearing often.",e:"She was a frequent visitor to the local library and knew all the staff."},
+  {w:"frivolous",d:"Not having any serious purpose or value; not sensible.",e:"The judge dismissed the case as a frivolous waste of the court's time."},
+  {w:"fund",d:"A sum of money saved for a particular purpose; to pay for something.",e:"The school set up a fund to help pupils who could not afford the trip."},
+  {w:"garment",d:"A piece of clothing.",e:"She chose her best garment to wear to the formal dinner."},
+  {w:"government",d:"The group of people who officially rule or manage a country.",e:"The government announced new plans to improve the country's schools."},
+  {w:"grate",d:"To shred food by rubbing it against a rough surface; to irritate.",e:"She began to grate the cheese over the warm pasta dish."},
+  {w:"gratitude",d:"The feeling of being thankful for something.",e:"She sent a card to express her gratitude for all their help."},
+  {w:"grave",d:"Serious and worrying; a place where a dead person is buried.",e:"The doctor's expression was grave as he explained the diagnosis."},
+  {w:"grieve",d:"To feel deep sadness, especially after losing someone you love.",e:"It takes time to grieve after losing a beloved pet."},
+  {w:"grotesque",d:"Strange and ugly in a way that seems unnatural or disturbing.",e:"The carnival mask was a grotesque mixture of a clown and a monster."},
+  {w:"guarantee",d:"A firm promise that something will happen or that something is true.",e:"The shop offered a one-year guarantee on all electrical products."},
+  {w:"guard",d:"A person who watches over something or someone to keep them safe.",e:"A guard stood at the entrance to the palace day and night."},
+  {w:"habitable",d:"Suitable for people to live in.",e:"After the repairs, the cottage was once again habitable."},
+  {w:"habitat",d:"The natural environment where a plant or animal normally lives.",e:"Rainforests are the natural habitat of hundreds of species of birds and insects."},
+  {w:"halt",d:"To come to or bring to a stop.",e:"The train came to a sudden halt just outside the station."},
+  {w:"harass",d:"To repeatedly bother or upset someone.",e:"It is wrong to harass others, and there are laws against it."},
+  {w:"hasty",d:"Done too quickly and without proper care.",e:"Making a hasty decision without thinking it through often leads to regret."},
+  {w:"heroic",d:"Very brave and admired for doing something difficult or dangerous.",e:"The firefighter made a heroic effort to rescue all the trapped passengers."},
+  {w:"hindrance",d:"Something that makes it difficult to do something; an obstacle.",e:"The heavy rucksack was a hindrance on the steep part of the climb."},
+  {w:"hoax",d:"A trick played on someone to make them believe something false.",e:"The UFO sighting turned out to be an elaborate hoax by local students."},
+  {w:"holiday",d:"A period of time away from school or work, often spent travelling.",e:"The family looked forward to their annual summer holiday by the sea."},
+  {w:"hollow",d:"Having an empty space inside; not solid.",e:"The rabbit disappeared into a hollow log at the edge of the forest."},
+  {w:"humble",d:"Not proud or boastful; showing a modest view of your own importance.",e:"Despite winning the award, she remained humble and thanked everyone who had helped her."},
+  {w:"hygienic",d:"Clean and free from germs and bacteria.",e:"It is important to keep the kitchen hygienic to prevent the spread of illness."},
+  {w:"identify",d:"To recognise who or what someone or something is.",e:"She was able to identify the bird from its distinctive red breast."},
+  {w:"idle",d:"Not working or being used; avoiding work; lazy.",e:"He spent the idle afternoon reading under the apple tree."},
+  {w:"idol",d:"A person who is greatly admired; an image worshipped as a god.",e:"The young athlete looked up to the Olympic champion as her idol."},
+  {w:"ignorant",d:"Lacking knowledge or awareness about something.",e:"He was embarrassed to admit he was ignorant of such a basic historical fact."},
+  {w:"imitate",d:"To copy someone's behaviour, speech, or appearance.",e:"Young children often imitate the gestures and expressions of their parents."},
+  {w:"immediately",d:"At once, without delay.",e:"When the fire alarm sounded, everyone immediately moved to the exit."},
+  {w:"immerse",d:"To put something deeply into a liquid; to involve yourself completely in something.",e:"She decided to immerse herself in the local language and culture."},
+  {w:"inaudible",d:"Too quiet to be heard.",e:"His voice was inaudible over the noise of the crowd."},
+  {w:"incision",d:"A precise cut made in something, especially during surgery.",e:"The surgeon made a small incision before removing the splinter."},
+  {w:"inconspicuous",d:"Not easily noticed or attracting attention.",e:"She wore dark, inconspicuous clothing so she would not stand out in the crowd."},
+  {w:"individual",d:"A single person, considered separately from a group.",e:"Every individual in the class had their own particular strengths."},
+  {w:"inedible",d:"Not suitable to be eaten, due to bad taste or being harmful.",e:"After days in the heat, the fruit had become completely inedible."},
+  {w:"inferior",d:"Lower in quality, status, or importance than something or someone else.",e:"This new design is clearly inferior to the original, which was far more practical."},
+  {w:"influence",d:"The power to affect how someone thinks or behaves.",e:"Great writers can have a huge influence on the way society thinks."},
+  {w:"inhabitants",d:"The people or animals that live in a particular place.",e:"The inhabitants of the remote island had developed their own unique customs."},
+  {w:"insane",d:"Seriously mentally ill; extremely foolish or unreasonable.",e:"The plan sounded completely insane, yet somehow it worked."},
+  {w:"insert",d:"To put something carefully into something else.",e:"Please insert your card into the machine before entering your PIN."},
+  {w:"insolent",d:"Rude and disrespectful, especially towards someone in authority.",e:"The insolent pupil interrupted the teacher and refused to apologise."},
+  {w:"inspire",d:"To fill someone with enthusiasm or a desire to do something.",e:"The astronaut's speech managed to inspire an entire generation to study science."},
+  {w:"intangible",d:"Unable to be touched or easily defined; not physical.",e:"The kindness in her voice had an intangible quality that put everyone at ease."},
+  {w:"intense",d:"Very strong, extreme, or serious.",e:"The intense heat of the desert sun made every step feel like hard work."},
+  {w:"intention",d:"What you plan or aim to do.",e:"It was never her intention to upset anyone with her comments."},
+  {w:"interested",d:"Wanting to know more about or take part in something.",e:"He was particularly interested in the chapter about ancient Egypt."},
+  {w:"interfere",d:"To involve yourself in a situation in a way that is not welcome.",e:"She told him not to interfere in matters that were not his concern."},
+  {w:"interior",d:"The inside part of something.",e:"The interior of the cave was cool and completely silent."},
+  {w:"interpret",d:"To explain the meaning of something; to translate spoken words.",e:"It can be difficult to interpret a poem without knowing its historical context."},
+  {w:"interrogate",d:"To question someone closely and in a forceful way.",e:"The detective planned to interrogate the key witness in the morning."},
+  {w:"interrupt",d:"To stop someone from speaking by saying or doing something.",e:"It is rude to interrupt someone when they are in the middle of a sentence."},
+  {w:"invalid",d:"Not officially acceptable because it breaks a rule; a person made weak by illness.",e:"The ticket was invalid because it was dated the previous month."},
+  {w:"insolation",d:"Exposure to the sun's rays; solar radiation reaching the earth.",e:"Scientists measure insolation to understand how much solar energy a region receives."},
+  {w:"labour",d:"Hard physical work; workers as a group.",e:"Building the cathedral took years of patient labour by skilled craftsmen."},
+  {w:"lament",d:"To feel or express great sorrow or regret.",e:"She would often lament the fact that she had never learned to play the piano."},
+  {w:"language",d:"The system of words and grammar used by people of a particular country.",e:"She spoke three languages fluently by the time she was fourteen."},
+  {w:"latter",d:"Referring to the second of two things just mentioned.",e:"Between football and swimming, she preferred the latter as it kept her cooler."},
+  {w:"lavish",d:"Rich and extravagant; giving generously.",e:"The birthday party was a lavish affair with a live band and a five-course meal."},
+  {w:"lean",d:"To rest against something; to be thin with little body fat; to bend towards.",e:"She liked to lean against the window and watch the world go by."},
+  {w:"legible",d:"Clear enough to be read easily.",e:"Please write in legible handwriting so the examiner can read your answers."},
+  {w:"leisure",d:"Free time; time when you are not working and can relax.",e:"She spent her leisure time painting and tending to her garden."},
+  {w:"lenient",d:"Not as strict or harsh as expected; tolerant.",e:"The teacher was lenient with the deadline because of the circumstances."},
+  {w:"liberal",d:"Open to new ideas and tolerant of others; generous with something.",e:"She had a liberal attitude to reading and allowed her pupils to choose any book."},
+  {w:"liberty",d:"Freedom from control or imprisonment; the right to do as you choose.",e:"The citizens protested for their liberty and right to vote."},
+  {w:"library",d:"A building or room where books and other resources are kept for people to use.",e:"She spent Saturday morning in the library, researching her history project."},
+  {w:"lightning",d:"A flash of bright light produced during a thunderstorm.",e:"A bolt of lightning lit up the entire sky for a brief, dazzling moment."},
+  {w:"limb",d:"An arm or leg; a large branch of a tree.",e:"The surgeon carefully examined the injured limb before deciding on treatment."},
+  {w:"linger",d:"To stay in a place longer than expected; to last longer than expected.",e:"The smell of fresh bread seemed to linger in the kitchen all morning."},
+  {w:"lodge",d:"To stay somewhere temporarily; a small house in the grounds of a larger one.",e:"They decided to lodge at a small inn at the edge of the village."},
+  {w:"lofty",d:"Very high; or having high moral standards or noble aims.",e:"The lofty spire of the cathedral could be seen from miles away."},
+  {w:"loneliness",d:"The state of feeling unhappy because you are alone or without friends.",e:"Moving to a new town can bring a deep sense of loneliness at first."},
+  {w:"loyalty",d:"The quality of being faithful and devoted to someone or something.",e:"The loyal dog showed its loyalty by waiting for its owner outside the hospital."},
+  {w:"majestic",d:"Impressively grand and beautiful.",e:"The majestic mountains rose above the clouds in the early morning light."},
+  {w:"margin",d:"The edge or border of something; the difference between two amounts.",e:"Please leave a margin on the left side of your page when you write."},
+  {w:"matte",d:"Having a dull surface with no shine.",e:"She preferred the matte finish of the photograph to a glossy one."},
+  {w:"maximum",d:"The greatest or highest amount possible.",e:"The maximum speed on this road is thirty miles per hour."},
+  {w:"meagre",d:"Very small in amount; not enough.",e:"The stranded travellers had to survive on a meagre supply of water and biscuits."},
+  {w:"meant",d:"Past tense of mean; intended to be or do something.",e:"The gift was meant as a kind gesture, even if it was unexpected."},
+  {w:"merchant",d:"A person who buys and sells goods, especially in large quantities.",e:"The merchant arrived at the market with a cart full of exotic spices."},
+  {w:"mercy",d:"Kindness shown to someone you have the power to punish or harm.",e:"The judge showed mercy to the young offender and gave a lighter sentence."},
+  {w:"meticulous",d:"Giving great attention to every detail; very careful and precise.",e:"She was meticulous in checking every answer before handing in her paper."},
+  {w:"minimum",d:"The smallest or lowest amount possible or allowed.",e:"The minimum age for the competition was eleven years old."},
+  {w:"mischief",d:"Playful behaviour that causes trouble or minor harm.",e:"The boys were full of mischief and had hidden their teacher's board rubber."},
+  {w:"moderate",d:"Not extreme; of medium amount or level.",e:"She had a moderate interest in science but a strong passion for art."},
+  {w:"modest",d:"Not boasting about your achievements; not large or showy.",e:"Despite winning the prize, he gave a modest speech thanking his teachers."},
+  {w:"moral",d:"Relating to right and wrong behaviour; having good values.",e:"The story had a clear moral: honesty always leads to a better outcome."},
+  {w:"mortal",d:"Unable to live forever; certain to die; extremely serious.",e:"The soldiers knew they faced a mortal danger as they approached the fortress."},
+  {w:"muscle",d:"A tissue in the body that produces movement when it contracts.",e:"Regular exercise helps to strengthen every muscle in your body."},
+  {w:"mysterious",d:"Difficult to understand or explain; full of mystery.",e:"A mysterious package arrived at the door with no name on the label."},
+  {w:"nauseous",d:"Feeling as if you are about to be sick.",e:"The winding mountain road made her feel nauseous and she asked to stop."},
+  {w:"neat",d:"Tidy and in good order; done with skill and precision.",e:"She had surprisingly neat handwriting for someone writing so quickly."},
+  {w:"necessary",d:"Needed in order for something to happen or exist.",e:"It is necessary to read the question carefully before you start answering it."},
+  {w:"nimble",d:"Quick and light in movement; able to think quickly and clearly.",e:"The nimble gymnast leapt across the beam without the slightest wobble."},
+  {w:"noted",d:"Well known and respected for a particular quality.",e:"The scientist was noted for her brilliant discoveries in the field of medicine."},
+  {w:"nuisance",d:"Something or someone that causes problems or annoyance.",e:"The barking dog next door had become quite a nuisance to the neighbours."},
+  {w:"oath",d:"A formal and solemn promise, often made before a court or authority.",e:"Before giving evidence, the witness took an oath to tell the truth."},
+  {w:"obey",d:"To do what you are told or what a rule requires.",e:"Citizens are expected to obey the laws of the country in which they live."},
+  {w:"obedience",d:"The fact of doing what you are told; compliance with rules.",e:"The dog showed perfect obedience at the training class."},
+  {w:"objection",d:"A reason given for disagreeing with or opposing something.",e:"She raised an objection to the plan because she felt it was unfair."},
+  {w:"obscure",d:"Not well known; difficult to understand; to make something harder to see.",e:"The poem was obscure and difficult to interpret without a lot of background knowledge."},
+  {w:"obstinate",d:"Stubbornly refusing to change your opinion or behaviour.",e:"Despite everyone's advice, he remained obstinate and refused to alter his plans."},
+  {w:"occupy",d:"To fill or take up a space or time; to live in a place.",e:"The books and papers seemed to occupy every surface in the small study."},
+  {w:"occur",d:"To happen; to come to mind.",e:"The accident was not expected to occur given all the safety measures in place."},
+  {w:"odour",d:"A smell, especially one that is unpleasant.",e:"A strange odour drifted in from the river on warm summer afternoons."},
+  {w:"offend",d:"To make someone feel upset or angry; to do something against the law.",e:"She did not mean to offend anyone with her comment about the painting."},
+  {w:"omen",d:"A sign of things to come, often thought to be a warning.",e:"Many people believed the dark clouds at dawn were an omen of bad luck."},
+  {w:"opportunity",d:"A chance to do something, especially something good.",e:"The talent show was a wonderful opportunity to showcase her singing ability."},
+  {w:"oppose",d:"To disagree with or be against something or someone.",e:"Many local residents decided to oppose the proposed new motorway."},
+  {w:"oppress",d:"To treat people cruelly and unfairly, denying their rights.",e:"Throughout history, tyrants have sought to oppress those who could not defend themselves."},
+  {w:"option",d:"A choice available to you.",e:"She had the option of studying French or Spanish in the second year."},
+  {w:"ordeal",d:"A very difficult or painful experience.",e:"The long wait in the hospital felt like quite an ordeal."},
+  {w:"origin",d:"The point where something began; where a person or thing comes from.",e:"The origin of the word 'adventure' can be traced back to Latin."},
+  {w:"painstaking",d:"Very careful and thorough; requiring a great deal of effort.",e:"Restoring the ancient manuscript was a painstaking task that took many months."},
+  {w:"parallel",d:"Lines that are the same distance apart at every point; a comparison between things.",e:"The two railway tracks ran parallel to each other all the way to the coast."},
+  {w:"parliament",d:"The group of elected representatives who make the laws of a country.",e:"The Members of Parliament debated the new education bill late into the night."},
+  {w:"passive",d:"Accepting what happens without taking action or resisting.",e:"She had a passive attitude to the argument, preferring not to get involved."},
+  {w:"peak",d:"The pointed top of a mountain; the highest point of something.",e:"They reached the peak of the mountain just as the sun was beginning to set."},
+  {w:"peculiar",d:"Strange or unusual; different from what is normal.",e:"There was a peculiar smell coming from the old chest in the attic."},
+  {w:"perceive",d:"To become aware of something through the senses; to think of something in a certain way.",e:"It can be hard to perceive colours accurately in very dim light."},
+  {w:"perilous",d:"Full of danger; very risky.",e:"The climbers faced a perilous descent as the fog thickened around them."},
+  {w:"perish",d:"To die suddenly, especially in a terrible way; to decay or be destroyed.",e:"Many crops had begun to perish in the heat of the unusually dry summer."},
+  {w:"permit",d:"To allow someone to do something; an official document giving permission.",e:"The sign stated that fishing was only allowed if you had a valid permit."},
+  {w:"perplexed",d:"Confused and unable to understand something.",e:"She was perplexed by the strange symbols written in the margin of the book."},
+  {w:"persuade",d:"To make someone agree to do something by giving them good reasons.",e:"He tried to persuade his parents to let him stay up late for the film."},
+  {w:"physical",d:"Relating to the body rather than the mind; relating to the material world.",e:"Regular physical activity is important for maintaining good health."},
+  {w:"pigment",d:"A substance that gives colour to something, such as paint or skin.",e:"Artists mix different pigments together to create the colours they need."},
+  {w:"pioneer",d:"One of the first people to explore or develop something new.",e:"Marie Curie was a pioneer of scientific research into radioactivity."},
+  {w:"pledge",d:"A serious promise or commitment to do something.",e:"She made a pledge to read at least one book every month throughout the year."},
+  {w:"plume",d:"A long feather; a tall column of smoke or water.",e:"A plume of white smoke rose from the chimney of the old stone cottage."},
+  {w:"plunge",d:"To jump or fall suddenly; to push something quickly into something else.",e:"He took a deep breath and plunged into the icy water of the lake."},
+  {w:"pompous",d:"Too impressed with your own importance; using overly grand language.",e:"The pompous official insisted on introducing himself with all his titles."},
+  {w:"poultry",d:"Chickens and other birds kept on a farm for their eggs and meat.",e:"The farmer kept a large flock of poultry in the yard behind his barn."},
+  {w:"precarious",d:"Not safe or certain; likely to fall or fail.",e:"The ladder was balanced in a precarious position against the old wall."},
+  {w:"prejudice",d:"An unfair opinion formed without knowing the facts, usually about a group of people.",e:"It is important to treat everyone fairly and to overcome prejudice."},
+  {w:"present",d:"Being in a place; something given as a gift; the current time.",e:"Every pupil was present for the final rehearsal of the school play."},
+  {w:"privilege",d:"A special right or advantage available only to certain people.",e:"Being chosen to represent the school was considered a great privilege."},
+  {w:"proclaim",d:"To announce something publicly and officially.",e:"The mayor stood on the steps of the town hall to proclaim the good news."},
+  {w:"procure",d:"To obtain something, especially with care or effort.",e:"It was difficult to procure the rare ingredient needed for the recipe."},
+  {w:"profession",d:"A job that requires special training or education.",e:"Teaching is a profession that demands both knowledge and great patience."},
+  {w:"profit",d:"Money gained after paying all costs; to benefit from something.",e:"The school fair made a healthy profit that went towards new books."},
+  {w:"programme",d:"A plan of activities; a booklet about a performance or event.",e:"She was given a programme as she entered the concert hall."},
+  {w:"prohibit",d:"To formally forbid something by law or rule.",e:"The new law would prohibit the sale of sugary drinks to children under twelve."},
+  {w:"prominent",d:"Important and well known; standing out so it is easily noticed.",e:"She played a prominent role in organising the school's charity event."},
+  {w:"promote",d:"To help something develop; to raise someone to a higher position.",e:"The campaign aimed to promote healthy eating among young people."},
+  {w:"prompt",d:"Done quickly and without delay; to encourage someone to do or say something.",e:"A prompt reply to the letter showed she was both organised and polite."},
+  {w:"pronunciation",d:"The way in which a word is spoken.",e:"The pronunciation of 'queue' confuses many learners of English."},
+  {w:"proportion",d:"The correct relationship between the sizes or amounts of parts of something.",e:"The proportion of boys to girls in the class was roughly equal."},
+  {w:"prosperous",d:"Successful financially; thriving.",e:"The prosperous merchant lived in the largest house on the high street."},
+  {w:"protein",d:"A substance found in food such as meat and eggs that is essential for growth.",e:"A diet rich in protein is important for building and repairing muscles."},
+  {w:"provoke",d:"To make someone react with anger or another strong emotion.",e:"He was careful not to provoke the guard dog as he passed the gate."},
+  {w:"public",d:"Relating to or available to all people; open to everyone.",e:"The decision was made available to the public after the council meeting."},
+  {w:"punctual",d:"Arriving or doing things at the expected or agreed time.",e:"She was always punctual and never kept anyone waiting."},
+  {w:"puncture",d:"A small hole in a tyre or other inflated object; to make such a hole.",e:"He discovered a puncture in his bicycle tyre just as he was leaving for school."},
+  {w:"purpose",d:"The reason for which something is done or exists.",e:"The purpose of the visit was to improve relations between the two schools."},
+  {w:"quaint",d:"Attractively unusual or old-fashioned.",e:"The quaint little cottage by the stream looked as if it belonged in a fairy tale."},
+  {w:"quell",d:"To put an end to something by using force or authority.",e:"The teacher managed to quell the noise in the corridor with a single look."},
+  {w:"quench",d:"To satisfy your thirst by drinking; to put out a fire.",e:"After the long hike, nothing could quench their thirst like cold water."},
+  {w:"queue",d:"A line of people or vehicles waiting their turn.",e:"There was a long queue outside the cinema for the opening night of the film."},
+  {w:"quiet",d:"Making little or no noise; calm and peaceful.",e:"The library was so quiet that she could hear the clock ticking on the wall."},
+  {w:"quite",d:"To a certain degree; fairly; completely.",e:"The journey was quite long, but the scenery made it worthwhile."},
+  {w:"quiver",d:"To tremble slightly; a case for carrying arrows.",e:"Her lip began to quiver as she tried not to cry when saying goodbye."},
+  {w:"ramble",d:"To walk for pleasure without a fixed route; to talk at length without a clear point.",e:"They spent Sunday morning on a gentle ramble through the countryside."},
+  {w:"rare",d:"Not common; occurring infrequently; (of meat) lightly cooked.",e:"A sighting of a white stag is an extremely rare and remarkable event."},
+  {w:"really",d:"In actual fact; used to emphasise a statement.",e:"She was really looking forward to the school trip to the museum."},
+  {w:"receive",d:"To be given or presented with something.",e:"He was thrilled to receive a first-place certificate in the art competition."},
+  {w:"recite",d:"To say something aloud from memory, especially a poem or passage.",e:"She had practised every evening and could now recite the whole poem without pausing."},
+  {w:"recognise",d:"To identify someone or something from past experience; to acknowledge.",e:"She was pleased to recognise her favourite author at the book signing event."},
+  {w:"recommend",d:"To suggest something as a good choice; to praise something to others.",e:"The librarian was happy to recommend her favourite novels to young readers."},
+  {w:"refer",d:"To mention or direct attention to something; to go to a source for information.",e:"Please refer to page forty-five for the list of key vocabulary."},
+  {w:"referee",d:"A person who watches a game and ensures the rules are followed.",e:"The referee blew the whistle when the ball went out of bounds."},
+  {w:"release",d:"To set something or someone free; to make something available to the public.",e:"The scientist chose to release the trapped bird gently back into the wild."},
+  {w:"relevant",d:"Closely connected to and important for the subject being discussed.",e:"Please only include information that is relevant to the question being asked."},
+  {w:"repent",d:"To feel deep regret for something wrong you have done.",e:"She began to repent her harsh words as soon as she had spoken them."},
+  {w:"reprimand",d:"To tell someone officially that their behaviour is wrong.",e:"The teacher had to reprimand the class for talking during the exam."},
+  {w:"reserve",d:"To keep something for a particular person or purpose; a supply kept for later.",e:"She decided to reserve her energy for the final lap of the race."},
+  {w:"reside",d:"To live in a particular place.",e:"The family chose to reside in a small village outside the city."},
+  {w:"residence",d:"The place where someone lives.",e:"The president's official residence is one of the most famous buildings in the country."},
+  {w:"resign",d:"To officially leave a job or position.",e:"The manager announced he would resign at the end of the season."},
+  {w:"resolve",d:"To find a solution to a problem; to decide firmly to do something.",e:"The two neighbours managed to resolve their dispute without going to court."},
+  {w:"restaurant",d:"A place where you pay to sit down and eat a meal.",e:"For her birthday, she chose to go to a small Italian restaurant in the town centre."},
+  {w:"restore",d:"To return something to its original condition; to bring something back.",e:"It took three years of careful work to restore the ancient painting."},
+  {w:"restrain",d:"To hold back someone or something; to prevent action.",e:"She had to restrain herself from laughing during the serious ceremony."},
+  {w:"retain",d:"To keep or continue to have something.",e:"She managed to retain all the information from her notes on the day of the exam."},
+  {w:"retreat",d:"To move back from a dangerous situation; a quiet place for rest.",e:"The army was forced to retreat when faced with the larger enemy force."},
+  {w:"reveal",d:"To make something known or visible that was previously hidden.",e:"At the end of the story, the author reveals the true identity of the villain."},
+  {w:"rhyme",d:"Words that end with the same sound; a short poem using such words.",e:"She enjoyed writing a rhyme for her younger sister's birthday card."},
+  {w:"ridiculous",d:"So silly or unreasonable that it deserves to be laughed at.",e:"It would be ridiculous to walk to school in this kind of thunderstorm."},
+  {w:"rigid",d:"Unable to bend or be changed; very strict.",e:"The rigid spine of the old book cracked when she opened it too wide."},
+  {w:"roam",d:"To walk or travel without a fixed destination.",e:"The deer would roam freely across the hills and valleys of the national park."},
+  {w:"robust",d:"Strong and healthy; able to withstand difficult conditions.",e:"A robust immune system helps the body fight off infections more effectively."},
+  {w:"rogue",d:"A person who behaves in a dishonest or mischievous way; acting independently.",e:"The rogue trader had been selling fake antiques for several years."},
+  {w:"rowdy",d:"Noisy and causing trouble; disorderly.",e:"A group of rowdy supporters celebrated loudly outside the stadium."},
+  {w:"rural",d:"Relating to the countryside rather than the town or city.",e:"She had grown up in a rural area where cows and sheep were common sights."},
+  {w:"sacred",d:"Considered holy or deserving great respect.",e:"The ancient temple was a sacred site visited by pilgrims from across the world."},
+  {w:"sacrifice",d:"To give up something valuable for the sake of something more important.",e:"She was willing to sacrifice her free time to help her friend revise."},
+  {w:"save",d:"To rescue someone from danger; to keep money for later; to avoid wasting.",e:"The lifeguard managed to save the swimmer who had drifted too far from shore."},
+  {w:"sanitary",d:"Free from germs and clean enough to prevent disease.",e:"The inspector was pleased to find that the kitchen was in a sanitary condition."},
+  {w:"score",d:"The number of points gained in a game; to gain a point or goal.",e:"She was delighted to score full marks on her maths test for the first time."},
+  {w:"scripture",d:"Sacred texts, especially from the Bible.",e:"The priest read a passage of scripture before beginning his sermon."},
+  {w:"secretary",d:"A person who manages correspondence and schedules for someone important.",e:"The school secretary greeted every visitor with a smile at the front desk."},
+  {w:"secure",d:"Safe from danger or threat; firmly fastened.",e:"Make sure all the windows and doors are secure before you leave the house."},
+  {w:"seize",d:"To grab something suddenly and firmly; to take control of something by force.",e:"The officer moved quickly to seize the stolen items before they could be moved."},
+  {w:"seldom",d:"Not often; rarely.",e:"She seldom missed a lesson and was known for her excellent attendance."},
+  {w:"separate",d:"To divide into parts; not joined; independent from something else.",e:"She had to separate the tangled threads before she could continue sewing."},
+  {w:"sermon",d:"A speech on a religious or moral topic, usually given in a church.",e:"The vicar delivered a short but memorable sermon about kindness."},
+  {w:"shoulder",d:"The joint between the arm and the body; to take on responsibility.",e:"He had to shoulder the responsibility of leading the group on his own."},
+  {w:"shrine",d:"A holy place connected to a saint or religious figure.",e:"Thousands of pilgrims visited the shrine each year to offer their prayers."},
+  {w:"signature",d:"A person's name written in their own handwriting; a distinctive mark.",e:"She practised her signature carefully before signing the important document."},
+  {w:"sincere",d:"Truly meaning what you say; genuine and honest.",e:"His apology seemed sincere, and everyone accepted it without hesitation."},
+  {w:"sincerely",d:"In a truthful and genuine way.",e:"She sincerely hoped that all her friends would have a wonderful holiday."},
+  {w:"sleek",d:"Smooth and shiny; stylish and elegant.",e:"The sleek sports car gleamed under the bright showroom lights."},
+  {w:"sly",d:"Cunning and secretive, especially in a dishonest way.",e:"The sly fox waited patiently until the farmer had gone inside before approaching the chickens."},
+  {w:"soldier",d:"A member of an army.",e:"The soldier stood to attention and saluted as the general walked past."},
+  {w:"sow",d:"To plant seeds in the ground; a female pig.",e:"Every spring, the farmer would sow seeds in the freshly ploughed fields."},
+  {w:"special",d:"Better or different from the usual; particularly important.",e:"She kept all the letters from her grandmother in a special box on her shelf."},
+  {w:"stem",d:"The main stalk of a plant; to stop something from happening or spreading.",e:"The volunteers worked hard to stem the spread of the wildfire."},
+  {w:"stomach",d:"The organ in the body where food is digested; to be able to accept something difficult.",e:"She had butterflies in her stomach just before she walked onto the stage."},
+  {w:"stoop",d:"To bend the upper body forward and downward; to lower your standards.",e:"He had to stoop to enter the low doorway of the ancient cottage."},
+  {w:"stout",d:"Solidly built; brave and determined.",e:"The stout wooden door stood firm despite the force of the storm outside."},
+  {w:"stretched",d:"Made longer or wider; extended to full length.",e:"She stretched out her arms and yawned after the long car journey."},
+  {w:"stubborn",d:"Refusing to change your opinion or do what others want.",e:"She was so stubborn that she refused to ask for help even when she was lost."},
+  {w:"sturdy",d:"Strong and solidly built; unlikely to fall or break.",e:"The sturdy oak table had survived in the family for three generations."},
+  {w:"subdued",d:"Quiet and without much energy or enthusiasm; not bright.",e:"The mood in the room was subdued after the disappointing announcement."},
+  {w:"submissive",d:"Willing to give in to others and do what they want.",e:"The submissive pupil agreed with everything the group suggested."},
+  {w:"submit",d:"To accept the authority of someone; to present something formally.",e:"Please submit your completed essay to the teacher by Friday afternoon."},
+  {w:"subterfuge",d:"Deceit used to achieve a goal.",e:"The spy used subterfuge to gain access to the secret documents."},
+  {w:"subtropical",d:"Relating to the regions just outside the tropics, which have a warm climate.",e:"The botanical garden had a section dedicated to subtropical plants."},
+  {w:"successful",d:"Having achieved what you wanted to achieve.",e:"After months of revision, she was finally successful in her entrance exam."},
+  {w:"succumb",d:"To give in to something, such as illness, temptation, or pressure.",e:"She was determined not to succumb to the pressure of the approaching deadline."},
+  {w:"sufficient",d:"Enough for a particular purpose.",e:"She had sufficient time to read the passage twice before answering the questions."},
+  {w:"suggest",d:"To put forward an idea for someone to consider.",e:"The teacher asked the class to suggest topics for their end-of-term project."},
+  {w:"summit",d:"The highest point of a mountain; a meeting between leaders.",e:"They celebrated reaching the summit with a photograph and a piece of chocolate."},
+  {w:"superior",d:"Higher in quality, rank, or importance than something else.",e:"Her second essay was clearly superior to her first in both structure and vocabulary."},
+  {w:"supposed",d:"Generally believed to be the case; required to do something.",e:"You are supposed to be in class, so why are you in the corridor?"},
+  {w:"surprise",d:"An unexpected event; the feeling caused by something unexpected.",e:"The party was a complete surprise — she had no idea her friends were waiting inside."},
+  {w:"suspect",d:"To think something is likely; a person thought to have committed a crime.",e:"The detective began to suspect that the key witness was not telling the whole truth."},
+  {w:"suspend",d:"To hang from above; to stop something temporarily; to ban someone.",e:"The school had to suspend the trip due to the severe weather warning."},
+  {w:"system",d:"A set of connected things or parts working together as a whole.",e:"A good filing system makes it much easier to find documents quickly."},
+  {w:"temperate",d:"Having a mild climate with moderate temperatures.",e:"Britain has a temperate climate, with cool summers and mild winters."},
+  {w:"temperature",d:"The measurement of how hot or cold something is.",e:"The temperature dropped sharply overnight, leaving frost on the grass by morning."},
+  {w:"temptation",d:"The desire to do something, especially something you know is wrong.",e:"She resisted the temptation to peek at the answers before the test began."},
+  {w:"thrust",d:"To push something with force.",e:"He thrust the key into the lock and turned it quickly."},
+  {w:"tolerable",d:"Able to be accepted, even if not pleasant; fairly good.",e:"The journey was long but tolerable, as the scenery was beautiful throughout."},
+  {w:"tolerably",d:"In an acceptable but not outstanding way.",e:"The student coped tolerably well with the difficult maths questions."},
+  {w:"toleration",d:"The willingness to accept something different or unpleasant without complaint.",e:"Life in a shared dormitory requires a great deal of toleration and compromise."},
+  {w:"tomorrow",d:"The day after today.",e:"She decided to finish the final chapter tomorrow after a good night's sleep."},
+  {w:"torment",d:"Severe physical or mental suffering; to cause such suffering to someone.",e:"The loud noise outside was a torment for anyone trying to concentrate."},
+  {w:"traitor",d:"A person who betrays their country, friends, or principles.",e:"In the play, the most shocking moment was when the trusted adviser revealed himself as a traitor."},
+  {w:"tranquil",d:"Calm, quiet, and peaceful.",e:"The tranquil lake reflected the mountains perfectly on a still morning."},
+  {w:"transference",d:"The process of moving or transferring something from one place to another.",e:"The transference of skills from one subject to another is important in education."},
+  {w:"transferral",d:"The act of moving something or someone to a different place or group.",e:"The transferral of the documents to the archive was completed smoothly."},
+  {w:"trivial",d:"Of very little importance or value.",e:"She tried not to waste time on trivial details when there was so much else to do."},
+  {w:"turbulent",d:"Full of sudden changes, confusion, or violence.",e:"The plane went through a patch of turbulent air and wobbled sharply."},
+  {w:"twelfth",d:"Coming after the eleventh in order; written as 12th.",e:"She finished in twelfth place in the regional swimming championship."},
+  {w:"twilight",d:"The soft light just after sunset or before sunrise.",e:"They sat outside in the twilight, listening to the birds settle in the trees."},
+  {w:"tyrant",d:"A ruler who uses power in a cruel and unfair way.",e:"The people of the kingdom had grown tired of living under the tyrant's harsh rule."},
+  {w:"unfathomable",d:"Too deep or complex to be fully understood.",e:"The universe is so large that its true size is almost unfathomable."},
+  {w:"uniform",d:"Clothing worn by members of an organisation; always the same.",e:"The pupils straightened their uniform before lining up for the school photograph."},
+  {w:"union",d:"The act of joining things together; an organised group of workers.",e:"The two schools formed a union to share resources and run joint events."},
+  {w:"unite",d:"To come together or bring people together for a common purpose.",e:"A shared goal can unite even the most different groups of people."},
+  {w:"unnecessary",d:"Not needed; more than what is required.",e:"She removed all unnecessary words from her essay to make it crisper."},
+  {w:"unsurpassed",d:"Better than everyone or everything else; without equal.",e:"Her dedication to her craft was unsurpassed by anyone else in the class."},
+  {w:"vacant",d:"Empty and available; not occupied; showing no intelligence or expression.",e:"The seat at the end of the row was vacant, so she sat down quickly."},
+  {w:"vanished",d:"Disappeared suddenly and completely.",e:"By the time they reached the clearing, the deer had vanished into the trees."},
+  {w:"vapour",d:"Moisture in the form of a gas; water that has evaporated.",e:"In the cold morning air, you could see the vapour of your breath in front of you."},
+  {w:"variety",d:"Several different types of the same thing; diversity.",e:"The market offered a wonderful variety of fresh fruit and vegetables."},
+  {w:"vast",d:"Extremely large in area, amount, or degree.",e:"The explorer looked out over the vast expanse of the Sahara Desert."},
+  {w:"vehicle",d:"A machine used for transporting people or goods, such as a car or lorry.",e:"Any vehicle over three tonnes is not allowed on this narrow bridge."},
+  {w:"veil",d:"A piece of thin material worn over the face; something that hides the truth.",e:"A thick veil of mist had settled over the valley by early morning."},
+  {w:"ventilation",d:"The movement of fresh air into an enclosed space.",e:"The hospital ward had good ventilation to prevent the spread of infection."},
+  {w:"vessel",d:"A ship or large boat; a container for liquids; a tube in the body.",e:"The ancient vessel was discovered at the bottom of the harbour after centuries."},
+  {w:"volatile",d:"Likely to change rapidly and unpredictably; quick to become angry or violent.",e:"The situation remained volatile and could change at any moment."},
+  {w:"wasteful",d:"Using more of something than is necessary; not careful with resources.",e:"Leaving lights on in empty rooms is a wasteful use of electricity."},
+  {w:"weary",d:"Very tired, especially after a long effort.",e:"After hours of revision, she felt weary and decided to take a short break."},
+  {w:"weird",d:"Strange and unusual, in a way that is difficult to explain.",e:"There was a weird humming sound coming from behind the old grandfather clock."},
+  {w:"wholesome",d:"Good for you in body or mind; morally good and healthy.",e:"A wholesome meal of vegetables and lean protein is a great way to end the day."},
+  {w:"wholly",d:"Completely and entirely.",e:"She was wholly committed to improving her reading speed before the exam."},
+  {w:"wither",d:"To become dry and shrivelled; to make someone feel embarrassed.",e:"Without enough water, the plants in the window box began to wither and die."},
+  {w:"wound",d:"An injury to the body; to hurt someone's feelings deeply.",e:"The nurse carefully cleaned and dressed the wound on his arm."},
+  {w:"wretched",d:"Feeling very unhappy or of very bad quality.",e:"The wretched weather made everyone feel gloomy and reluctant to go outside."},
+  {w:"yacht",d:"A large sailing boat or motor boat used for pleasure trips.",e:"The gleaming white yacht was moored in the harbour throughout the summer."},
+  {w:"yield",d:"To produce or provide something; to give way to pressure or argument.",e:"The orchard was expected to yield a large crop of apples this autumn."},
+];
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+let deck = [...WORDS];
+let filteredDeck = [...WORDS];
+let letterFrom = 'A';
+let letterTo   = 'Z';
+let currentIndex = 0;
+let knownSet = new Set(JSON.parse(localStorage.getItem('known11plus') || '[]'));
+let shuffled = false;
+let mode = 'study';
+
+// Quiz state
+let quizDeck = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizWrong = 0;
+let quizMissed = [];
+let quizAnswered = false;
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY
+// ═══════════════════════════════════════════════════════════════
+function wordsInRange() {
+  return WORDS.filter(w => {
+    const c = w.w[0].toUpperCase();
+    return c >= letterFrom && c <= letterTo;
+  });
+}
+
+function resetLetterRange() {
+  document.getElementById('letter-from').value = presentLetters[0];
+  document.getElementById('letter-to').value   = presentLetters[presentLetters.length - 1];
+  applyLetterRange();
+}
+
+function applyLetterRange() {
+  letterFrom = document.getElementById('letter-from').value;
+  letterTo   = document.getElementById('letter-to').value;
+  // Ensure from <= to
+  if (letterFrom > letterTo) {
+    document.getElementById('letter-to').value = letterFrom;
+    letterTo = letterFrom;
+  }
+  const inRange = wordsInRange();
+  document.getElementById('range-info').textContent = inRange.length + ' word' + (inRange.length !== 1 ? 's' : '');
+  applyFilter();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function saveKnown() {
+  localStorage.setItem('known11plus', JSON.stringify([...knownSet]));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODE SWITCHING
+// ═══════════════════════════════════════════════════════════════
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && m==='study') || (i===1 && m==='learn') || (i===2 && m==='quiz'));
+  });
+  document.getElementById('study-section').style.display = m==='study' ? 'block' : 'none';
+  document.getElementById('learn-section').style.display = m==='learn' ? 'block' : 'none';
+  document.getElementById('quiz-section').style.display  = m==='quiz'  ? 'block' : 'none';
+  if (m === 'quiz') startQuiz();
+  if (m === 'learn') renderLearnList();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STUDY MODE
+// ═══════════════════════════════════════════════════════════════
+function applyFilter() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const base = wordsInRange();
+  filteredDeck = q ? base.filter(w => w.w.toLowerCase().includes(q)) : base;
+  if (shuffled) filteredDeck = shuffle(filteredDeck);
+  currentIndex = 0;
+  renderCard();
+}
+
+function toggleShuffle() {
+  shuffled = document.getElementById('shuffle-toggle').checked;
+  if (shuffled) filteredDeck = shuffle(filteredDeck);
+  else {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    const base = wordsInRange();
+    filteredDeck = q ? base.filter(w => w.w.toLowerCase().includes(q)) : base;
+  }
+  currentIndex = 0;
+  renderCard();
+}
+
+function getActiveDeck() {
+  const skipKnown = document.getElementById('skip-toggle').checked;
+  return skipKnown ? filteredDeck.filter(w => !knownSet.has(w.w)) : filteredDeck;
+}
+
+function renderCard() {
+  const active = getActiveDeck();
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+
+  if (active.length === 0) {
+    document.getElementById('card-word').textContent = '🎉 All known!';
+    document.getElementById('card-pos').textContent = '';
+    document.getElementById('card-def').textContent = 'You know every word in this deck!';
+    document.getElementById('card-ex').textContent = 'Reset or turn off "Skip known" to review again.';
+    document.getElementById('known-badge').style.display = 'none';
+    updateProgress(0, 0);
+    return;
+  }
+
+  if (currentIndex >= active.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = active.length - 1;
+
+  const entry = active[currentIndex];
+  document.getElementById('card-word').textContent = entry.w;
+  document.getElementById('card-pos').textContent = '';
+  document.getElementById('card-def').textContent = entry.d;
+  document.getElementById('card-ex').textContent  = entry.e;
+  document.getElementById('known-badge').style.display = knownSet.has(entry.w) ? 'block' : 'none';
+
+  updateProgress(currentIndex + 1, active.length);
+  document.getElementById('nav-counter').textContent = `${currentIndex + 1} / ${active.length}`;
+
+  // stats
+  document.getElementById('stat-known').textContent = knownSet.size;
+  document.getElementById('stat-remaining').textContent = WORDS.length - knownSet.size;
+}
+
+function updateProgress(cur, total) {
+  const pct = total ? Math.round((cur / total) * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = total ? `Card ${cur} of ${total}` : 'No cards';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+function flipCard() {
+  document.getElementById('flashcard').classList.toggle('flipped');
+}
+
+function navigate(dir) {
+  const active = getActiveDeck();
+  currentIndex = (currentIndex + dir + active.length) % active.length;
+  renderCard();
+}
+
+function markKnown() {
+  const active = getActiveDeck();
+  if (!active.length) return;
+  const entry = active[currentIndex];
+  if (knownSet.has(entry.w)) {
+    knownSet.delete(entry.w);
+  } else {
+    knownSet.add(entry.w);
+    // auto-advance
+    if (getActiveDeck().length > 1) {
+      const newActive = getActiveDeck();
+      if (currentIndex >= newActive.length) currentIndex = 0;
+    }
+  }
+  saveKnown();
+  renderCard();
+}
+
+function resetKnown() {
+  if (!confirm('Reset all "Known" marks?')) return;
+  knownSet.clear();
+  saveKnown();
+  renderCard();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// QUIZ MODE
+// ═══════════════════════════════════════════════════════════════
+function startQuiz() {
+  document.getElementById('finish-screen').classList.remove('visible');
+  document.getElementById('quiz-active').style.display = '';
+
+  const onlyUnknown = document.getElementById('q-unknown-only').checked;
+  const base = wordsInRange();
+  const pool = onlyUnknown ? base.filter(w => !knownSet.has(w.w)) : base;
+  const count = Math.min(parseInt(document.getElementById('q-count-select').value), pool.length);
+
+  quizDeck = shuffle(pool).slice(0, count);
+  quizIndex = 0;
+  quizScore = 0;
+  quizWrong = 0;
+  quizMissed = [];
+
+  updateQuizStats();
+  renderQuestion();
+}
+
+function updateQuizStats() {
+  document.getElementById('q-score').textContent = quizScore;
+  document.getElementById('q-wrong-count').textContent = quizWrong;
+  document.getElementById('q-remaining').textContent = quizDeck.length - quizIndex;
+  const pct = quizDeck.length ? Math.round((quizIndex / quizDeck.length) * 100) : 0;
+  document.getElementById('q-progress-fill').style.width = pct + '%';
+  document.getElementById('q-progress-text').textContent = `Question ${Math.min(quizIndex+1, quizDeck.length)} of ${quizDeck.length}`;
+  document.getElementById('q-progress-pct').textContent = pct + '%';
+}
+
+// Pick question type for each card: 1, 2, or 3 (weighted equally when all enabled)
+function pickQType() {
+  const enabled = [];
+  if (document.getElementById('qt1').checked) enabled.push(1);
+  if (document.getElementById('qt2').checked) enabled.push(2);
+  if (document.getElementById('qt3').checked) enabled.push(3);
+  if (!enabled.length) enabled.push(1);
+  return enabled[Math.floor(Math.random() * enabled.length)];
+}
+
+function renderQuestion() {
+  quizAnswered = false;
+  const entry = quizDeck[quizIndex];
+  const qtype = pickQType();
+
+  // Reset UI
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'quiz-feedback';
+  document.getElementById('q-next-btn').disabled = true;
+  document.getElementById('options-grid').innerHTML = '';
+  document.getElementById('fill-wrap').style.display = 'none';
+  document.getElementById('options-grid').style.display = '';
+  document.getElementById('q-word').style.display = 'none';
+  document.getElementById('q-sentence-wrap').style.display = 'none';
+
+  const badge = document.getElementById('q-type-badge');
+
+  if (qtype === 1) {
+    // ── Type 1: show the WORD → pick the correct DEFINITION ──
+    badge.textContent = '📖 What does this word mean?';
+    badge.style.background = '#ede9ff'; badge.style.color = '#5b21b6';
+    document.getElementById('q-instruction').textContent = 'Choose the correct definition:';
+    document.getElementById('q-word').textContent = entry.w;
+    document.getElementById('q-word').style.display = 'block';
+
+    const pool = wordsInRange();
+    const others = shuffle(pool.filter(w => w.w !== entry.w)).slice(0, 3);
+    const options = shuffle([entry, ...others]);
+    const grid = document.getElementById('options-grid');
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = opt.d;
+      btn.onclick = () => resolveMultiChoice(opt.w === entry.w, entry, btn, 'def');
+      grid.appendChild(btn);
+    });
+
+  } else if (qtype === 2) {
+    // ── Type 2: show the DEFINITION → pick the correct WORD ──
+    badge.textContent = '🔤 Which word matches this meaning?';
+    badge.style.background = '#fce7f3'; badge.style.color = '#9d174d';
+    document.getElementById('q-instruction').textContent = 'Choose the correct word:';
+    document.getElementById('q-word').textContent = entry.d;
+    document.getElementById('q-word').style.display = 'block';
+    document.getElementById('q-word').style.fontSize = '1.1rem';
+
+    const pool = wordsInRange();
+    const others = shuffle(pool.filter(w => w.w !== entry.w)).slice(0, 3);
+    const options = shuffle([entry, ...others]);
+    const grid = document.getElementById('options-grid');
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = opt.w;
+      btn.onclick = () => resolveMultiChoice(opt.w === entry.w, entry, btn, 'word');
+      grid.appendChild(btn);
+    });
+
+  } else {
+    // ── Type 3: fill in the blank ──
+    badge.textContent = '✏️ Fill in the blank';
+    badge.style.background = '#d1fae5'; badge.style.color = '#065f46';
+    document.getElementById('q-instruction').textContent = 'Type the missing word in the sentence:';
+    document.getElementById('options-grid').style.display = 'none';
+
+    // Replace the word in the example sentence with a blank
+    const blank = '_______';
+    const regex = new RegExp('\\b' + entry.w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+    const masked = entry.e.replace(regex, blank);
+    document.getElementById('q-sentence').textContent = masked;
+    document.getElementById('q-sentence-wrap').style.display = 'block';
+    document.getElementById('fill-wrap').style.display = 'block';
+    const inp = document.getElementById('fill-input');
+    inp.value = '';
+    inp.style.borderColor = '#dde0ff';
+    setTimeout(() => inp.focus(), 50);
+  }
+
+  // Reset word font size (may have been changed for type 2)
+  if (qtype !== 2) document.getElementById('q-word').style.fontSize = '';
+
+  updateQuizStats();
+}
+
+function resolveMultiChoice(correct, entry, clickedBtn, mode) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const buttons = document.querySelectorAll('.option');
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    const isCorrect = mode === 'def' ? btn.textContent === entry.d : btn.textContent === entry.w;
+    if (isCorrect) btn.classList.add('correct');
+  });
+
+  const feedback = document.getElementById('quiz-feedback');
+  if (correct) {
+    quizScore++;
+    clickedBtn.classList.add('correct');
+    feedback.textContent = '✓ Correct! Well done!';
+    feedback.className = 'quiz-feedback';
+  } else {
+    quizWrong++;
+    clickedBtn.classList.add('wrong');
+    quizMissed.push(entry);
+    const hint = mode === 'def' ? `The answer is: "${entry.d}"` : `The answer is: "${entry.w}"`;
+    feedback.textContent = '✗ Not quite — ' + hint;
+    feedback.className = 'quiz-feedback wrong';
+  }
+  updateQuizStats();
+  document.getElementById('q-next-btn').disabled = false;
+}
+
+function submitFill() {
+  if (quizAnswered) return;
+  const inp = document.getElementById('fill-input');
+  const typed = inp.value.trim().toLowerCase();
+  if (!typed) return;
+
+  quizAnswered = true;
+  const entry = quizDeck[quizIndex];
+  const correct = typed === entry.w.toLowerCase();
+
+  const feedback = document.getElementById('quiz-feedback');
+  inp.disabled = true;
+
+  if (correct) {
+    quizScore++;
+    inp.style.borderColor = '#2a7a5a';
+    inp.style.background = '#d4f5e9';
+    feedback.textContent = '✓ Correct! Well done!';
+    feedback.className = 'quiz-feedback';
+  } else {
+    quizWrong++;
+    quizMissed.push(entry);
+    inp.style.borderColor = 'var(--secondary)';
+    inp.style.background = '#fde8ef';
+    feedback.textContent = `✗ The answer is "${entry.w}".`;
+    feedback.className = 'quiz-feedback wrong';
+  }
+  updateQuizStats();
+  document.getElementById('q-next-btn').disabled = false;
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex >= quizDeck.length) {
+    showFinish();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showFinish() {
+  document.getElementById('quiz-active').style.display = 'none';
+  const fs = document.getElementById('finish-screen');
+  fs.classList.add('visible');
+
+  const total = quizDeck.length;
+  const pct = Math.round((quizScore / total) * 100);
+
+  let emoji = '🌟', title = 'Brilliant!';
+  if (pct < 50) { emoji = '📚'; title = 'Keep practising!'; }
+  else if (pct < 70) { emoji = '👍'; title = 'Good effort!'; }
+  else if (pct < 90) { emoji = '🎉'; title = 'Well done!'; }
+  else { emoji = '🏆'; title = 'Excellent work!'; }
+
+  document.getElementById('finish-emoji').textContent = emoji;
+  document.getElementById('finish-title').textContent = title;
+  document.getElementById('finish-score').textContent = `You scored ${quizScore} out of ${total} (${pct}%)`;
+
+  const missedEl = document.getElementById('missed-list');
+  if (quizMissed.length) {
+    missedEl.innerHTML = `<h3>Words to review (${quizMissed.length}):</h3>`;
+    quizMissed.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'missed-item';
+      div.innerHTML = `<strong>${m.w}</strong><br>${m.d}<br><em>"${m.e}"</em>`;
+      missedEl.appendChild(div);
+    });
+  } else {
+    missedEl.innerHTML = '<h3 style="color:var(--accent)">🌟 You got every question right!</h3>';
+  }
+
+  updateQuizStats();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEARN MODE
+// ═══════════════════════════════════════════════════════════════
+function renderLearnList() {
+  const q = document.getElementById('learn-search').value.trim().toLowerCase();
+  const knownOnly = document.getElementById('learn-known-only').checked;
+  const hideKnown = document.getElementById('learn-hide-known').checked;
+
+  let words = wordsInRange();
+  if (q) words = words.filter(w => w.w.toLowerCase().includes(q) || w.d.toLowerCase().includes(q));
+  if (knownOnly) words = words.filter(w => knownSet.has(w.w));
+  if (hideKnown) words = words.filter(w => !knownSet.has(w.w));
+
+  document.getElementById('learn-count').textContent = words.length + ' word' + (words.length !== 1 ? 's' : '');
+
+  const list = document.getElementById('learn-list');
+  list.innerHTML = '';
+
+  if (words.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;">No words match your filters.</div>';
+    return;
+  }
+
+  let lastLetter = '';
+  words.forEach(entry => {
+    const letter = entry.w[0].toUpperCase();
+    if (letter !== lastLetter) {
+      lastLetter = letter;
+      const div = document.createElement('div');
+      div.className = 'learn-letter-divider';
+      div.textContent = letter;
+      list.appendChild(div);
+    }
+
+    const known = knownSet.has(entry.w);
+    const item = document.createElement('div');
+    item.className = 'learn-item' + (known ? ' is-known' : '');
+    item.id = 'learn-item-' + entry.w;
+    item.innerHTML = `
+      <div>
+        <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
+        <button class="learn-mark-btn ${known ? 'known' : ''}" onclick="learnToggleKnown('${entry.w}')">${known ? '✓ Known' : 'Mark known'}</button>
+      </div>
+      <div class="learn-right">
+        <div class="learn-def">${entry.d}</div>
+        <div class="learn-ex">${entry.e}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+function learnToggleKnown(word) {
+  if (knownSet.has(word)) knownSet.delete(word);
+  else knownSet.add(word);
+  saveKnown();
+  // Re-render only if a filter depends on known state, else just update the row
+  const knownOnly = document.getElementById('learn-known-only').checked;
+  const hideKnown = document.getElementById('learn-hide-known').checked;
+  if (knownOnly || hideKnown) {
+    renderLearnList();
+  } else {
+    const known = knownSet.has(word);
+    const item = document.getElementById('learn-item-' + word);
+    if (!item) return;
+    item.className = 'learn-item' + (known ? ' is-known' : '');
+    const wordEl = item.querySelector('.learn-word');
+    wordEl.innerHTML = word + (known ? '<span class="learn-known-dot" title="Known"></span>' : '');
+    const btn = item.querySelector('.learn-mark-btn');
+    btn.className = 'learn-mark-btn' + (known ? ' known' : '');
+    btn.textContent = known ? '✓ Known' : 'Mark known';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// KEYBOARD NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (mode !== 'study') return;
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   navigate(-1);
+  if (e.key === ' ' || e.key === 'Enter') flipCard();
+  if (e.key === 'k' || e.key === 'K') markKnown();
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+
+// Build letter dropdowns from letters actually present in the word list
+const presentLetters = [...new Set(WORDS.map(w => w.w[0].toUpperCase()))].sort();
+['letter-from', 'letter-to'].forEach((id, i) => {
+  const sel = document.getElementById(id);
+  presentLetters.forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = l;
+    if ((i === 0 && l === presentLetters[0]) || (i === 1 && l === presentLetters[presentLetters.length - 1]))
+      opt.selected = true;
+    sel.appendChild(opt);
+  });
+});
+document.getElementById('range-info').textContent = WORDS.length + ' words';
+
+renderCard();
+document.getElementById('stat-total').textContent = WORDS.length;
+document.getElementById('stat-known').textContent = knownSet.size;
+document.getElementById('stat-remaining').textContent = WORDS.length - knownSet.size;
+</script>
+</body>
+</html>
