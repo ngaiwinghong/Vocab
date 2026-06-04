@@ -940,12 +940,21 @@
           <!-- Word range -->
           <div>
             <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Word range</div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
               <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">From</span>
               <select id="q-letter-from" onchange="updateSetupRange()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
               <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">to</span>
               <select id="q-letter-to" onchange="updateSetupRange()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
               <div style="font-size:0.78rem;font-weight:800;color:var(--gray-400);background:var(--gray-100);padding:5px 12px;border-radius:99px;" id="q-setup-count">500 words</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;color:var(--gray-600);cursor:pointer;">
+                <input type="checkbox" id="q-limit-toggle" onchange="updateSetupRange()" style="accent-color:var(--green);width:15px;height:15px;">
+                First
+              </label>
+              <input type="number" id="q-limit-count" value="15" min="1" max="500" onchange="updateSetupRange()" disabled
+                style="width:64px;padding:6px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.95rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;text-align:center;opacity:0.4;">
+              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">words only</span>
             </div>
           </div>
 
@@ -1809,15 +1818,26 @@ function resetKnown() {
 // ═══════════════════════════════════════════════════════════════
 // QUIZ MODE
 // ═══════════════════════════════════════════════════════════════
+function getSetupPool() {
+  const from    = document.getElementById('q-letter-from').value;
+  const to      = document.getElementById('q-letter-to').value;
+  const limited = document.getElementById('q-limit-toggle').checked;
+  const limit   = parseInt(document.getElementById('q-limit-count').value) || 15;
+  let pool = WORDS.filter(w => { const c = w.w[0].toUpperCase(); return c >= from && c <= to; });
+  if (limited) pool = pool.slice(0, limit);
+  return pool;
+}
+
 function updateSetupRange() {
   const from = document.getElementById('q-letter-from').value;
   const to   = document.getElementById('q-letter-to').value;
-  if (from > to) { document.getElementById('q-letter-to').value = from; }
-  const count = WORDS.filter(w => {
-    const c = w.w[0].toUpperCase();
-    return c >= from && c <= (from > to ? from : to);
-  }).length;
-  document.getElementById('q-setup-count').textContent = count + ' words';
+  if (from > to) document.getElementById('q-letter-to').value = from;
+  const limited = document.getElementById('q-limit-toggle').checked;
+  const limitInput = document.getElementById('q-limit-count');
+  limitInput.disabled = !limited;
+  limitInput.style.opacity = limited ? '1' : '0.4';
+  const pool = getSetupPool();
+  document.getElementById('q-setup-count').textContent = pool.length + ' words';
 }
 
 function backToSetup() {
@@ -1832,9 +1852,7 @@ function startQuiz() {
   document.getElementById('quiz-active').style.display = 'block';
 
   const onlyUnknown = document.getElementById('q-unknown-only').checked;
-  const qFrom = document.getElementById('q-letter-from').value;
-  const qTo   = document.getElementById('q-letter-to').value;
-  const base = WORDS.filter(w => { const c = w.w[0].toUpperCase(); return c >= qFrom && c <= qTo; });
+  const base = getSetupPool();
   const pool = onlyUnknown ? base.filter(w => !knownSet.has(w.w)) : base;
   const countVal = document.querySelector('input[name="qcount"]:checked');
   const count = Math.min(parseInt(countVal ? countVal.value : 20), pool.length);
