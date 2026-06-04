@@ -527,6 +527,22 @@
     color: #c4b5fd;
     text-align: right;
   }
+  .speak-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    color: #c4b5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .speak-btn:hover { color: var(--green); background: var(--green-bg); }
+  .speak-btn.speaking { color: var(--green); animation: pulse 0.8s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
   .learn-item:hover:not(.is-known) { border-color: var(--green); }
   .learn-item.is-known { opacity: 0.3; }
   @media (max-width: 520px) { .learn-item { grid-template-columns: 1fr; gap: 6px; } }
@@ -2145,7 +2161,12 @@ function renderLearnList() {
     item.id = 'learn-item-' + entry.w;
     item.innerHTML = `
       <div class="learn-num">${++letterCount}</div>
-      <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
+        <button class="speak-btn" onclick="speakWord('${entry.w}', this)" title="Hear pronunciation">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 7h3l4-4v14l-4-4H3V7z" fill="currentColor"/><path d="M13 7a5 5 0 010 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 4.5a9 9 0 010 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
       <div class="learn-right">
         <div class="learn-def">${entry.d}</div>
         <div class="learn-ex">${entry.e}</div>
@@ -2339,6 +2360,44 @@ function clearHistory() {
   localStorage.removeItem('miss_counts');
   localStorage.removeItem('streak');
   renderStats();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SPEECH  –  UK English pronunciation
+// ═══════════════════════════════════════════════════════════════
+let ukVoice = null;
+
+function loadVoices() {
+  const voices = speechSynthesis.getVoices();
+  // Prefer a UK English voice; fall back to any English voice
+  ukVoice =
+    voices.find(v => v.lang === 'en-GB' && v.name.toLowerCase().includes('female')) ||
+    voices.find(v => v.lang === 'en-GB') ||
+    voices.find(v => v.lang.startsWith('en')) ||
+    voices[0];
+}
+
+// Voices load asynchronously in most browsers
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+loadVoices();
+
+function speakWord(word, btn) {
+  speechSynthesis.cancel();
+  // Remove speaking class from any active button
+  document.querySelectorAll('.speak-btn.speaking').forEach(b => b.classList.remove('speaking'));
+
+  const utter = new SpeechSynthesisUtterance(word);
+  utter.lang  = 'en-GB';
+  utter.rate  = 0.9;
+  if (ukVoice) utter.voice = ukVoice;
+
+  btn.classList.add('speaking');
+  utter.onend = () => btn.classList.remove('speaking');
+  utter.onerror = () => btn.classList.remove('speaking');
+
+  speechSynthesis.speak(utter);
 }
 
 // ═══════════════════════════════════════════════════════════════
