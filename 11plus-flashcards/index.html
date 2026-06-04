@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>11+ Vocabulary Flashcards</title>
+    <link rel="stylesheet" href="styles.css?v=20260604-flashcard-back">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">🦉</div>
+          <div>
+            <p class="eyebrow">✨ Quest 500 words</p>
+            <h1>Vocabulary Practice</h1>
+          </div>
+        </div>
+        <div class="top-actions" aria-label="App actions">
+          <button class="icon-button" id="shuffleDeck" type="button" title="Shuffle deck" aria-label="Shuffle deck"><span aria-hidden="true">🔀</span> Shuffle</button>
+          <button class="icon-button" id="resetProgress" type="button" title="Reset progress" aria-label="Reset progress"><span aria-hidden="true">🧹</span> Reset</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero-panel" aria-label="Learning progress">
+          <div class="hero-copy">
+            <p class="eyebrow">🚀 Daily quest</p>
+            <h2>Build word power one card at a time.</h2>
+            <div class="hero-progress" aria-hidden="true">
+              <span id="learningProgress"></span>
+            </div>
+          </div>
+          <div class="dashboard">
+            <div class="stat stat-total">
+              <small>📚 Deck</small>
+              <span id="totalCount">500</span>
+              <em>words</em>
+            </div>
+            <div class="stat stat-known">
+              <small>🏆 Mastered</small>
+              <span id="knownCount">0</span>
+              <em id="learningPercent">0%</em>
+            </div>
+            <div class="stat stat-practice">
+              <small>💪 Practice</small>
+              <span id="practiceCount">0</span>
+              <em>to revisit</em>
+            </div>
+            <div class="stat stat-quiz">
+              <small>🎯 Best quiz</small>
+              <span id="quizBest">0%</span>
+              <em>personal best</em>
+            </div>
+          </div>
+        </section>
+
+        <nav class="mode-tabs" aria-label="Practice modes">
+          <button class="tab is-active" id="studyTab" type="button" data-mode="study"><span aria-hidden="true">📖</span> Study</button>
+          <button class="tab" id="quizTab" type="button" data-mode="quiz"><span aria-hidden="true">🧠</span> Quiz</button>
+        </nav>
+
+        <section class="panel is-visible" id="studyPanel" aria-labelledby="studyTab">
+          <div class="study-layout">
+            <aside class="study-sidebar" aria-label="Study controls">
+              <h2>🗂️ Choose a deck</h2>
+              <label for="searchInput">🔎 Find a word</label>
+              <input id="searchInput" type="search" placeholder="Search vocabulary">
+
+              <label for="studyFilter">🧺 Deck</label>
+              <select id="studyFilter">
+                <option value="all">📚 All words</option>
+                <option value="practice">💪 Needs practice</option>
+                <option value="known">🏆 Known words</option>
+                <option value="starred">⭐ Starred words</option>
+              </select>
+
+              <p class="deck-count" id="deckCount">📚 500 words shown</p>
+              <div class="word-list" id="wordList" aria-label="Word list"></div>
+            </aside>
+
+            <section class="card-zone" aria-label="Flashcard">
+              <div class="card-track">
+                <span id="cardPosition">1 / 500</span>
+                <div class="meter" aria-hidden="true"><span id="deckMeter"></span></div>
+                <strong id="currentStatus">Not marked yet</strong>
+              </div>
+
+              <button class="flashcard" id="flashcard" type="button" aria-label="Flip flashcard">
+                <span class="card-hint" id="cardHint">Tap to reveal</span>
+                <span class="word" id="cardWord"></span>
+                <span class="answer" id="cardAnswer"></span>
+              </button>
+
+              <div class="card-actions">
+                <button id="prevCard" type="button"><span aria-hidden="true">⬅️</span> Previous</button>
+                <button class="secondary" id="flipCard" type="button">🔄 Flip</button>
+                <button id="nextCard" type="button">Next <span aria-hidden="true">➡️</span></button>
+              </div>
+
+              <div class="mark-actions" aria-label="Mark card">
+                <button class="success" id="markKnown" type="button">✅ I know it</button>
+                <button class="warning" id="markPractice" type="button">💪 Needs practice</button>
+                <button class="secondary" id="toggleStar" type="button">⭐ Star</button>
+              </div>
+            </section>
+
+            <aside class="edit-panel" aria-label="Edit card">
+              <h2>✏️ Card editor</h2>
+              <label for="definitionInput">💡 Brief definition</label>
+              <textarea id="definitionInput" rows="4"></textarea>
+              <label for="exampleInput">📝 Example sentence</label>
+              <textarea id="exampleInput" rows="4"></textarea>
+              <button id="saveCard" type="button">💾 Save card</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="panel" id="quizPanel" aria-labelledby="quizTab">
+          <div class="quiz-layout">
+            <aside class="quiz-controls" aria-label="Quiz setup">
+              <h2>🎮 Quiz setup</h2>
+              <label for="quizType">❓ Question type</label>
+              <select id="quizType">
+                <option value="definition">💡 Choose the definition</option>
+                <option value="word">🔤 Choose the word</option>
+                <option value="sentence">📝 Complete the sentence</option>
+              </select>
+
+              <label for="quizScope">🎒 Words to quiz</label>
+              <select id="quizScope">
+                <option value="all">📚 All words</option>
+                <option value="practice">💪 Needs practice</option>
+                <option value="starred">⭐ Starred words</option>
+              </select>
+
+              <label for="questionCount">🔢 Questions</label>
+              <input id="questionCount" type="number" min="5" max="50" step="5" value="10">
+
+              <button id="startQuiz" type="button">🚀 Start quiz</button>
+            </aside>
+
+            <section class="quiz-card" aria-live="polite">
+              <div class="quiz-meta">
+                <span id="quizProgress">Ready ✨</span>
+                <span id="quizScore">Score 0</span>
+              </div>
+              <h2 id="quizPrompt">Choose a quiz setup and press Start quiz. 🎯</h2>
+              <div class="quiz-options" id="quizOptions"></div>
+              <div class="feedback" id="quizFeedback"></div>
+              <button class="secondary hidden" id="nextQuestion" type="button">➡️ Next question</button>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="vocab-data.js?v=20260604-flashcard-back"></script>
+    <script src="app.js?v=20260604-flashcard-back"></script>
+  </body>
+</html>
