@@ -524,7 +524,7 @@
   .learn-num {
     font-size: 0.8rem;
     font-weight: 800;
-    color: var(--gray-400);
+    color: #c4b5fd;
     text-align: right;
   }
   .learn-item:hover:not(.is-known) { border-color: var(--green); }
@@ -2127,10 +2127,12 @@ function renderLearnList() {
   }
 
   let lastLetter = '';
-  words.forEach((entry, idx) => {
+  let letterCount = 0;
+  words.forEach((entry) => {
     const letter = entry.w[0].toUpperCase();
     if (letter !== lastLetter) {
       lastLetter = letter;
+      letterCount = 0;
       const div = document.createElement('div');
       div.className = 'learn-letter-divider';
       div.textContent = letter;
@@ -2142,7 +2144,7 @@ function renderLearnList() {
     item.className = 'learn-item' + (known ? ' is-known' : '');
     item.id = 'learn-item-' + entry.w;
     item.innerHTML = `
-      <div class="learn-num">${idx + 1}</div>
+      <div class="learn-num">${++letterCount}</div>
       <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
       <div class="learn-right">
         <div class="learn-def">${entry.d}</div>
