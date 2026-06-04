@@ -517,8 +517,8 @@
     align-items: center;
     transition: border-color 0.15s;
   }
-  .learn-item:hover { border-color: var(--green); }
-  .learn-item.is-known { border-left: 5px solid var(--green); }
+  .learn-item:hover:not(.is-known) { border-color: var(--green); }
+  .learn-item.is-known { opacity: 0.3; }
   @media (max-width: 520px) { .learn-item { grid-template-columns: 1fr; gap: 6px; } }
   .learn-word { font-size: 1.4rem; font-weight: 800; color: var(--green-dk); word-break: break-word; }
   .learn-known-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-left: 6px; vertical-align: middle; }
@@ -644,9 +644,142 @@
   .hist-pct.hi  { background: var(--green-bg);  color: var(--green-dk); }
   .hist-pct.mid { background: var(--yellow-bg); color: #7a5c00; }
   .hist-pct.lo  { background: var(--red-bg);    color: var(--red-dk); }
+
+  /* ── Auth overlay ── */
+  #auth-overlay {
+    position: fixed; inset: 0;
+    background: var(--gray-100);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .auth-card {
+    background: white;
+    border-radius: 24px;
+    border: 2px solid var(--gray-200);
+    border-bottom: 5px solid var(--gray-200);
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  .auth-owl { font-size: 3.5rem; margin-bottom: 8px; }
+  .auth-title { font-size: 1.6rem; font-weight: 800; color: var(--green); margin-bottom: 4px; }
+  .auth-subtitle { font-size: 0.85rem; color: var(--gray-400); font-weight: 700; margin-bottom: 28px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .auth-input {
+    width: 100%;
+    padding: 13px 18px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    border-bottom: 4px solid var(--gray-200);
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 600;
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
+  .auth-input:focus { border-color: var(--green); }
+  .auth-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border: none;
+    border-bottom: 4px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    transition: transform 0.08s, border-bottom-width 0.08s;
+  }
+  .auth-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .auth-btn-primary { background: var(--green); color: white; border-bottom-color: var(--green-dk); }
+  .auth-btn-secondary { background: white; color: var(--text); border: 2px solid var(--gray-200); border-bottom: 4px solid var(--gray-200); }
+  .auth-btn-google { background: #4285F4; color: white; border-bottom-color: #2b6fd4; }
+  .auth-divider { font-size: 0.78rem; color: var(--gray-400); font-weight: 700; margin: 8px 0 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .auth-toggle { font-size: 0.85rem; color: var(--gray-400); margin-top: 16px; }
+  .auth-toggle a { color: var(--green); font-weight: 800; cursor: pointer; text-decoration: none; }
+  .auth-error { color: var(--red-dk); font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; min-height: 20px; }
+  .auth-name { font-size: 0.85rem; font-weight: 700; color: var(--gray-600); }
+
+  /* ── User bar (top-right of header) ── */
+  .user-bar { display: flex; align-items: center; gap: 10px; }
+  .user-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    border: 2px solid var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--green-dk);
+  }
+  .signout-btn {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    background: none;
+    border: 2px solid var(--gray-200);
+    border-radius: 99px;
+    padding: 4px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-family: inherit;
+  }
+  .signout-btn:hover { border-color: var(--red); color: var(--red); }
+  .sync-indicator {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .sync-indicator.syncing { color: var(--blue); }
+  .sync-indicator.saved   { color: var(--green); }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
+
+<!-- ── Auth overlay ── -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-owl">🦉</div>
+    <div class="auth-title">11+ Vocab</div>
+    <div class="auth-subtitle">Sign in to sync your progress</div>
+
+    <div id="auth-error" class="auth-error"></div>
+
+    <div id="auth-form-login">
+      <input class="auth-input" id="auth-email" type="email" placeholder="Email address" autocomplete="email">
+      <input class="auth-input" id="auth-password" type="password" placeholder="Password" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')signIn()">
+      <button class="auth-btn auth-btn-primary" onclick="signIn()">Log In</button>
+      <div class="auth-divider">or</div>
+      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">🔵 Continue with Google</button>
+      <div class="auth-toggle">No account? <a onclick="showSignUp()">Sign up free</a></div>
+    </div>
+
+    <div id="auth-form-signup" style="display:none">
+      <input class="auth-input" id="auth-name" type="text" placeholder="Your name (e.g. Sophia)">
+      <input class="auth-input" id="auth-email2" type="email" placeholder="Email address">
+      <input class="auth-input" id="auth-password2" type="password" placeholder="Password (min 6 characters)"
+        onkeydown="if(event.key==='Enter')signUp()">
+      <button class="auth-btn auth-btn-primary" onclick="signUp()">Create Account</button>
+      <div class="auth-divider">or</div>
+      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">🔵 Continue with Google</button>
+      <div class="auth-toggle">Already have an account? <a onclick="showLogin()">Log in</a></div>
+    </div>
+  </div>
+</div>
 
 <header>
   <div class="header-brand">
@@ -661,6 +794,11 @@
     <button class="mode-tab active" onclick="setMode('study')">📖 Study</button>
     <button class="mode-tab" onclick="setMode('quiz')">🎯 Quiz</button>
     <button class="mode-tab" onclick="setMode('stats')">📊 Stats</button>
+  </div>
+  <div class="user-bar">
+    <div class="sync-indicator" id="sync-indicator"></div>
+    <div class="user-avatar" id="user-avatar"></div>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
   </div>
 </header>
 
@@ -1942,6 +2080,7 @@ function learnToggleKnown(word) {
     const item = document.getElementById('learn-item-' + word);
     if (!item) return;
     item.className = 'learn-item' + (known ? ' is-known' : '');
+
     const wordEl = item.querySelector('.learn-word');
     wordEl.innerHTML = word + (known ? '<span class="learn-known-dot" title="Known"></span>' : '');
 
@@ -2147,6 +2286,153 @@ renderCard();
 document.getElementById('stat-total').textContent = WORDS.length;
 document.getElementById('stat-known').textContent = knownSet.size;
 document.getElementById('stat-remaining').textContent = WORDS.length - knownSet.size;
+
+// ═══════════════════════════════════════════════════════════════
+// FIREBASE  –  auth + Firestore sync
+// ═══════════════════════════════════════════════════════════════
+
+firebase.initializeApp({
+  apiKey:            "AIzaSyA1o_NXDUT-_XogaOPxy_JkpZTaD7BvVNk",
+  authDomain:        "vocabs-49a89.firebaseapp.com",
+  projectId:         "vocabs-49a89",
+  storageBucket:     "vocabs-49a89.firebasestorage.app",
+  messagingSenderId: "47976876638",
+  appId:             "1:47976876638:web:e26d223bd09758a816c2cf"
+});
+
+const auth = firebase.auth();
+const db   = firebase.firestore();
+let syncTimeout = null;
+
+// ── Sync indicator ──────────────────────────────────────────────
+function setSyncStatus(state) {
+  const el = document.getElementById('sync-indicator');
+  if (state === 'saving')  { el.textContent = '↑ Saving…'; el.className = 'sync-indicator syncing'; }
+  else if (state === 'saved') { el.textContent = '✓ Synced';  el.className = 'sync-indicator saved';
+    setTimeout(() => { el.textContent = ''; el.className = 'sync-indicator'; }, 2000); }
+  else { el.textContent = ''; el.className = 'sync-indicator'; }
+}
+
+// ── Save all progress to Firestore (debounced 1.5s) ─────────────
+function cloudSave() {
+  if (!auth.currentUser) return;
+  clearTimeout(syncTimeout);
+  setSyncStatus('saving');
+  syncTimeout = setTimeout(async () => {
+    try {
+      await db.collection('users').doc(auth.currentUser.uid).set({
+        knownWords:  [...knownSet],
+        quizHistory: loadHistory(),
+        missCounts:  loadMissCounts(),
+        streak:      loadStreak(),
+        updatedAt:   firebase.firestore.FieldValue.serverTimestamp()
+      });
+      setSyncStatus('saved');
+    } catch(e) { console.error('Sync failed', e); setSyncStatus(''); }
+  }, 1500);
+}
+
+// ── Load progress from Firestore ────────────────────────────────
+async function loadCloudData(uid) {
+  try {
+    const doc = await db.collection('users').doc(uid).get();
+    if (!doc.exists) return;
+    const d = doc.data();
+    if (d.knownWords)  { localStorage.setItem('known11plus',   JSON.stringify(d.knownWords));  knownSet = new Set(d.knownWords); }
+    if (d.quizHistory) localStorage.setItem('quiz_history', JSON.stringify(d.quizHistory));
+    if (d.missCounts)  localStorage.setItem('miss_counts',  JSON.stringify(d.missCounts));
+    if (d.streak)      localStorage.setItem('streak',       JSON.stringify(d.streak));
+    // Refresh UI with loaded data
+    renderCard();
+    document.getElementById('stat-known').textContent     = knownSet.size;
+    document.getElementById('stat-remaining').textContent = WORDS.length - knownSet.size;
+    if (document.getElementById('learn-section').style.display === 'block') renderLearnList();
+    if (document.getElementById('stats-section').style.display === 'block') renderStats();
+  } catch(e) { console.error('Load failed', e); }
+}
+
+// ── Patch localStorage writes to also trigger cloudSave ─────────
+const _origSaveKnown = saveKnown;
+saveKnown = function() { _origSaveKnown(); cloudSave(); };
+
+const _origSaveSession = saveSession;
+saveSession = function(score, total, missed) {
+  const result = _origSaveSession(score, total, missed);
+  cloudSave();
+  return result;
+};
+
+const _origClearHistory = clearHistory;
+clearHistory = function() {
+  if (!confirm('Clear all quiz history and miss counts? Your Known words will not be affected.')) return;
+  localStorage.removeItem('quiz_history');
+  localStorage.removeItem('miss_counts');
+  localStorage.removeItem('streak');
+  cloudSave();
+  renderStats();
+};
+
+// ── Auth UI helpers ─────────────────────────────────────────────
+function showLogin()  { document.getElementById('auth-form-login').style.display=''; document.getElementById('auth-form-signup').style.display='none'; document.getElementById('auth-error').textContent=''; }
+function showSignUp() { document.getElementById('auth-form-login').style.display='none'; document.getElementById('auth-form-signup').style.display=''; document.getElementById('auth-error').textContent=''; }
+function setAuthError(msg) { document.getElementById('auth-error').textContent = msg; }
+
+async function signIn() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-password').value;
+  try { await auth.signInWithEmailAndPassword(email, pass); }
+  catch(e) { setAuthError(friendlyError(e)); }
+}
+
+async function signUp() {
+  const name  = document.getElementById('auth-name').value.trim();
+  const email = document.getElementById('auth-email2').value.trim();
+  const pass  = document.getElementById('auth-password2').value;
+  if (!name) { setAuthError('Please enter your name.'); return; }
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+    await cred.user.updateProfile({ displayName: name });
+  } catch(e) { setAuthError(friendlyError(e)); }
+}
+
+async function signInGoogle() {
+  try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+  catch(e) { setAuthError(friendlyError(e)); }
+}
+
+async function doSignOut() {
+  if (!confirm('Sign out?')) return;
+  await auth.signOut();
+}
+
+function friendlyError(e) {
+  const map = {
+    'auth/invalid-email':        'Please enter a valid email address.',
+    'auth/user-not-found':       'No account found with that email.',
+    'auth/wrong-password':       'Incorrect password.',
+    'auth/email-already-in-use': 'An account with that email already exists.',
+    'auth/weak-password':        'Password must be at least 6 characters.',
+    'auth/too-many-requests':    'Too many attempts. Please try again later.',
+    'auth/invalid-credential':   'Incorrect email or password.',
+  };
+  return map[e.code] || e.message;
+}
+
+// ── Auth state listener ─────────────────────────────────────────
+auth.onAuthStateChanged(async user => {
+  const overlay = document.getElementById('auth-overlay');
+  const avatar  = document.getElementById('user-avatar');
+  if (user) {
+    overlay.style.display = 'none';
+    const initial = (user.displayName || user.email || '?')[0].toUpperCase();
+    avatar.textContent = initial;
+    avatar.title = user.displayName || user.email;
+    await loadCloudData(user.uid);
+  } else {
+    overlay.style.display = 'flex';
+    avatar.textContent = '';
+  }
+});
 </script>
 </body>
 </html>
