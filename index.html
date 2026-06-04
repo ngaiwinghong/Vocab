@@ -572,7 +572,7 @@
   .hero-box .lbl { font-size: 0.65rem; font-weight: 800; color: var(--gray-400); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
   .streak-box .big { color: #f97316; }
   .streak-box { border-bottom-color: #f97316; }
-  .streak-box .flame { font-size: 2rem; }
+  .hero-box .flame { font-size: 2rem; }
 
   .section-card {
     background: var(--white);
@@ -767,6 +767,10 @@
       <div class="auth-divider">or</div>
       <button class="auth-btn auth-btn-google" onclick="signInGoogle()">Continue with Google</button>
       <div class="auth-toggle">No account? <a onclick="showSignUp()">Sign up free</a></div>
+      <div style="margin-top:20px;padding-top:20px;border-top:2px solid var(--gray-100);">
+        <button class="auth-btn auth-btn-secondary" onclick="continueAsGuest()" style="color:#666666;">Try as Guest</button>
+        <div style="font-size:0.75rem;color:var(--gray-400);font-weight:600;margin-top:8px;">Progress saved on this device only</div>
+      </div>
     </div>
 
     <div id="auth-form-signup" style="display:none">
@@ -797,8 +801,8 @@
   </div>
   <div class="user-bar">
     <div class="sync-indicator" id="sync-indicator"></div>
-    <div class="user-avatar" id="user-avatar"></div>
-    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+    <div class="user-avatar" id="user-avatar" style="display:none"></div>
+    <button class="signout-btn" id="auth-action-btn" onclick="doSignOut()">Sign out</button>
   </div>
 </header>
 
@@ -2435,18 +2439,45 @@ function friendlyError(e) {
   return map[e.code] || e.message;
 }
 
+// ── Guest mode ──────────────────────────────────────────────────
+let isGuest = false;
+
+function continueAsGuest() {
+  isGuest = true;
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('user-avatar').style.display = 'none';
+  const btn = document.getElementById('auth-action-btn');
+  btn.textContent = 'Sign in';
+  btn.onclick = () => {
+    isGuest = false;
+    document.getElementById('auth-overlay').style.display = 'flex';
+  };
+  document.getElementById('sync-indicator').textContent = '👤 Guest';
+  document.getElementById('sync-indicator').className = 'sync-indicator';
+}
+
+// Disable cloud save for guests
+const _cloudSave = cloudSave;
+cloudSave = function() { if (!isGuest) _cloudSave(); };
+
 // ── Auth state listener ─────────────────────────────────────────
 auth.onAuthStateChanged(async user => {
   const overlay = document.getElementById('auth-overlay');
   const avatar  = document.getElementById('user-avatar');
+  const btn     = document.getElementById('auth-action-btn');
   if (user) {
+    isGuest = false;
     overlay.style.display = 'none';
     const initial = (user.displayName || user.email || '?')[0].toUpperCase();
+    avatar.style.display = 'flex';
     avatar.textContent = initial;
     avatar.title = user.displayName || user.email;
+    btn.textContent = 'Sign out';
+    btn.onclick = doSignOut;
     await loadCloudData(user.uid);
-  } else {
+  } else if (!isGuest) {
     overlay.style.display = 'flex';
+    avatar.style.display = 'none';
     avatar.textContent = '';
   }
 });
