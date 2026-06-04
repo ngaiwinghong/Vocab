@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>11+ Vocabulary Flashcards</title>
-    <link rel="stylesheet" href="styles.css?v=20260604-centered-card">
+    <link rel="stylesheet" href="styles.css?v=20260604-ipad-editor">
   </head>
   <body>
     <div class="app-shell">
@@ -17,7 +17,6 @@
           </div>
         </div>
         <div class="top-actions" aria-label="App actions">
-          <button class="icon-button" id="shuffleDeck" type="button" title="Shuffle deck" aria-label="Shuffle deck"><span aria-hidden="true">🔀</span> Shuffle</button>
           <button class="icon-button" id="resetProgress" type="button" title="Reset progress" aria-label="Reset progress"><span aria-hidden="true">🧹</span> Reset</button>
         </div>
       </header>
@@ -152,15 +151,19 @@
                 <strong id="currentStatus">Not marked yet</strong>
               </div>
 
-              <button class="flashcard" id="flashcard" type="button" aria-label="Flip flashcard">
-                <span class="card-hint" id="cardHint">Tap to reveal</span>
-                <span class="word" id="cardWord"></span>
-                <span class="answer" id="cardAnswer"></span>
-              </button>
+              <div class="flashcard-wrap">
+                <button class="card-edit-button" id="openEditor" type="button" aria-label="Edit this flashcard">✏️ Edit</button>
+                <button class="flashcard" id="flashcard" type="button" aria-label="Flip flashcard">
+                  <span class="card-hint" id="cardHint">Tap to reveal</span>
+                  <span class="word" id="cardWord"></span>
+                  <span class="answer" id="cardAnswer"></span>
+                </button>
+              </div>
 
               <div class="card-actions">
                 <button id="prevCard" type="button"><span aria-hidden="true">⬅️</span> Previous</button>
                 <button class="secondary" id="flipCard" type="button">🔄 Flip</button>
+                <button class="secondary" id="shuffleDeck" type="button" title="Shuffle deck" aria-label="Shuffle deck"><span aria-hidden="true">🔀</span> Shuffle</button>
                 <button id="nextCard" type="button">Next <span aria-hidden="true">➡️</span></button>
               </div>
 
@@ -171,8 +174,11 @@
               </div>
             </section>
 
-            <aside class="edit-panel" aria-label="Edit card">
-              <h2>✏️ Card editor</h2>
+            <aside class="edit-panel" id="editPanel" aria-label="Edit card" aria-hidden="true">
+              <div class="edit-panel-header">
+                <h2>✏️ Card editor</h2>
+                <button class="secondary close-editor" id="closeEditor" type="button" aria-label="Close card editor">×</button>
+              </div>
               <label for="definitionInput">💡 Brief definition</label>
               <textarea id="definitionInput" rows="4"></textarea>
               <label for="exampleInput">📝 Example sentence</label>
@@ -222,6 +228,6 @@
     </div>
 
     <script src="vocab-data.js?v=20260604-letter-range"></script>
-    <script src="app.js?v=20260604-letter-range"></script>
+    <script src="app.js?v=20260604-ipad-editor"></script>
   </body>
 </html>

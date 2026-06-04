@@ -5,6 +5,7 @@ const state = {
   activeIndex: 0,
   flipped: false,
   deckOrder: [],
+  shuffleOrder: null,
   quiz: null,
   store: loadStore()
 };
@@ -33,6 +34,9 @@ const els = {
   currentStatus: document.getElementById("currentStatus"),
   deckMeter: document.getElementById("deckMeter"),
   toggleStar: document.getElementById("toggleStar"),
+  openEditor: document.getElementById("openEditor"),
+  closeEditor: document.getElementById("closeEditor"),
+  editPanel: document.getElementById("editPanel"),
   definitionInput: document.getElementById("definitionInput"),
   exampleInput: document.getElementById("exampleInput"),
   quizType: document.getElementById("quizType"),
@@ -79,7 +83,7 @@ function getFilteredIndexes() {
   const query = els.searchInput.value.trim().toLowerCase();
   const filter = els.studyFilter.value;
   const [rangeStart, rangeEnd] = getLetterRange();
-  return entries
+  const filtered = entries
     .filter((entry) => {
       const firstLetter = entry.word.charAt(0).toUpperCase();
       const matchesSearch = !query || entry.word.toLowerCase().includes(query);
@@ -92,6 +96,10 @@ function getFilteredIndexes() {
       return matchesSearch && matchesLetterRange && matchesFilter;
     })
     .map((entry) => entry.index);
+
+  if (!state.shuffleOrder) return filtered;
+  const filteredSet = new Set(filtered);
+  return state.shuffleOrder.filter((index) => filteredSet.has(index));
 }
 
 function getLetterRange() {
@@ -239,10 +247,27 @@ function markCard(type) {
 }
 
 function shuffleDeck() {
-  state.deckOrder = [...state.deckOrder].sort(() => Math.random() - 0.5);
-  state.activeIndex = state.deckOrder[0] || 0;
+  const filteredIndexes = getFilteredIndexes();
+  state.shuffleOrder = [...filteredIndexes].sort(() => Math.random() - 0.5);
+  state.activeIndex = state.shuffleOrder[0] || state.activeIndex;
   state.flipped = false;
   render();
+}
+
+function resetDeckOrder() {
+  state.shuffleOrder = null;
+  render();
+}
+
+function openEditor() {
+  els.editPanel.classList.add("is-open");
+  els.editPanel.setAttribute("aria-hidden", "false");
+  els.definitionInput.focus();
+}
+
+function closeEditor() {
+  els.editPanel.classList.remove("is-open");
+  els.editPanel.setAttribute("aria-hidden", "true");
 }
 
 function getQuizPool() {
@@ -382,14 +407,16 @@ function bindEvents() {
     });
   });
 
-  els.searchInput.addEventListener("input", render);
-  els.studyFilter.addEventListener("change", render);
-  els.letterStart.addEventListener("change", render);
-  els.letterEnd.addEventListener("change", render);
+  els.searchInput.addEventListener("input", resetDeckOrder);
+  els.studyFilter.addEventListener("change", resetDeckOrder);
+  els.letterStart.addEventListener("change", resetDeckOrder);
+  els.letterEnd.addEventListener("change", resetDeckOrder);
   els.flashcard.addEventListener("click", () => {
     state.flipped = !state.flipped;
     renderCard();
   });
+  els.openEditor.addEventListener("click", openEditor);
+  els.closeEditor.addEventListener("click", closeEditor);
   document.getElementById("flipCard").addEventListener("click", () => {
     state.flipped = !state.flipped;
     renderCard();
@@ -411,6 +438,7 @@ function bindEvents() {
       example: els.exampleInput.value.trim() || entry.example
     };
     saveStore();
+    closeEditor();
     render();
   });
   document.getElementById("shuffleDeck").addEventListener("click", shuffleDeck);
@@ -427,6 +455,7 @@ function bindEvents() {
   });
 
   document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeEditor();
     if (event.target.matches("input, textarea, select")) return;
     if (event.key === "ArrowRight") moveCard(1);
     if (event.key === "ArrowLeft") moveCard(-1);
