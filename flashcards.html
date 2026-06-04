@@ -1625,6 +1625,7 @@ function applyLetterRange() {
   const inRange = wordsInRange();
   document.getElementById('range-info').textContent = inRange.length + ' word' + (inRange.length !== 1 ? 's' : '');
   applyFilter();
+  renderLearnList();
 }
 
 function shuffle(arr) {
