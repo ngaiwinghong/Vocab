@@ -516,10 +516,16 @@
     padding: 14px 18px;
     border: 2px solid var(--gray-200);
     display: grid;
-    grid-template-columns: 180px 1fr auto;
-    gap: 10px 20px;
+    grid-template-columns: 32px 180px 1fr auto;
+    gap: 10px 16px;
     align-items: center;
     transition: border-color 0.15s;
+  }
+  .learn-num {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    text-align: right;
   }
   .learn-item:hover:not(.is-known) { border-color: var(--green); }
   .learn-item.is-known { opacity: 0.3; }
@@ -549,13 +555,14 @@
   }
   .learn-mark-btn.known { border-color: var(--green); color: var(--green-dk); background: var(--green-bg); }
   .learn-letter-divider {
-    font-size: 1.2rem;
+    font-size: 2.2rem;
     font-weight: 800;
     color: var(--green);
-    padding: 8px 4px 2px;
+    padding: 12px 4px 4px;
     border-bottom: 3px solid var(--green-bg);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     letter-spacing: 2px;
+    line-height: 1;
   }
 
   /* ── Stats / History tab ── */
@@ -2120,7 +2127,7 @@ function renderLearnList() {
   }
 
   let lastLetter = '';
-  words.forEach(entry => {
+  words.forEach((entry, idx) => {
     const letter = entry.w[0].toUpperCase();
     if (letter !== lastLetter) {
       lastLetter = letter;
@@ -2135,6 +2142,7 @@ function renderLearnList() {
     item.className = 'learn-item' + (known ? ' is-known' : '');
     item.id = 'learn-item-' + entry.w;
     item.innerHTML = `
+      <div class="learn-num">${idx + 1}</div>
       <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
       <div class="learn-right">
         <div class="learn-def">${entry.d}</div>
@@ -2159,7 +2167,6 @@ function learnToggleKnown(word) {
     const item = document.getElementById('learn-item-' + word);
     if (!item) return;
     item.className = 'learn-item' + (known ? ' is-known' : '');
-
     const wordEl = item.querySelector('.learn-word');
     wordEl.innerHTML = word + (known ? '<span class="learn-known-dot" title="Known"></span>' : '');
 
