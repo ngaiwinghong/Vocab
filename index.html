@@ -2162,7 +2162,7 @@ function renderLearnList() {
     item.innerHTML = `
       <div class="learn-num">${++letterCount}</div>
       <div style="display:flex;align-items:center;gap:6px;">
-        <div class="learn-word">${entry.w}${known ? '<span class="learn-known-dot" title="Known"></span>' : ''}</div>
+        <div class="learn-word">${entry.w}</div>
         <button class="speak-btn" onclick="speakWord('${entry.w}', this)" title="Hear pronunciation">
           <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 7h3l4-4v14l-4-4H3V7z" fill="currentColor"/><path d="M13 7a5 5 0 010 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 4.5a9 9 0 010 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
