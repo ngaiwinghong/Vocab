@@ -70,6 +70,10 @@
   }
   header .subtitle { font-size: 0.72rem; color: var(--gray-400); font-weight: 700; margin-top: 1px; letter-spacing: 0.3px; text-transform: uppercase; }
 
+  @media (max-width: 600px) {
+    .header-brand { display: none; }
+    .letter-range-label { display: none; }
+  }
   .mode-tabs {
     display: flex;
     gap: 0;
@@ -202,11 +206,9 @@
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    position: sticky;
-    top: 64px;
-    z-index: 80;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
+  .letter-range.sticky { position: sticky; top: 64px; z-index: 80; }
   .letter-range label { font-size: 0.8rem; font-weight: 800; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
   .letter-range select {
     padding: 7px 14px;
@@ -752,7 +754,6 @@
 <!-- ── Auth overlay ── -->
 <div id="auth-overlay">
   <div class="auth-card">
-    <div class="auth-owl">🦉</div>
     <div class="auth-title">11+ Vocab</div>
     <div class="auth-subtitle">Sign in to sync your progress</div>
 
@@ -764,7 +765,7 @@
         onkeydown="if(event.key==='Enter')signIn()">
       <button class="auth-btn auth-btn-primary" onclick="signIn()">Log In</button>
       <div class="auth-divider">or</div>
-      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">🔵 Continue with Google</button>
+      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">Continue with Google</button>
       <div class="auth-toggle">No account? <a onclick="showSignUp()">Sign up free</a></div>
     </div>
 
@@ -775,7 +776,7 @@
         onkeydown="if(event.key==='Enter')signUp()">
       <button class="auth-btn auth-btn-primary" onclick="signUp()">Create Account</button>
       <div class="auth-divider">or</div>
-      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">🔵 Continue with Google</button>
+      <button class="auth-btn auth-btn-google" onclick="signInGoogle()">Continue with Google</button>
       <div class="auth-toggle">Already have an account? <a onclick="showLogin()">Log in</a></div>
     </div>
   </div>
@@ -783,7 +784,6 @@
 
 <header>
   <div class="header-brand">
-    <div class="header-owl">🦉</div>
     <div>
       <h1>11+ Vocab</h1>
       <div class="subtitle">500 words</div>
@@ -806,7 +806,7 @@
 
   <!-- ── Shared letter range filter ── -->
   <div class="letter-range">
-    <label>Show words:</label>
+    <label class="letter-range-label">Show words:</label>
     <label style="font-weight:500;color:#444;">From</label>
     <select id="letter-from" onchange="applyLetterRange()">
     </select>
@@ -1656,6 +1656,7 @@ function setMode(m) {
   document.getElementById('quiz-section').style.display  = m==='quiz'  ? 'block' : 'none';
   document.getElementById('stats-section').style.display = m==='stats' ? 'block' : 'none';
   document.querySelector('.letter-range').style.display  = m==='stats' ? 'none' : '';
+  document.querySelector('.letter-range').classList.toggle('sticky', m==='learn');
   if (m === 'quiz')  startQuiz();
   if (m === 'learn') renderLearnList();
   if (m === 'stats') renderStats();
