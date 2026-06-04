@@ -5,512 +5,666 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>11+ Vocabulary Flashcards</title>
 <style>
+  /* ── Duolingo-style design system ── */
   :root {
-    --primary: #6c63ff;
-    --secondary: #ff6584;
-    --accent: #43b89c;
-    --bg: #f0f2ff;
-    --card-front: #ffffff;
-    --card-back: #6c63ff;
-    --text: #2d2d2d;
-    --light: #f8f9ff;
-    --shadow: 0 8px 32px rgba(108,99,255,0.15);
+    --green:      #58CC02;
+    --green-dk:   #46A302;
+    --green-bg:   #D7FFB8;
+    --blue:       #1CB0F6;
+    --blue-dk:    #0B95D1;
+    --blue-bg:    #DDF4FF;
+    --yellow:     #FFD900;
+    --yellow-dk:  #B8A000;
+    --yellow-bg:  #FFF9C4;
+    --red:        #FF4B4B;
+    --red-dk:     #C93939;
+    --red-bg:     #FFDFE0;
+    --purple:     #CE82FF;
+    --purple-dk:  #9C52CC;
+    --purple-bg:  #F3E6FF;
+    --gray-100:   #F7F7F7;
+    --gray-200:   #E5E5E5;
+    --gray-400:   #AFAFAF;
+    --gray-600:   #777;
+    --text:       #3C3C3C;
+    --white:      #FFFFFF;
+    --shadow:     0 4px 0;
+    --radius-lg:  20px;
+    --radius-md:  14px;
+    --radius-sm:  8px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg);
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
+    background: var(--gray-100);
     color: var(--text);
     min-height: 100vh;
   }
 
   /* ── Header ── */
   header {
-    background: linear-gradient(135deg, var(--primary), #a78bfa);
-    color: white;
-    padding: 18px 24px;
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 24px;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-brand {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 16px rgba(108,99,255,0.3);
+    gap: 10px;
+    padding: 14px 0;
   }
-  header h1 { font-size: 1.4rem; letter-spacing: 0.5px; }
-  header .subtitle { font-size: 0.8rem; opacity: 0.85; margin-top: 2px; }
+  .header-owl { font-size: 2rem; line-height: 1; }
+  header h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--green);
+    letter-spacing: -0.3px;
+  }
+  header .subtitle { font-size: 0.72rem; color: var(--gray-400); font-weight: 700; margin-top: 1px; letter-spacing: 0.3px; text-transform: uppercase; }
+
   .mode-tabs {
     display: flex;
-    gap: 8px;
+    gap: 0;
   }
   .mode-tab {
-    padding: 8px 20px;
-    border-radius: 50px;
-    border: 2px solid rgba(255,255,255,0.6);
+    padding: 0 18px;
+    border: none;
+    border-bottom: 3px solid transparent;
     background: transparent;
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
+    color: var(--gray-400);
+    font-size: 0.82rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   .mode-tab.active {
-    background: white;
-    color: var(--primary);
-    border-color: white;
+    color: var(--green);
+    border-bottom-color: var(--green);
   }
-  .mode-tab:hover:not(.active) { background: rgba(255,255,255,0.2); }
+  .mode-tab:hover:not(.active) {
+    color: var(--text);
+    background: var(--gray-100);
+  }
 
   /* ── Layout ── */
-  main { max-width: 700px; margin: 0 auto; padding: 28px 16px; }
+  main { max-width: 680px; margin: 0 auto; padding: 24px 16px; }
 
-  /* ── Progress bar ── */
-  .progress-wrap {
-    margin-bottom: 20px;
-  }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 6px;
-  }
-  .progress-bar {
-    height: 8px;
-    background: #dde0ff;
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    border-radius: 99px;
-    transition: width 0.4s ease;
-  }
-
-  /* ── Controls ── */
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  /* ── Duolingo 3-D button ── */
   .btn {
-    padding: 9px 20px;
-    border-radius: 50px;
+    padding: 13px 24px;
+    border-radius: 14px;
     border: none;
-    font-size: 0.9rem;
-    font-weight: 600;
+    border-bottom: 4px solid transparent;
+    font-size: 0.92rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: transform 0.08s, border-bottom-width 0.08s;
+    font-family: inherit;
   }
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover { background: #5a52d5; transform: translateY(-1px); }
-  .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
-  .btn-secondary:hover { background: #f0eeff; }
-  .btn-accent { background: var(--accent); color: white; }
-  .btn-accent:hover { background: #35a389; }
-  .btn-danger { background: var(--secondary); color: white; }
-  .btn-danger:hover { background: #e55577; }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn:active:not(:disabled) {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    border-bottom-color: var(--green-dk);
+  }
+  .btn-primary:hover:not(:disabled) { background: #62dc02; }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--blue);
+    border: 2px solid var(--gray-200);
+    border-bottom: 4px solid var(--gray-200);
+  }
+  .btn-secondary:hover:not(:disabled) { background: var(--blue-bg); border-color: var(--blue); }
+  .btn-accent {
+    background: var(--blue);
+    color: white;
+    border-bottom-color: var(--blue-dk);
+  }
+  .btn-accent:hover:not(:disabled) { background: #28beff; }
+  .btn-danger {
+    background: var(--red);
+    color: white;
+    border-bottom-color: var(--red-dk);
+  }
+  .btn-danger:hover:not(:disabled) { background: #ff5f5f; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+  /* ── Toggle switch ── */
   .toggle-wrap {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto;
-    font-size: 0.85rem;
-    color: #555;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
-  .toggle {
-    position: relative;
-    width: 42px;
-    height: 22px;
-  }
+  .toggle { position: relative; width: 44px; height: 24px; }
   .toggle input { display: none; }
   .toggle-slider {
     position: absolute;
     inset: 0;
-    background: #ccc;
+    background: var(--gray-200);
     border-radius: 99px;
     cursor: pointer;
     transition: background 0.2s;
+    border-bottom: 3px solid #ccc;
   }
   .toggle-slider::before {
     content: '';
     position: absolute;
-    width: 16px; height: 16px;
-    left: 3px; top: 3px;
+    width: 17px; height: 17px;
+    left: 3px; top: 2px;
     background: white;
     border-radius: 50%;
     transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   }
-  .toggle input:checked + .toggle-slider { background: var(--primary); }
+  .toggle input:checked + .toggle-slider { background: var(--green); border-bottom-color: var(--green-dk); }
   .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
 
-  /* ── Filter bar ── */
-  .filter-bar {
+  /* ── Controls row ── */
+  .controls {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    align-items: center;
   }
-  .filter-bar input {
-    flex: 1;
-    min-width: 180px;
-    padding: 9px 16px;
-    border-radius: 50px;
-    border: 2px solid #dde0ff;
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .filter-bar input:focus { border-color: var(--primary); }
 
-  /* ── Letter range ── */
+  /* ── Letter range bar ── */
   .letter-range {
-    background: white;
-    border-radius: 16px;
-    padding: 14px 18px;
-    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    padding: 12px 18px;
     margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
   }
-  .letter-range label { font-size: 0.85rem; font-weight: 600; color: #555; white-space: nowrap; }
+  .letter-range label { font-size: 0.8rem; font-weight: 800; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
   .letter-range select {
-    padding: 6px 14px;
-    border-radius: 50px;
-    border: 2px solid #dde0ff;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--primary);
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--gray-200);
+    border-bottom: 3px solid var(--gray-200);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--green);
     outline: none;
     cursor: pointer;
-    transition: border-color 0.2s;
+    background: var(--white);
+    font-family: inherit;
   }
-  .letter-range select:focus { border-color: var(--primary); }
+  .letter-range select:focus { border-color: var(--green); }
   .letter-range .range-info {
     margin-left: auto;
-    font-size: 0.82rem;
-    color: #888;
-    background: #f0eeff;
-    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    background: var(--gray-100);
+    padding: 5px 12px;
     border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
 
-  /* ── Flashcard ── */
-  .card-area {
-    perspective: 1200px;
-    margin-bottom: 24px;
+  /* ── Progress bar ── */
+  .progress-wrap { margin-bottom: 20px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
+  .progress-bar {
+    height: 14px;
+    background: var(--gray-200);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-bar input {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 18px;
+    border-radius: 99px;
+    border: 2px solid var(--gray-200);
+    border-bottom: 3px solid var(--gray-200);
+    font-size: 0.9rem;
+    font-weight: 700;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    background: var(--white);
+  }
+  .filter-bar input:focus { border-color: var(--blue); }
+
+  /* ── Stats strip (in-mode) ── */
+  .stats-strip { display: flex; gap: 10px; margin-bottom: 20px; }
+  .stat-box {
+    flex: 1;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    border-bottom-width: 4px;
+    padding: 12px 8px;
+    text-align: center;
+    background: var(--white);
+  }
+  .stat-box.green  { background: var(--green-bg);  border-color: var(--green);  }
+  .stat-box.red    { background: var(--red-bg);    border-color: var(--red);    }
+  .stat-box.blue   { background: var(--blue-bg);   border-color: var(--blue);   }
+  .stat-box.yellow { background: var(--yellow-bg); border-color: var(--yellow); border-bottom-color: var(--yellow-dk); }
+  .stat-num { font-size: 1.5rem; font-weight: 800; color: var(--green); }
+  .stat-box.red   .stat-num { color: var(--red); }
+  .stat-box.blue  .stat-num { color: var(--blue-dk); }
+  .stat-box.yellow .stat-num { color: #7a5c00; }
+  .stat-label { font-size: 0.68rem; font-weight: 800; color: var(--gray-400); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
+
+  /* ── Flashcard ── */
+  .card-area { perspective: 1200px; margin-bottom: 20px; }
   .card {
     position: relative;
     width: 100%;
-    height: 320px;
+    height: 300px;
     cursor: pointer;
     transform-style: preserve-3d;
-    transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+    transition: transform 0.5s cubic-bezier(0.4,0.2,0.2,1);
   }
   .card.flipped { transform: rotateY(180deg); }
   .card-face {
     position: absolute;
     inset: 0;
-    border-radius: 24px;
+    border-radius: var(--radius-lg);
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 36px;
-    box-shadow: var(--shadow);
+    border: 2px solid var(--gray-200);
+    border-bottom: 5px solid var(--gray-200);
   }
-  .card-front {
-    background: var(--card-front);
-  }
+  .card-front { background: var(--white); }
   .card-back {
-    background: linear-gradient(135deg, var(--primary), #a78bfa);
+    background: var(--green);
     color: white;
+    border-color: var(--green-dk);
     transform: rotateY(180deg);
   }
-  .card-hint {
-    position: absolute;
-    bottom: 18px;
-    font-size: 0.75rem;
-    opacity: 0.45;
-    letter-spacing: 0.5px;
-  }
-  .card-word {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: var(--primary);
-    text-align: center;
-    line-height: 1.1;
-    margin-bottom: 10px;
-  }
+  .card-hint { position: absolute; bottom: 16px; font-size: 0.72rem; font-weight: 800; opacity: 0.4; letter-spacing: 0.5px; text-transform: uppercase; }
+  .card-word { font-size: 3rem; font-weight: 800; color: var(--green); text-align: center; line-height: 1.1; margin-bottom: 12px; }
   .card-pos {
-    font-size: 0.85rem;
-    background: #f0eeff;
-    color: var(--primary);
-    padding: 3px 12px;
-    border-radius: 99px;
-    font-style: italic;
+    font-size: 0.78rem; font-weight: 800;
+    background: var(--green-bg); color: var(--green-dk);
+    padding: 3px 12px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .card-definition {
-    font-size: 1.15rem;
-    text-align: center;
-    line-height: 1.6;
-    margin-bottom: 16px;
-    font-weight: 500;
-  }
-  .card-example {
-    font-size: 0.95rem;
-    text-align: center;
-    line-height: 1.6;
-    opacity: 0.9;
-    font-style: italic;
-  }
+  .card-definition { font-size: 1.1rem; text-align: center; line-height: 1.6; margin-bottom: 14px; font-weight: 700; }
+  .card-example { font-size: 0.92rem; text-align: center; line-height: 1.6; opacity: 0.88; font-style: italic; font-weight: 600; }
   .card-example::before { content: '"'; }
   .card-example::after  { content: '"'; }
 
   /* ── Nav ── */
-  .nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-  .nav .btn { min-width: 100px; }
-  .nav-counter { font-size: 1rem; font-weight: 600; color: #555; min-width: 90px; text-align: center; }
+  .nav { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px; }
+  .nav .btn { min-width: 110px; }
+  .nav-counter { font-size: 0.85rem; font-weight: 800; color: var(--gray-400); min-width: 80px; text-align: center; text-transform: uppercase; letter-spacing: 0.3px; }
 
   /* ── Known badge ── */
   .known-badge {
     display: none;
-    background: #d4f5e9;
-    color: #2a7a5a;
-    font-size: 0.8rem;
-    font-weight: 700;
+    background: var(--green-bg);
+    color: var(--green-dk);
+    font-size: 0.72rem;
+    font-weight: 800;
     padding: 4px 14px;
     border-radius: 99px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 
-  /* ── Question type toggles ── */
-  .qtype-label {
+  /* ── Question type chips ── */
+  .qtype-chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 600;
     cursor: pointer;
     user-select: none;
   }
-  .qtype-label input { cursor: pointer; accent-color: currentColor; }
+  .qtype-chip input { display: none; }
+  .qtype-chip span {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    border: 2px solid var(--gray-200);
+    color: var(--gray-400);
+    background: var(--white);
+    transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .qtype-chip input:checked + span {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green-dk);
+  }
+  .qtype-chip:hover span { border-color: var(--green); }
 
   /* ── Quiz ── */
   #quiz-section { display: none; }
   .quiz-word {
     text-align: center;
     font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 10px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.2;
   }
   .quiz-instruction {
     text-align: center;
-    color: #777;
-    font-size: 0.9rem;
-    margin-bottom: 24px;
+    color: var(--gray-400);
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   .options {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
   @media (max-width: 500px) { .options { grid-template-columns: 1fr; } }
   .option {
-    padding: 16px 20px;
-    border-radius: 16px;
-    border: 2px solid #dde0ff;
-    background: white;
-    font-size: 0.95rem;
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    border-bottom: 4px solid var(--gray-200);
+    background: var(--white);
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     text-align: left;
     line-height: 1.4;
-    transition: all 0.15s;
+    transition: all 0.1s;
     font-family: inherit;
+    color: var(--text);
   }
-  .option:hover:not(:disabled) { border-color: var(--primary); background: #f0eeff; }
-  .option.correct { background: #d4f5e9; border-color: #2a7a5a; color: #1a5c40; }
-  .option.wrong   { background: #fde8ef; border-color: var(--secondary); color: #8b1a30; }
+  .option:hover:not(:disabled) {
+    border-color: var(--blue);
+    background: var(--blue-bg);
+    transform: translateY(-1px);
+  }
+  .option.correct {
+    background: var(--green-bg);
+    border-color: var(--green);
+    border-bottom-color: var(--green-dk);
+    color: var(--green-dk);
+  }
+  .option.wrong {
+    background: var(--red-bg);
+    border-color: var(--red);
+    border-bottom-color: var(--red-dk);
+    color: var(--red-dk);
+  }
   .option:disabled { cursor: default; }
+
+  /* Feedback bar (Duolingo-style bottom panel) */
   .quiz-feedback {
-    text-align: center;
+    border-radius: var(--radius-md);
     font-size: 1rem;
-    font-weight: 600;
-    min-height: 28px;
-    margin-bottom: 16px;
-    color: var(--accent);
+    font-weight: 800;
+    min-height: 32px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    text-align: center;
+    letter-spacing: 0.2px;
   }
-  .quiz-feedback.wrong { color: var(--secondary); }
+  .quiz-feedback:not(:empty) { background: var(--green-bg); color: var(--green-dk); border: 2px solid var(--green); }
+  .quiz-feedback.wrong:not(:empty) { background: var(--red-bg); color: var(--red-dk); border: 2px solid var(--red); }
 
   /* ── Score / Finish ── */
   .finish-screen {
     display: none;
     text-align: center;
-    padding: 40px 20px;
+    padding: 32px 20px;
   }
   .finish-screen.visible { display: block; }
-  .finish-emoji { font-size: 4rem; margin-bottom: 16px; }
-  .finish-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
-  .finish-score { font-size: 1.2rem; color: #555; margin-bottom: 24px; }
-  .missed-list { text-align: left; margin-top: 20px; }
-  .missed-list h3 { color: var(--secondary); margin-bottom: 10px; }
+  .finish-emoji { font-size: 5rem; margin-bottom: 12px; }
+  .finish-title { font-size: 2rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .finish-score { font-size: 1.1rem; color: var(--gray-600); font-weight: 700; margin-bottom: 20px; }
+  .missed-list { text-align: left; margin-top: 24px; }
+  .missed-list h3 { color: var(--red); margin-bottom: 12px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
   .missed-item {
-    background: white;
-    border-radius: 12px;
+    background: var(--white);
+    border-radius: var(--radius-md);
     padding: 12px 16px;
     margin-bottom: 8px;
-    border-left: 4px solid var(--secondary);
+    border: 2px solid var(--gray-200);
+    border-left: 5px solid var(--red);
     font-size: 0.9rem;
   }
-  .missed-item strong { color: var(--primary); font-size: 1rem; }
+  .missed-item strong { color: var(--green-dk); font-size: 1rem; }
 
   /* ── Learn mode ── */
   #learn-section { display: none; }
-  .learn-controls {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+  .learn-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
   .learn-search {
     flex: 1;
     min-width: 180px;
-    padding: 9px 16px;
-    border-radius: 50px;
-    border: 2px solid #dde0ff;
+    padding: 10px 18px;
+    border-radius: 99px;
+    border: 2px solid var(--gray-200);
+    border-bottom: 3px solid var(--gray-200);
     font-size: 0.9rem;
+    font-weight: 700;
     outline: none;
     transition: border-color 0.2s;
+    font-family: inherit;
+    background: var(--white);
   }
-  .learn-search:focus { border-color: var(--primary); }
+  .learn-search:focus { border-color: var(--blue); }
   .learn-count {
-    font-size: 0.85rem;
-    color: #888;
-    background: #f0eeff;
-    padding: 5px 14px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--gray-400);
+    background: var(--gray-100);
+    padding: 6px 14px;
     border-radius: 99px;
     white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
-  .learn-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .learn-list { display: flex; flex-direction: column; gap: 8px; }
   .learn-item {
-    background: white;
-    border-radius: 16px;
-    padding: 16px 20px;
-    box-shadow: 0 2px 8px rgba(108,99,255,0.07);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    border: 2px solid var(--gray-200);
     display: grid;
     grid-template-columns: 140px 1fr;
-    gap: 12px 20px;
+    gap: 10px 20px;
     align-items: start;
-    transition: box-shadow 0.15s;
+    transition: border-color 0.15s;
   }
-  .learn-item:hover { box-shadow: 0 4px 16px rgba(108,99,255,0.14); }
-  .learn-item.is-known { border-left: 4px solid var(--accent); }
-  @media (max-width: 520px) {
-    .learn-item { grid-template-columns: 1fr; gap: 6px; }
-  }
-  .learn-word {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--primary);
-    word-break: break-word;
-  }
-  .learn-known-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    margin-left: 6px;
-    vertical-align: middle;
-  }
+  .learn-item:hover { border-color: var(--green); }
+  .learn-item.is-known { border-left: 5px solid var(--green); }
+  @media (max-width: 520px) { .learn-item { grid-template-columns: 1fr; gap: 6px; } }
+  .learn-word { font-size: 1.1rem; font-weight: 800; color: var(--green-dk); word-break: break-word; }
+  .learn-known-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); margin-left: 6px; vertical-align: middle; }
   .learn-right { display: flex; flex-direction: column; gap: 4px; }
-  .learn-def { font-size: 0.95rem; color: #333; line-height: 1.5; }
-  .learn-ex {
-    font-size: 0.85rem;
-    color: #777;
-    font-style: italic;
-    line-height: 1.5;
-  }
+  .learn-def { font-size: 0.92rem; color: var(--text); line-height: 1.5; font-weight: 600; }
+  .learn-ex { font-size: 0.82rem; color: var(--gray-600); font-style: italic; line-height: 1.5; font-weight: 600; }
   .learn-ex::before { content: '"'; }
   .learn-ex::after  { content: '"'; }
   .learn-mark-btn {
     margin-top: 6px;
-    padding: 3px 12px;
+    padding: 4px 12px;
     border-radius: 99px;
-    border: 1.5px solid #ccc;
+    border: 2px solid var(--gray-200);
     background: transparent;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 800;
     cursor: pointer;
-    color: #888;
+    color: var(--gray-400);
     transition: all 0.15s;
     align-self: flex-start;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-family: inherit;
   }
-  .learn-mark-btn.known {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: #d4f5e9;
-  }
+  .learn-mark-btn.known { border-color: var(--green); color: var(--green-dk); background: var(--green-bg); }
   .learn-letter-divider {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    color: var(--primary);
+    color: var(--green);
     padding: 8px 4px 2px;
-    border-bottom: 2px solid #dde0ff;
+    border-bottom: 3px solid var(--green-bg);
     margin-bottom: 4px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
   }
 
-  /* ── Stats strip ── */
-  .stats-strip {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .stat-box {
+  /* ── Stats / History tab ── */
+  #stats-section { display: none; }
+  .stats-hero { display: flex; gap: 10px; margin-bottom: 20px; }
+  .hero-box {
     flex: 1;
-    background: white;
-    border-radius: 14px;
-    padding: 12px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    border-bottom: 4px solid var(--gray-200);
+    padding: 16px 10px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(108,99,255,0.08);
   }
-  .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-  .stat-label { font-size: 0.75rem; color: #888; margin-top: 2px; }
+  .hero-box .big { font-size: 2.2rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .hero-box .lbl { font-size: 0.65rem; font-weight: 800; color: var(--gray-400); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .streak-box .big { color: #f97316; }
+  .streak-box { border-bottom-color: #f97316; }
+  .streak-box .flame { font-size: 2rem; }
+
+  .section-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-200);
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .section-card h3 {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--gray-600);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Bar chart */
+  .chart-wrap { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding-bottom: 24px; position: relative; }
+  .chart-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .chart-bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    background: var(--green);
+    min-height: 4px;
+    transition: height 0.4s ease;
+    position: relative;
+    cursor: pointer;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.15);
+  }
+  .chart-bar.best { background: var(--yellow); box-shadow: inset 0 -3px 0 var(--yellow-dk); }
+  .chart-bar-val { position: absolute; top: -20px; font-size: 0.68rem; font-weight: 800; color: var(--green-dk); white-space: nowrap; }
+  .chart-bar.best .chart-bar-val { color: var(--yellow-dk); }
+  .chart-date { position: absolute; bottom: 0; font-size: 0.6rem; font-weight: 700; color: var(--gray-400); white-space: nowrap; transform: rotate(-35deg); transform-origin: top left; left: 50%; }
+  .chart-empty { color: var(--gray-400); font-size: 0.88rem; font-weight: 700; text-align: center; padding: 20px 0; }
+  .pb-banner { text-align: center; font-size: 0.82rem; color: #f97316; font-weight: 800; margin-top: 10px; }
+
+  /* Most-missed */
+  .miss-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 2px solid var(--gray-100); }
+  .miss-row:last-child { border-bottom: none; }
+  .miss-word { font-weight: 800; color: var(--green-dk); min-width: 110px; font-size: 0.92rem; }
+  .miss-bar-wrap { flex: 1; background: var(--gray-200); border-radius: 99px; height: 8px; }
+  .miss-bar { height: 8px; border-radius: 99px; background: var(--red); }
+  .miss-count { font-size: 0.78rem; font-weight: 800; color: var(--red); min-width: 28px; text-align: right; }
+
+  /* Finish streak banner */
+  .streak-banner {
+    display: inline-block;
+    background: var(--yellow);
+    color: #7a5c00;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 8px 22px;
+    border-radius: 99px;
+    margin-bottom: 14px;
+    border-bottom: 3px solid var(--yellow-dk);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  /* History list */
+  .hist-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 2px solid var(--gray-100); font-size: 0.85rem; }
+  .hist-row:last-child { border-bottom: none; }
+  .hist-date { color: var(--gray-400); min-width: 80px; font-weight: 700; }
+  .hist-range { color: var(--gray-400); min-width: 50px; font-weight: 700; }
+  .hist-score { font-weight: 800; color: var(--text); min-width: 55px; }
+  .hist-pct { padding: 3px 11px; border-radius: 99px; font-size: 0.75rem; font-weight: 800; }
+  .hist-pct.hi  { background: var(--green-bg);  color: var(--green-dk); }
+  .hist-pct.mid { background: var(--yellow-bg); color: #7a5c00; }
+  .hist-pct.lo  { background: var(--red-bg);    color: var(--red-dk); }
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>✨ 11+ Vocabulary</h1>
-    <div class="subtitle">500 words · Study &amp; Quiz</div>
+  <div class="header-brand">
+    <div class="header-owl">🦉</div>
+    <div>
+      <h1>11+ Vocab</h1>
+      <div class="subtitle">500 words</div>
+    </div>
   </div>
   <div class="mode-tabs">
     <button class="mode-tab" onclick="setMode('learn')">📋 Learn</button>
     <button class="mode-tab active" onclick="setMode('study')">📖 Study</button>
     <button class="mode-tab" onclick="setMode('quiz')">🎯 Quiz</button>
+    <button class="mode-tab" onclick="setMode('stats')">📊 Stats</button>
   </div>
 </header>
 
@@ -670,17 +824,13 @@
       </label>
     </div>
 
-    <div style="background:#f8f9ff;border-radius:14px;padding:12px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-      <span style="font-size:0.85rem;font-weight:700;color:#555;margin-right:4px;">Question types:</span>
-      <label class="qtype-label" style="background:#ede9ff;color:#5b21b6;">
-        <input type="checkbox" id="qt1" checked> 📖 Word → Meaning
-      </label>
-      <label class="qtype-label" style="background:#fce7f3;color:#9d174d;">
-        <input type="checkbox" id="qt2" checked> 🔤 Meaning → Word
-      </label>
-      <label class="qtype-label" style="background:#d1fae5;color:#065f46;">
-        <input type="checkbox" id="qt3" checked> ✏️ Fill in the blank
-      </label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <span style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;">Types:</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <label class="qtype-chip"><input type="checkbox" id="qt1" checked><span>📖 Word → Meaning</span></label>
+        <label class="qtype-chip"><input type="checkbox" id="qt2" checked><span>🔤 Meaning → Word</span></label>
+        <label class="qtype-chip"><input type="checkbox" id="qt3" checked><span>✏️ Fill in blank</span></label>
+      </div>
     </div>
 
     <div id="quiz-active">
@@ -723,8 +873,64 @@
       <div class="finish-emoji" id="finish-emoji">🎉</div>
       <div class="finish-title" id="finish-title">Well done!</div>
       <div class="finish-score" id="finish-score"></div>
-      <button class="btn btn-primary" onclick="startQuiz()" style="margin:0 auto;">Play Again</button>
+      <div class="streak-banner" id="finish-streak" style="display:none"></div>
+      <div id="finish-pb" style="color:#f97316;font-weight:700;font-size:0.95rem;margin-bottom:12px;display:none"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="startQuiz()">Play Again</button>
+        <button class="btn btn-secondary" onclick="setMode('stats')">📊 See Stats</button>
+      </div>
       <div class="missed-list" id="missed-list"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ STATS MODE ═══════════════ -->
+  <div id="stats-section">
+
+    <!-- Hero row: streak + totals -->
+    <div class="stats-hero">
+      <div class="hero-box streak-box">
+        <div class="flame">🔥</div>
+        <div class="big" id="st-streak">0</div>
+        <div class="lbl">day streak</div>
+      </div>
+      <div class="hero-box">
+        <div class="flame">🎯</div>
+        <div class="big" id="st-quizzes">0</div>
+        <div class="lbl">quizzes taken</div>
+      </div>
+      <div class="hero-box">
+        <div class="flame">⭐</div>
+        <div class="big" id="st-known">0</div>
+        <div class="lbl">words known</div>
+      </div>
+    </div>
+
+    <!-- Score chart -->
+    <div class="section-card">
+      <h3>📈 Last 10 quiz scores</h3>
+      <div class="chart-wrap" id="st-chart"><div class="chart-empty">No quizzes yet — take your first quiz!</div></div>
+      <div class="pb-banner" id="st-pb" style="display:none"></div>
+    </div>
+
+    <!-- Most-missed words -->
+    <div class="section-card">
+      <h3>⚠️ Words to work on</h3>
+      <div id="st-missed-list"><div class="chart-empty">No data yet.</div></div>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="btn btn-danger" id="st-practise-btn" onclick="practiseMissed()" style="display:none">
+          🎯 Quick quiz on these words
+        </button>
+      </div>
+    </div>
+
+    <!-- Full history -->
+    <div class="section-card">
+      <h3>🗓️ Quiz history</h3>
+      <div id="st-history-list"><div class="chart-empty">No quizzes yet.</div></div>
+      <div style="text-align:center;margin-top:14px;">
+        <button class="btn btn-secondary" onclick="clearHistory()" style="font-size:0.8rem;padding:7px 16px;">Clear history</button>
+      </div>
     </div>
 
   </div>
@@ -1306,13 +1512,17 @@ function saveKnown() {
 function setMode(m) {
   mode = m;
   document.querySelectorAll('.mode-tab').forEach((t,i) => {
-    t.classList.toggle('active', (i===0 && m==='study') || (i===1 && m==='learn') || (i===2 && m==='quiz'));
+    t.classList.toggle('active',
+      (i===0 && m==='learn') || (i===1 && m==='study') ||
+      (i===2 && m==='quiz')  || (i===3 && m==='stats'));
   });
   document.getElementById('study-section').style.display = m==='study' ? 'block' : 'none';
   document.getElementById('learn-section').style.display = m==='learn' ? 'block' : 'none';
   document.getElementById('quiz-section').style.display  = m==='quiz'  ? 'block' : 'none';
-  if (m === 'quiz') startQuiz();
+  document.getElementById('stats-section').style.display = m==='stats' ? 'block' : 'none';
+  if (m === 'quiz')  startQuiz();
   if (m === 'learn') renderLearnList();
+  if (m === 'stats') renderStats();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1500,8 +1710,8 @@ function renderQuestion() {
 
   } else if (qtype === 2) {
     // ── Type 2: show the DEFINITION → pick the correct WORD ──
-    badge.textContent = '🔤 Which word matches this meaning?';
-    badge.style.background = '#fce7f3'; badge.style.color = '#9d174d';
+    badge.textContent = '';
+    badge.style.background = 'transparent';
     document.getElementById('q-instruction').textContent = 'Choose the correct word:';
     document.getElementById('q-word').textContent = entry.d;
     document.getElementById('q-word').style.display = 'block';
@@ -1620,7 +1830,11 @@ function showFinish() {
   fs.classList.add('visible');
 
   const total = quizDeck.length;
-  const pct = Math.round((quizScore / total) * 100);
+  const pct   = Math.round((quizScore / total) * 100);
+
+  // save before checking PB so history includes this session
+  const prevPB = personalBest();
+  const streak = saveSession(quizScore, total, quizMissed);
 
   let emoji = '🌟', title = 'Brilliant!';
   if (pct < 50) { emoji = '📚'; title = 'Keep practising!'; }
@@ -1632,6 +1846,26 @@ function showFinish() {
   document.getElementById('finish-title').textContent = title;
   document.getElementById('finish-score').textContent = `You scored ${quizScore} out of ${total} (${pct}%)`;
 
+  // streak banner
+  const streakEl = document.getElementById('finish-streak');
+  if (streak.count >= 2) {
+    streakEl.textContent  = `🔥 ${streak.count} day streak! Keep it up!`;
+    streakEl.style.display = 'inline-block';
+  } else {
+    streakEl.style.display = 'none';
+  }
+
+  // personal best banner
+  const newPB  = personalBest();
+  const pbEl   = document.getElementById('finish-pb');
+  if (newPB !== null && newPB > (prevPB || 0)) {
+    pbEl.textContent  = `🏆 New personal best: ${newPB}%!`;
+    pbEl.style.display = 'block';
+  } else {
+    pbEl.style.display = 'none';
+  }
+
+  // missed words list
   const missedEl = document.getElementById('missed-list');
   if (quizMissed.length) {
     missedEl.innerHTML = `<h3>Words to review (${quizMissed.length}):</h3>`;
@@ -1719,6 +1953,168 @@ function learnToggleKnown(word) {
     btn.className = 'learn-mark-btn' + (known ? ' known' : '');
     btn.textContent = known ? '✓ Known' : 'Mark known';
   }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HISTORY & STREAK  (localStorage keys: quiz_history, miss_counts, streak)
+// ═══════════════════════════════════════════════════════════════
+
+function loadHistory()    { return JSON.parse(localStorage.getItem('quiz_history') || '[]'); }
+function loadMissCounts() { return JSON.parse(localStorage.getItem('miss_counts')  || '{}'); }
+function loadStreak()     { return JSON.parse(localStorage.getItem('streak')       || '{"count":0,"lastDate":""}'); }
+
+function saveSession(score, total, missed) {
+  // --- history ---
+  const history = loadHistory();
+  history.push({
+    date:  new Date().toISOString(),
+    from:  letterFrom,
+    to:    letterTo,
+    score,
+    total,
+    missed: missed.map(m => m.w)
+  });
+  // keep last 100 sessions
+  if (history.length > 100) history.splice(0, history.length - 100);
+  localStorage.setItem('quiz_history', JSON.stringify(history));
+
+  // --- miss counts ---
+  const counts = loadMissCounts();
+  missed.forEach(m => { counts[m.w] = (counts[m.w] || 0) + 1; });
+  localStorage.setItem('miss_counts', JSON.stringify(counts));
+
+  // --- streak ---
+  const today = new Date().toDateString();
+  const streak = loadStreak();
+  if (streak.lastDate === today) {
+    // already counted today, no change
+  } else if (streak.lastDate === new Date(Date.now() - 86400000).toDateString()) {
+    streak.count++;
+    streak.lastDate = today;
+  } else {
+    streak.count = 1;
+    streak.lastDate = today;
+  }
+  localStorage.setItem('streak', JSON.stringify(streak));
+  return streak;
+}
+
+function personalBest() {
+  const history = loadHistory();
+  if (!history.length) return null;
+  return Math.max(...history.map(h => Math.round((h.score / h.total) * 100)));
+}
+
+// ── Stats tab renderer ──────────────────────────────────────────
+function renderStats() {
+  const history    = loadHistory();
+  const counts     = loadMissCounts();
+  const streak     = loadStreak();
+
+  // hero numbers
+  document.getElementById('st-streak').textContent  = streak.count;
+  document.getElementById('st-quizzes').textContent = history.length;
+  document.getElementById('st-known').textContent   = knownSet.size;
+
+  // --- bar chart (last 10) ---
+  const recent = history.slice(-10);
+  const chartWrap = document.getElementById('st-chart');
+  chartWrap.innerHTML = '';
+  if (!recent.length) {
+    chartWrap.innerHTML = '<div class="chart-empty">No quizzes yet — take your first quiz!</div>';
+  } else {
+    const pb = Math.max(...recent.map(h => Math.round((h.score / h.total) * 100)));
+    recent.forEach(h => {
+      const pct  = Math.round((h.score / h.total) * 100);
+      const isBest = pct === pb;
+      const col  = document.createElement('div');
+      col.className = 'chart-bar-col';
+      const d = new Date(h.date);
+      const label = `${d.getDate()}/${d.getMonth()+1}`;
+      col.innerHTML = `
+        <div class="chart-bar${isBest ? ' best' : ''}" style="height:${Math.max(pct, 4)}%">
+          <div class="chart-bar-val">${pct}%</div>
+        </div>
+        <div class="chart-date">${label}</div>`;
+      chartWrap.appendChild(col);
+    });
+    const pbEl = document.getElementById('st-pb');
+    const allTimePB = personalBest();
+    if (allTimePB !== null) {
+      pbEl.textContent  = `🏆 Personal best: ${allTimePB}%`;
+      pbEl.style.display = 'block';
+    }
+  }
+
+  // --- most-missed words (top 8) ---
+  const missedEl = document.getElementById('st-missed-list');
+  const entries  = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 8);
+  if (!entries.length) {
+    missedEl.innerHTML = '<div class="chart-empty">No misses recorded yet — great work!</div>';
+    document.getElementById('st-practise-btn').style.display = 'none';
+  } else {
+    const maxCount = entries[0][1];
+    missedEl.innerHTML = '';
+    entries.forEach(([word, count]) => {
+      const row = document.createElement('div');
+      row.className = 'miss-row';
+      row.innerHTML = `
+        <div class="miss-word">${word}</div>
+        <div class="miss-bar-wrap"><div class="miss-bar" style="width:${Math.round((count/maxCount)*100)}%"></div></div>
+        <div class="miss-count">${count}✗</div>`;
+      missedEl.appendChild(row);
+    });
+    document.getElementById('st-practise-btn').style.display = 'inline-block';
+  }
+
+  // --- history list (newest first) ---
+  const histEl = document.getElementById('st-history-list');
+  if (!history.length) {
+    histEl.innerHTML = '<div class="chart-empty">No quizzes yet.</div>';
+  } else {
+    histEl.innerHTML = '';
+    [...history].reverse().forEach(h => {
+      const pct   = Math.round((h.score / h.total) * 100);
+      const cls   = pct >= 80 ? 'hi' : pct >= 50 ? 'mid' : 'lo';
+      const d     = new Date(h.date);
+      const dateStr = `${d.getDate()}/${d.getMonth()+1}/${String(d.getFullYear()).slice(-2)}`;
+      const row = document.createElement('div');
+      row.className = 'hist-row';
+      row.innerHTML = `
+        <div class="hist-date">${dateStr}</div>
+        <div class="hist-range">${h.from}–${h.to}</div>
+        <div class="hist-score">${h.score}/${h.total}</div>
+        <div class="hist-pct ${cls}">${pct}%</div>`;
+      histEl.appendChild(row);
+    });
+  }
+}
+
+function practiseMissed() {
+  const counts  = loadMissCounts();
+  const topWords = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 10).map(([w]) => w);
+  const pool    = WORDS.filter(w => topWords.includes(w.w));
+  if (!pool.length) return;
+
+  // switch to quiz with these words pre-loaded
+  setMode('quiz');
+  document.getElementById('finish-screen').classList.remove('visible');
+  document.getElementById('quiz-active').style.display = 'block';
+  quizDeck    = shuffle(pool);
+  quizIndex   = 0;
+  quizScore   = 0;
+  quizWrong   = 0;
+  quizMissed  = [];
+  updateQuizStats();
+  renderQuestion();
+}
+
+function clearHistory() {
+  if (!confirm('Clear all quiz history and miss counts? Your Known words will not be affected.')) return;
+  localStorage.removeItem('quiz_history');
+  localStorage.removeItem('miss_counts');
+  localStorage.removeItem('streak');
+  renderStats();
 }
 
 // ═══════════════════════════════════════════════════════════════
