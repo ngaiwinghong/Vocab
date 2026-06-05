@@ -77,7 +77,6 @@
   header .subtitle { font-size: 0.72rem; color: var(--gray-400); font-weight: 700; margin-top: 1px; letter-spacing: 0.3px; text-transform: uppercase; }
 
   @media (max-width: 600px) {
-    .header-brand { display: none; }
     .letter-range-label { display: none; }
   }
   .mode-tabs {
@@ -497,16 +496,15 @@
     width: 100%;
     padding: 8px 14px 8px 36px;
     border-radius: 99px;
-    border: 1.5px solid var(--gray-200);
+    border: none;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--gray-600);
     outline: none;
-    transition: border-color 0.2s;
     font-family: inherit;
-    background: var(--gray-100);
+    background: rgba(255, 255, 255, 0.5);
   }
-  .learn-search:focus { border-color: var(--green); background: var(--white); }
+  .learn-search:focus { background: rgba(255, 255, 255, 0.85); }
   .learn-count {
     font-size: 0.75rem;
     font-weight: 800;
@@ -858,12 +856,6 @@
 </div>
 
 <header>
-  <div class="header-brand">
-    <div>
-      <h1>11+ Vocab</h1>
-      <div class="subtitle">500 words</div>
-    </div>
-  </div>
   <div class="mode-tabs">
     <button class="mode-tab active" onclick="setMode('learn')">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="6" height="1.5" rx="0.75" fill="currentColor"/><rect x="1" y="5.5" width="10" height="1.5" rx="0.75" fill="currentColor"/><rect x="1" y="9" width="10" height="1.5" rx="0.75" fill="currentColor"/><rect x="1" y="12.5" width="7" height="1.5" rx="0.75" fill="currentColor"/></svg>
@@ -2738,7 +2730,7 @@ function continueAsGuest() {
     isGuest = false;
     document.getElementById('auth-overlay').style.display = 'flex';
   };
-  document.getElementById('sync-indicator').textContent = '👤 Guest';
+  document.getElementById('sync-indicator').textContent = '';
   document.getElementById('sync-indicator').className = 'sync-indicator';
 }
 
