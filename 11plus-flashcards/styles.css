@@ -414,9 +414,7 @@ textarea {
   height: 34px;
   margin: 8px 0 2px;
   padding: 0 12px;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  position: static;
 }
 
 .word-letter:first-child {
