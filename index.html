@@ -40,7 +40,7 @@
     --radius-sm:  8px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
 
   body {
     font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
@@ -54,6 +54,7 @@
     background: var(--white);
     border-bottom: 2px solid var(--gray-200);
     padding: 0 24px;
+    min-height: 52px;
     display: flex;
     align-items: stretch;
     justify-content: space-between;
@@ -305,7 +306,7 @@
   .card {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 420px;
     cursor: pointer;
     transform-style: preserve-3d;
     transition: transform 0.5s cubic-bezier(0.4,0.2,0.2,1);
@@ -742,7 +743,7 @@
   .auth-name { font-size: 0.85rem; font-weight: 700; color: var(--gray-600); }
 
   /* ── User bar (top-right of header) ── */
-  .user-bar { display: flex; align-items: center; gap: 10px; }
+  .user-bar { display: flex; align-items: center; gap: 10px; align-self: center; }
   .user-avatar {
     width: 34px; height: 34px;
     border-radius: 50%;
@@ -1000,16 +1001,17 @@
         <div style="background:white;border-radius:var(--radius-lg);border:2px solid var(--gray-200);padding:28px 32px;display:grid;grid-template-columns:1fr 1fr;gap:28px 40px;">
 
           <!-- Word range -->
-          <div>
-            <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Word range</div>
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">From</span>
-              <select id="q-letter-from" onchange="buildQuizWordDropdowns()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <select id="q-word-start" onchange="updateSetupRange()" style="padding:7px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.9rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <span style="font-size:0.8rem;font-weight:700;color:var(--gray-600);">–</span>
-              <select id="q-letter-to" onchange="buildQuizWordDropdowns()" style="padding:7px 14px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:1rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <select id="q-word-end" onchange="updateSetupRange()" style="padding:7px 10px;border-radius:var(--radius-sm);border:2px solid var(--gray-200);font-size:0.9rem;font-weight:800;color:var(--green);outline:none;font-family:inherit;background:white;"></select>
-              <div style="font-size:0.78rem;font-weight:800;color:var(--gray-400);background:var(--gray-100);padding:5px 12px;border-radius:99px;" id="q-setup-count">500 words</div>
+          <div style="grid-column:1/-1;">
+            <div class="letter-range" style="background:none;border:none;border-bottom:2px solid var(--gray-200);border-radius:0;box-shadow:none;padding:12px 0 20px;margin-bottom:20px;">
+              <label>From</label>
+              <select id="q-letter-from" onchange="buildQuizWordDropdowns()"></select>
+              <label>To</label>
+              <select id="q-letter-to" onchange="buildQuizWordDropdowns()"></select>
+              <div style="width:1px;height:20px;background:var(--gray-200);margin:0 4px;"></div>
+              <select id="q-word-start" onchange="updateSetupRange()"></select>
+              <label>–</label>
+              <select id="q-word-end" onchange="updateSetupRange()"></select>
+              <div class="range-info" id="q-setup-count">500 words</div>
             </div>
           </div>
 
