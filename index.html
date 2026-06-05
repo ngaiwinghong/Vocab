@@ -57,7 +57,7 @@
     min-height: 52px;
     display: flex;
     align-items: stretch;
-    justify-content: space-between;
+    justify-content: center;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -85,12 +85,12 @@
     gap: 0;
   }
   .mode-tab {
-    padding: 0 18px;
+    padding: 0 26px;
     border: none;
     border-bottom: 3px solid transparent;
     background: transparent;
     color: var(--gray-400);
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.15s;
@@ -98,7 +98,7 @@
     text-transform: uppercase;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
   }
   .mode-tab.active {
     color: var(--green);
@@ -364,16 +364,15 @@
   }
 
   /* ── Question type chips ── */
-  .qtype-chip {
+  /* ── Number-of-questions chips (compact pill) ── */
+  .qcount-chip {
     display: inline-flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
   }
-  .qtype-chip input[type="radio"] { display: none; }
-  .qtype-chip input[type="checkbox"] { display: none; }
-  .qcount-chip input:checked + span,
-  .qtype-chip span {
+  .qcount-chip input[type="radio"] { display: none; }
+  .qcount-chip span {
     padding: 6px 14px;
     border-radius: 99px;
     font-size: 0.78rem;
@@ -384,10 +383,64 @@
     transition: all 0.15s;
     letter-spacing: 0.2px;
   }
-  .qtype-chip input:checked + span {
+  .qcount-chip input:checked + span {
     background: var(--green-bg);
     border-color: #a78bfa;
     color: var(--green-dk);
+  }
+  .qcount-chip:hover span { border-color: #a78bfa; }
+
+  /* ── Question-type chips (full-width with circle indicator) ── */
+  .qtype-chip {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+  }
+  .qtype-chip input[type="checkbox"] { display: none; }
+  .qtype-chip span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 99px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border: 2px solid var(--gray-200);
+    color: var(--gray-400);
+    background: var(--white);
+    transition: all 0.15s;
+  }
+  /* Empty circle (deselected) */
+  .qtype-chip span::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-200);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  /* Selected state: white bg, purple border + text */
+  .qtype-chip input:checked + span {
+    background: var(--white);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  /* Filled purple circle with white checkmark (selected) */
+  .qtype-chip input:checked + span::before {
+    content: '✓';
+    background: var(--green);
+    border-color: var(--green);
+    color: #ffffff;
+    line-height: 20px;
+    text-align: center;
   }
   .qtype-chip:hover span { border-color: #a78bfa; }
 
@@ -472,7 +525,13 @@
     padding: 32px 20px;
   }
   .finish-screen.visible { display: block; }
-  .finish-emoji { font-size: 5rem; margin-bottom: 12px; }
+  .finish-emoji { margin-bottom: 12px; line-height: 1; }
+  .finish-emoji svg { width: 72px; height: 72px; color: var(--green); }
+  /* inline icon sizing */
+  .section-card h3 svg { width: 16px; height: 16px; vertical-align: middle; margin-right: 2px; }
+  #q-type-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 2px; }
+  .pb-banner svg, #finish-pb svg, #finish-streak svg { width: 18px; height: 18px; vertical-align: middle; }
+  .btn svg { width: 16px; height: 16px; vertical-align: middle; }
   .finish-title { font-size: 2rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
   .finish-score { font-size: 1.1rem; color: var(--gray-600); font-weight: 700; margin-bottom: 20px; }
   .missed-list { text-align: left; margin-top: 24px; }
@@ -627,7 +686,7 @@
   }
 
   /* Bar chart */
-  .chart-wrap { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding-bottom: 24px; position: relative; }
+  .chart-wrap { display: flex; align-items: flex-end; gap: 6px; height: 120px; padding-bottom: 28px; position: relative; }
   .chart-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
   .chart-bar {
     width: 100%;
@@ -642,7 +701,7 @@
   .chart-bar.best { background: var(--yellow); box-shadow: inset 0 -3px 0 var(--yellow-dk); }
   .chart-bar-val { position: absolute; top: -20px; font-size: 0.68rem; font-weight: 800; color: #6D28D9; white-space: nowrap; }
   .chart-bar.best .chart-bar-val { color: var(--yellow-dk); }
-  .chart-date { position: absolute; bottom: 0; font-size: 0.6rem; font-weight: 700; color: var(--gray-400); white-space: nowrap; transform: rotate(-35deg); transform-origin: top left; left: 50%; }
+  .chart-date { position: absolute; bottom: -20px; font-size: 0.65rem; font-weight: 700; color: var(--gray-400); white-space: nowrap; left: 50%; transform: translateX(-50%); }
   .chart-empty { color: var(--gray-400); font-size: 0.88rem; font-weight: 700; text-align: center; padding: 20px 0; }
   .pb-banner { text-align: center; font-size: 0.82rem; color: #f97316; font-weight: 800; margin-top: 10px; }
 
@@ -651,8 +710,15 @@
   .miss-row:last-child { border-bottom: none; }
   .miss-word { font-weight: 800; color: var(--green-dk); min-width: 110px; font-size: 0.92rem; }
   .miss-bar-wrap { flex: 1; background: var(--gray-200); border-radius: 99px; height: 8px; }
-  .miss-bar { height: 8px; border-radius: 99px; background: var(--red); }
-  .miss-count { font-size: 0.78rem; font-weight: 800; color: var(--red); min-width: 28px; text-align: right; }
+  .miss-bar { height: 8px; border-radius: 99px; background: var(--blue); }
+  .miss-count { font-size: 0.78rem; font-weight: 800; color: var(--blue); min-width: 28px; text-align: right; }
+  .miss-dismiss {
+    background: none; border: 2px solid var(--gray-200); border-radius: 99px;
+    color: var(--gray-400); font-size: 0.75rem; font-weight: 800; cursor: pointer;
+    padding: 2px 8px; min-width: 28px; flex-shrink: 0; transition: all 0.15s;
+    box-shadow: none; min-height: unset;
+  }
+  .miss-dismiss:hover { background: #d7ffb8; border-color: #46a302; color: #2d6800; }
 
   /* Finish streak banner */
   .streak-banner {
@@ -743,7 +809,7 @@
   .auth-name { font-size: 0.85rem; font-weight: 700; color: var(--gray-600); }
 
   /* ── User bar (top-right of header) ── */
-  .user-bar { display: flex; align-items: center; gap: 10px; align-self: center; }
+  .user-bar { display: flex; align-items: center; gap: 10px; align-self: center; position: absolute; right: 24px; }
   .user-avatar {
     width: 34px; height: 34px;
     border-radius: 50%;
@@ -786,9 +852,9 @@
     /* Auth card: reduce horizontal padding */
     .auth-card { padding-left: 24px; padding-right: 24px; }
 
-    /* Header: no vertical padding so active-tab underline sits at the bottom edge */
-    header { padding: 0 10px; min-height: 52px; }
-    .user-bar { align-self: center; }
+    /* Header: revert to space-between on mobile */
+    header { padding: 0 10px; min-height: 52px; justify-content: space-between; }
+    .user-bar { position: static; align-self: center; }
     .mode-tab { padding: 0 8px; font-size: 0.72rem; gap: 3px; }
     .user-bar { gap: 6px; }
     .signout-btn { padding: 4px 8px; font-size: 0.65rem; white-space: nowrap; }
@@ -1019,30 +1085,27 @@
           <div>
             <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Number of questions</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <label class="qtype-chip qcount-chip"><input type="radio" name="qcount" value="10"><span>10</span></label>
-              <label class="qtype-chip qcount-chip"><input type="radio" name="qcount" value="20" checked><span>20</span></label>
-              <label class="qtype-chip qcount-chip"><input type="radio" name="qcount" value="30"><span>30</span></label>
-              <label class="qtype-chip qcount-chip"><input type="radio" name="qcount" value="50"><span>50</span></label>
-              <label class="qtype-chip qcount-chip"><input type="radio" name="qcount" value="500"><span>All</span></label>
+              <label class="qcount-chip"><input type="radio" name="qcount" value="10"><span>10</span></label>
+              <label class="qcount-chip"><input type="radio" name="qcount" value="20" checked><span>20</span></label>
+              <label class="qcount-chip"><input type="radio" name="qcount" value="30"><span>30</span></label>
+              <label class="qcount-chip"><input type="radio" name="qcount" value="50"><span>50</span></label>
+              <label class="qcount-chip"><input type="radio" name="qcount" value="500"><span>All</span></label>
             </div>
           </div>
 
           <!-- Question types -->
           <div>
             <div style="font-size:0.75rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Question types</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <label class="qtype-chip"><input type="checkbox" id="qt1" checked><span>📖 Word → Meaning</span></label>
-              <label class="qtype-chip"><input type="checkbox" id="qt2" checked><span>🔤 Meaning → Word</span></label>
-              <label class="qtype-chip"><input type="checkbox" id="qt3" checked><span>✏️ Fill in blank</span></label>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+              <label class="qtype-chip"><input type="checkbox" id="qt1"><span>Word → Meaning</span></label>
+              <label class="qtype-chip"><input type="checkbox" id="qt2"><span>Meaning → Word</span></label>
+              <label class="qtype-chip"><input type="checkbox" id="qt3"><span>Fill in the _______</span></label>
             </div>
           </div>
 
           <!-- Only unknowns -->
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div>
-              <div style="font-size:0.9rem;font-weight:800;color:var(--text);">Only words I haven't mastered</div>
-              <div style="font-size:0.78rem;color:var(--gray-400);font-weight:600;margin-top:2px;">Skip words already marked as Known</div>
-            </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="font-size:0.88rem;color:var(--gray-400);font-weight:700;">Skip words marked as Known</div>
             <label class="toggle">
               <input type="checkbox" id="q-unknown-only">
               <span class="toggle-slider"></span>
@@ -1092,14 +1155,14 @@
 
     <!-- ── Finish screen ── -->
     <div class="finish-screen" id="finish-screen">
-      <div class="finish-emoji" id="finish-emoji">🎉</div>
+      <div class="finish-emoji" id="finish-emoji"></div>
       <div class="finish-title" id="finish-title">Well done!</div>
       <div class="finish-score" id="finish-score"></div>
       <div class="streak-banner" id="finish-streak" style="display:none"></div>
       <div id="finish-pb" style="color:#f97316;font-weight:700;font-size:0.95rem;margin-bottom:12px;display:none"></div>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
         <button class="btn btn-primary" onclick="backToSetup()">Play Again</button>
-        <button class="btn btn-secondary" onclick="setMode('stats')">📊 See Stats</button>
+        <button class="btn btn-secondary" onclick="setMode('stats')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="9" width="3" height="6" rx="0.5"/><rect x="6" y="5" width="3" height="10" rx="0.5"/><rect x="11" y="2" width="3" height="13" rx="0.5"/></svg> See Stats</button>
       </div>
       <div class="missed-list" id="missed-list"></div>
     </div>
@@ -1148,25 +1211,25 @@
 
     <!-- Score chart -->
     <div class="section-card">
-      <h3>📈 Last 10 quiz scores</h3>
+      <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,12 5,8 9,10 15,4"/><polyline points="11,4 15,4 15,8"/></svg> Last 10 quiz scores</h3>
       <div class="chart-wrap" id="st-chart"><div class="chart-empty">No quizzes yet — take your first quiz!</div></div>
       <div class="pb-banner" id="st-pb" style="display:none"></div>
     </div>
 
     <!-- Most-missed words -->
     <div class="section-card">
-      <h3>⚠️ Words to work on</h3>
+      <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1L15 14H1L8 1z"/><line x1="8" y1="6" x2="8" y2="9.5"/><circle cx="8" cy="11.5" r="0.6" fill="currentColor" stroke="none"/></svg> Words to work on</h3>
       <div id="st-missed-list"><div class="chart-empty">No data yet.</div></div>
       <div style="text-align:center;margin-top:14px;">
-        <button class="btn btn-danger" id="st-practise-btn" onclick="practiseMissed()" style="display:none">
-          🎯 Quick quiz on these words
+        <button class="btn btn-accent" id="st-practise-btn" onclick="practiseMissed()" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor" stroke="none"/></svg> Quick quiz on these words
         </button>
       </div>
     </div>
 
     <!-- Full history -->
     <div class="section-card">
-      <h3>🗓️ Quiz history</h3>
+      <h3><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="14" height="12" rx="2"/><line x1="1" y1="7" x2="15" y2="7"/><line x1="5" y1="1" x2="5" y2="5"/><line x1="11" y1="1" x2="11" y2="5"/></svg> Quiz history</h3>
       <div id="st-history-list"><div class="chart-empty">No quizzes yet.</div></div>
       <div style="text-align:center;margin-top:14px;">
         <button class="btn btn-secondary" onclick="clearHistory()" style="font-size:0.8rem;padding:7px 16px;">Clear history</button>
@@ -1688,6 +1751,18 @@ const WORDS = [
 // STATE
 // ═══════════════════════════════════════════════════════════════
 let deck = [...WORDS];
+// ── Flat SVG icon library ──────────────────────────────────────
+const IC = {
+  trophy:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8M9 3v5a3 3 0 006 0V3"/><path d="M12 11v5"/><path d="M8 21h8"/><path d="M5 5H3c0 4 2 7 6 8"/><path d="M19 5h2c0 4-2 7-6 8"/></svg>`,
+  star:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.3 7 1-5 4.9 1.2 7L12 18l-6.2 3.2L7 14.2 2 9.3l7-1z"/></svg>`,
+  sparkle:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>`,
+  thumbsUp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3-7c1.5 0 3 .8 3 3v2h5a1 1 0 011 1.2l-2 8A1 1 0 0118 19h-7a1 1 0 01-1-1v-7z"/><path d="M9 11H5a1 1 0 00-1 1v7a1 1 0 001 1h4"/></svg>`,
+  books:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="5" height="14" rx="1"/><rect x="10" y="3" width="5" height="16" rx="1"/><rect x="16" y="6" width="5" height="13" rx="1"/></svg>`,
+  book:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v14l-8-3-8 3V6z"/><line x1="12" y1="4" x2="12" y2="17"/></svg>`,
+  pencil:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2 2 0 013 3L7 19l-4 1 1-4L17 3z"/></svg>`,
+  flame:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 0-6 6-6 11a6 6 0 0012 0c0-4-3-6-3-6s-1 3-3 3c-1.2 0-2-1-2-2 0-2 2-4 2-6z"/></svg>`,
+};
+
 let filteredDeck = [...WORDS];
 let letterFrom = 'A';
 let letterTo   = 'Z';
@@ -1834,7 +1909,8 @@ function setMode(m) {
 // STUDY MODE
 // ═══════════════════════════════════════════════════════════════
 function applyFilter() {
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  const searchEl = document.getElementById('search-input');
+  const q = searchEl ? searchEl.value.trim().toLowerCase() : '';
   const base = wordsInRange();
   filteredDeck = q ? base.filter(w => w.w.toLowerCase().includes(q)) : base;
   if (shuffled) filteredDeck = shuffle(filteredDeck);
@@ -1846,7 +1922,8 @@ function toggleShuffle() {
   shuffled = document.getElementById('shuffle-toggle').checked;
   if (shuffled) filteredDeck = shuffle(filteredDeck);
   else {
-    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    const searchEl = document.getElementById('search-input');
+    const q = searchEl ? searchEl.value.trim().toLowerCase() : '';
     const base = wordsInRange();
     filteredDeck = q ? base.filter(w => w.w.toLowerCase().includes(q)) : base;
   }
@@ -1865,7 +1942,7 @@ function renderCard() {
   card.classList.remove('flipped');
 
   if (active.length === 0) {
-    document.getElementById('card-word').textContent = '🎉 All known!';
+    document.getElementById('card-word').textContent = 'All known!';
     document.getElementById('card-pos').textContent = '';
     document.getElementById('card-def').textContent = 'You know every word in this deck!';
     document.getElementById('card-ex').textContent = 'Reset or turn off "Skip known" to review again.';
@@ -2028,7 +2105,7 @@ function pickQType() {
   if (document.getElementById('qt1').checked) enabled.push(1);
   if (document.getElementById('qt2').checked) enabled.push(2);
   if (document.getElementById('qt3').checked) enabled.push(3);
-  if (!enabled.length) enabled.push(1);
+  if (!enabled.length) enabled.push(1, 2, 3); // none selected = all types
   return enabled[Math.floor(Math.random() * enabled.length)];
 }
 
@@ -2053,7 +2130,7 @@ function renderQuestion() {
 
   if (qtype === 1) {
     // ── Type 1: show the WORD → pick the correct DEFINITION ──
-    badge.textContent = '📖 What does this word mean?';
+    badge.innerHTML = IC.book + ' What does this word mean?';
     badge.style.background = '#ede9ff'; badge.style.color = '#5b21b6';
     document.getElementById('q-instruction').textContent = 'Choose the correct definition:';
     document.getElementById('q-word').textContent = entry.w;
@@ -2094,7 +2171,7 @@ function renderQuestion() {
 
   } else {
     // ── Type 3: fill in the blank ──
-    badge.textContent = '✏️ Fill in the blank';
+    badge.innerHTML = IC.pencil + ' Fill in the blank';
     badge.style.background = '#d1fae5'; badge.style.color = '#065f46';
     document.getElementById('q-instruction').textContent = 'Type the missing word in the sentence:';
     document.getElementById('options-grid').style.display = 'none';
@@ -2197,21 +2274,23 @@ function showFinish() {
   const prevPB = personalBest();
   const streak = saveSession(quizScore, total, quizMissed);
 
-  let emoji = '🌟', title = 'Brilliant!';
-  if (pct < 50) { emoji = '📚'; title = 'Keep practising!'; }
-  else if (pct < 70) { emoji = '👍'; title = 'Good effort!'; }
-  else if (pct < 90) { emoji = '🎉'; title = 'Well done!'; }
-  else { emoji = '🏆'; title = 'Excellent work!'; }
+  let icon = IC.star, title = 'Brilliant!';
+  if (pct < 50) { icon = IC.books;    title = 'Keep practising!'; }
+  else if (pct < 70) { icon = IC.thumbsUp; title = 'Good effort!'; }
+  else if (pct < 90) { icon = IC.sparkle;  title = 'Well done!'; }
+  else { icon = IC.trophy; title = 'Excellent work!'; }
 
-  document.getElementById('finish-emoji').textContent = emoji;
+  document.getElementById('finish-emoji').innerHTML = icon;
   document.getElementById('finish-title').textContent = title;
   document.getElementById('finish-score').textContent = `You scored ${quizScore} out of ${total} (${pct}%)`;
 
   // streak banner
   const streakEl = document.getElementById('finish-streak');
   if (streak.count >= 2) {
-    streakEl.textContent  = `🔥 ${streak.count} day streak! Keep it up!`;
-    streakEl.style.display = 'inline-block';
+    streakEl.innerHTML = IC.flame + ` ${streak.count} day streak! Keep it up!`;
+    streakEl.style.display = 'inline-flex';
+    streakEl.style.alignItems = 'center';
+    streakEl.style.gap = '6px';
   } else {
     streakEl.style.display = 'none';
   }
@@ -2220,8 +2299,11 @@ function showFinish() {
   const newPB  = personalBest();
   const pbEl   = document.getElementById('finish-pb');
   if (newPB !== null && newPB > (prevPB || 0)) {
-    pbEl.textContent  = `🏆 New personal best: ${newPB}%!`;
-    pbEl.style.display = 'block';
+    pbEl.innerHTML = IC.trophy + ` New personal best: ${newPB}%!`;
+    pbEl.style.display = 'flex';
+    pbEl.style.alignItems = 'center';
+    pbEl.style.justifyContent = 'center';
+    pbEl.style.gap = '6px';
   } else {
     pbEl.style.display = 'none';
   }
@@ -2237,7 +2319,7 @@ function showFinish() {
       missedEl.appendChild(div);
     });
   } else {
-    missedEl.innerHTML = '<h3 style="color:var(--accent)">🌟 You got every question right!</h3>';
+    missedEl.innerHTML = `<h3 style="color:var(--green);display:flex;align-items:center;gap:6px;">${IC.star} You got every question right!</h3>`;
   }
 
   updateQuizStats();
@@ -2331,6 +2413,13 @@ function loadHistory()    { return JSON.parse(localStorage.getItem('quiz_history
 function loadMissCounts() { return JSON.parse(localStorage.getItem('miss_counts')  || '{}'); }
 function loadStreak()     { return JSON.parse(localStorage.getItem('streak')       || '{"count":0,"lastDate":""}'); }
 
+function dismissMissed(word) {
+  const counts = loadMissCounts();
+  delete counts[word];
+  localStorage.setItem('miss_counts', JSON.stringify(counts));
+  renderStats();
+}
+
 function saveSession(score, total, missed) {
   // --- history ---
   const history = loadHistory();
@@ -2398,7 +2487,7 @@ function renderStats() {
       const col  = document.createElement('div');
       col.className = 'chart-bar-col';
       const d = new Date(h.date);
-      const label = `${d.getDate()}/${d.getMonth()+1}`;
+      const label = d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
       col.innerHTML = `
         <div class="chart-bar${isBest ? ' best' : ''}" style="height:${Math.max(pct, 4)}%">
           <div class="chart-bar-val">${pct}%</div>
@@ -2409,7 +2498,7 @@ function renderStats() {
     const pbEl = document.getElementById('st-pb');
     const allTimePB = personalBest();
     if (allTimePB !== null) {
-      pbEl.textContent  = `🏆 Personal best: ${allTimePB}%`;
+      pbEl.innerHTML = IC.trophy + ` Personal best: ${allTimePB}%`;
       pbEl.style.display = 'block';
     }
   }
@@ -2429,7 +2518,8 @@ function renderStats() {
       row.innerHTML = `
         <div class="miss-word">${word}</div>
         <div class="miss-bar-wrap"><div class="miss-bar" style="width:${Math.round((count/maxCount)*100)}%"></div></div>
-        <div class="miss-count">${count}✗</div>`;
+        <div class="miss-count">${count}✗</div>
+        <button class="miss-dismiss" title="I've mastered this word" onclick="dismissMissed('${word}')">✓</button>`;
       missedEl.appendChild(row);
     });
     document.getElementById('st-practise-btn').style.display = 'inline-block';
@@ -2556,6 +2646,7 @@ document.getElementById('range-info').textContent = WORDS.length + ' words';
 letterFrom = presentLetters[0];
 letterTo   = presentLetters[presentLetters.length - 1];
 buildWordDropdowns();
+applyFilter(); // initialise filteredDeck from wordsInRange()
 
 // Populate quiz setup letter dropdowns
 ['q-letter-from', 'q-letter-to'].forEach((id, i) => {
@@ -2569,9 +2660,6 @@ buildWordDropdowns();
   });
 });
 buildQuizWordDropdowns();
-
-renderCard();
-// stat boxes removed from study tab — no-op
 
 // Default to Learn tab
 setMode('learn');
