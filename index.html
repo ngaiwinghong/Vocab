@@ -2466,12 +2466,14 @@ function renderLearnList() {
         <button class="speak-btn" onclick="speakWord('${entry.w}', this)" title="Hear pronunciation">
           <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 7h3l4-4v14l-4-4H3V7z" fill="currentColor"/><path d="M13 7a5 5 0 010 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 4.5a9 9 0 010 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
-        <button class="learn-edit-btn" onclick="openEditModal('${entry.w}')" title="Edit definition">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2 2 0 013 3L7 19l-4 1 1-4L17 3z"/></svg>
-        </button>
       </div>
       <div class="learn-right">
-        <div class="learn-def">${defHTML(ew.d)}</div>
+        <div style="display:flex;align-items:flex-start;gap:6px;">
+          <div class="learn-def" style="flex:1">${defHTML(ew.d)}</div>
+          <button class="learn-edit-btn" onclick="openEditModal('${entry.w}')" title="Edit definition" style="flex-shrink:0;margin-top:2px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2 2 0 013 3L7 19l-4 1 1-4L17 3z"/></svg>
+          </button>
+        </div>
         <div class="learn-ex">${ew.e}</div>
       </div>
       <button class="learn-mark-btn ${known ? 'known' : ''}" onclick="learnToggleKnown('${entry.w}')">${known ? '✓ Known' : 'Mark known'}</button>`;
