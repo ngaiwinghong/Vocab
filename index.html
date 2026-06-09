@@ -2787,6 +2787,7 @@ function saveEdit() {
     e: example || WORDS.find(w => w.w === editingWord).e
   };
   localStorage.setItem('vocab_edits', JSON.stringify(vocabEdits));
+  if (typeof cloudSave === 'function') cloudSave();
 
   closeEditModal();
   renderLearnList();
@@ -2885,6 +2886,7 @@ function cloudSave() {
         quizHistory: loadHistory(),
         missCounts:  loadMissCounts(),
         streak:      loadStreak(),
+        vocabEdits:  vocabEdits,
         updatedAt:   firebase.firestore.FieldValue.serverTimestamp()
       });
       setSyncStatus('saved');
@@ -2900,7 +2902,9 @@ async function loadCloudData(uid) {
     localStorage.removeItem('quiz_history');
     localStorage.removeItem('miss_counts');
     localStorage.removeItem('streak');
+    localStorage.removeItem('vocab_edits');
     knownSet = new Set();
+    vocabEdits = {};
 
     const doc = await db.collection('users').doc(uid).get();
     if (!doc.exists) return;
@@ -2909,6 +2913,7 @@ async function loadCloudData(uid) {
     if (d.quizHistory) localStorage.setItem('quiz_history', JSON.stringify(d.quizHistory));
     if (d.missCounts)  localStorage.setItem('miss_counts',  JSON.stringify(d.missCounts));
     if (d.streak)      localStorage.setItem('streak',       JSON.stringify(d.streak));
+    if (d.vocabEdits)  { localStorage.setItem('vocab_edits', JSON.stringify(d.vocabEdits));  vocabEdits = d.vocabEdits; }
     // Refresh UI with loaded data
     renderCard();
     document.getElementById('stat-known').textContent     = knownSet.size;
@@ -2973,7 +2978,9 @@ async function doSignOut() {
   localStorage.removeItem('quiz_history');
   localStorage.removeItem('miss_counts');
   localStorage.removeItem('streak');
+  localStorage.removeItem('vocab_edits');
   knownSet = new Set();
+  vocabEdits = {};
   await auth.signOut();
 }
 
