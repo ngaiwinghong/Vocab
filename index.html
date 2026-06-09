@@ -620,6 +620,79 @@
   .learn-ex { font-size: 0.82rem; color: var(--gray-600); font-style: italic; line-height: 1.5; font-weight: 600; }
   .learn-ex::before { content: '"'; }
   .learn-ex::after  { content: '"'; }
+  .learn-def-list { display: flex; flex-direction: column; gap: 2px; }
+  .learn-def-item { font-size: 0.92rem; color: var(--text); line-height: 1.5; font-weight: 600; }
+  .learn-def-num  { font-weight: 800; color: var(--green-dk); margin-right: 4px; }
+  .learn-edit-btn {
+    background: none; border: none; cursor: pointer; padding: 4px;
+    border-radius: 50%; color: #c4b5fd;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s; flex-shrink: 0;
+  }
+  .learn-edit-btn:hover { color: var(--green); background: var(--green-bg); }
+  /* ── Edit modal ── */
+  #edit-modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+    z-index: 400; display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  #edit-modal {
+    background: white; border-radius: var(--radius-lg);
+    border: 2px solid var(--gray-200); width: 100%; max-width: 480px;
+    max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+  .edit-modal-header {
+    padding: 20px 24px 16px; border-bottom: 2px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .edit-modal-word { font-size: 1.5rem; font-weight: 800; color: var(--green-dk); }
+  .edit-modal-close {
+    background: none; border: none; font-size: 1.6rem; cursor: pointer;
+    color: var(--gray-400); padding: 2px 8px; border-radius: 8px; line-height: 1;
+  }
+  .edit-modal-close:hover { background: var(--gray-100); }
+  .edit-modal-body {
+    padding: 20px 24px; overflow-y: auto; flex: 1;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .edit-modal-label {
+    font-size: 0.75rem; font-weight: 800; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .edit-def-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 6px; }
+  .edit-def-num { font-size: 0.8rem; font-weight: 800; color: var(--green-dk); padding-top: 10px; min-width: 20px; }
+  .edit-textarea {
+    flex: 1; padding: 10px 14px; border-radius: var(--radius-sm);
+    border: 2px solid var(--gray-200); font-size: 0.9rem; font-family: inherit;
+    font-weight: 600; outline: none; resize: vertical; min-height: 58px;
+    transition: border-color 0.15s; color: var(--text);
+  }
+  .edit-textarea:focus { border-color: var(--green); }
+  .edit-remove-btn {
+    background: none; border: none; cursor: pointer; color: var(--gray-400);
+    padding: 8px 4px; font-size: 1.2rem; border-radius: 6px; line-height: 1; flex-shrink: 0;
+  }
+  .edit-remove-btn:hover { color: var(--red); background: var(--red-bg); }
+  .edit-add-btn {
+    background: none; border: 2px dashed var(--gray-200); border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 0.82rem; font-weight: 800; color: var(--gray-400);
+    cursor: pointer; font-family: inherit; transition: all 0.15s; width: 100%;
+  }
+  .edit-add-btn:hover { border-color: var(--green); color: var(--green-dk); background: var(--green-bg); }
+  .edit-modal-footer {
+    padding: 16px 24px; border-top: 2px solid var(--gray-200);
+    display: flex; gap: 10px; justify-content: flex-end;
+  }
+  .edit-cancel-btn {
+    padding: 10px 20px; border-radius: var(--radius-sm); border: 2px solid var(--gray-200);
+    background: transparent; font-size: 0.9rem; font-weight: 800; cursor: pointer;
+    font-family: inherit; color: var(--gray-400);
+  }
+  .edit-save-btn {
+    padding: 10px 24px; border-radius: var(--radius-sm); border: none;
+    border-bottom: 3px solid var(--green-dk); background: var(--green); color: white;
+    font-size: 0.9rem; font-weight: 800; cursor: pointer; font-family: inherit;
+  }
+  .edit-save-btn:hover { background: var(--green-dk); }
   .learn-mark-btn {
     margin-top: 6px;
     padding: 4px 12px;
@@ -1770,8 +1843,27 @@ let wordStartIdx = 0;       // index within the letter-range pool
 let wordEndIdx   = Infinity; // index within the letter-range pool
 let currentIndex = 0;
 let knownSet = new Set(JSON.parse(localStorage.getItem('known11plus') || '[]'));
+let vocabEdits = JSON.parse(localStorage.getItem('vocab_edits') || '{}');
 let shuffled = false;
 let mode = 'study';
+
+function applyEdits(entry) {
+  const edits = vocabEdits[entry.w];
+  return edits ? { ...entry, ...edits } : entry;
+}
+
+function defText(d) {
+  return Array.isArray(d) ? d.join('; ') : d;
+}
+
+function defHTML(d) {
+  if (Array.isArray(d) && d.length > 1) {
+    return '<div class="learn-def-list">' +
+      d.map((m, i) => `<div class="learn-def-item"><span class="learn-def-num">${i + 1}.</span>${m}</div>`).join('') +
+      '</div>';
+  }
+  return Array.isArray(d) ? d[0] : d;
+}
 
 // Quiz state
 let quizDeck = [];
@@ -1954,10 +2046,10 @@ function renderCard() {
   if (currentIndex >= active.length) currentIndex = 0;
   if (currentIndex < 0) currentIndex = active.length - 1;
 
-  const entry = active[currentIndex];
+  const entry = applyEdits(active[currentIndex]);
   document.getElementById('card-word').textContent = entry.w;
   document.getElementById('card-pos').textContent = '';
-  document.getElementById('card-def').textContent = entry.d;
+  document.getElementById('card-def').textContent = defText(entry.d);
   document.getElementById('card-ex').textContent  = entry.e;
   document.getElementById('known-badge').style.display = knownSet.has(entry.w) ? 'block' : 'none';
 
@@ -2081,7 +2173,7 @@ function startQuiz() {
   const countVal = document.querySelector('input[name="qcount"]:checked');
   const count = Math.min(parseInt(countVal ? countVal.value : 20), pool.length);
 
-  quizDeck = shuffle(pool).slice(0, count);
+  quizDeck = shuffle(pool).slice(0, count).map(applyEdits);
   quizIndex = 0;
   quizScore = 0;
   quizWrong = 0;
@@ -2136,14 +2228,14 @@ function renderQuestion() {
     document.getElementById('q-word').textContent = entry.w;
     document.getElementById('q-word').style.display = 'block';
 
-    const pool = wordsInRange();
+    const pool = wordsInRange().map(applyEdits);
     const others = shuffle(pool.filter(w => w.w !== entry.w)).slice(0, 3);
     const options = shuffle([entry, ...others]);
     const grid = document.getElementById('options-grid');
     options.forEach(opt => {
       const btn = document.createElement('button');
       btn.className = 'option';
-      btn.textContent = opt.d;
+      btn.textContent = defText(opt.d);
       btn.onclick = () => resolveMultiChoice(opt.w === entry.w, entry, btn, 'def');
       grid.appendChild(btn);
     });
@@ -2153,11 +2245,11 @@ function renderQuestion() {
     badge.textContent = '';
     badge.style.background = 'transparent';
     document.getElementById('q-instruction').textContent = 'Choose the correct word:';
-    document.getElementById('q-word').textContent = entry.d;
+    document.getElementById('q-word').textContent = defText(entry.d);
     document.getElementById('q-word').style.display = 'block';
     document.getElementById('q-word').style.fontSize = '1.1rem';
 
-    const pool = wordsInRange();
+    const pool = wordsInRange().map(applyEdits);
     const others = shuffle(pool.filter(w => w.w !== entry.w)).slice(0, 3);
     const options = shuffle([entry, ...others]);
     const grid = document.getElementById('options-grid');
@@ -2201,7 +2293,7 @@ function resolveMultiChoice(correct, entry, clickedBtn, mode) {
 
   document.querySelectorAll('.option').forEach(btn => {
     btn.disabled = true;
-    const isCorrect = mode === 'def' ? btn.textContent === entry.d : btn.textContent === entry.w;
+    const isCorrect = mode === 'def' ? btn.textContent === defText(entry.d) : btn.textContent === entry.w;
     if (isCorrect) btn.classList.add('correct');
   });
 
@@ -2215,7 +2307,7 @@ function resolveMultiChoice(correct, entry, clickedBtn, mode) {
     quizWrong++;
     clickedBtn.classList.add('wrong');
     quizMissed.push(entry);
-    const hint = mode === 'def' ? `The answer is: "${entry.d}"` : `The answer is: "${entry.w}"`;
+    const hint = mode === 'def' ? `The answer is: "${defText(entry.d)}"` : `The answer is: "${entry.w}"`;
     feedback.textContent = '✗ Not quite — ' + hint;
     feedback.className = 'quiz-feedback wrong';
   }
@@ -2362,6 +2454,7 @@ function renderLearnList() {
     }
 
     const known = knownSet.has(entry.w);
+    const ew = applyEdits(entry);
     const item = document.createElement('div');
     item.className = 'learn-item' + (known ? ' is-known' : '');
     item.id = 'learn-item-' + entry.w;
@@ -2372,10 +2465,13 @@ function renderLearnList() {
         <button class="speak-btn" onclick="speakWord('${entry.w}', this)" title="Hear pronunciation">
           <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 7h3l4-4v14l-4-4H3V7z" fill="currentColor"/><path d="M13 7a5 5 0 010 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M15.5 4.5a9 9 0 010 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
+        <button class="learn-edit-btn" onclick="openEditModal('${entry.w}')" title="Edit definition">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2 2 0 013 3L7 19l-4 1 1-4L17 3z"/></svg>
+        </button>
       </div>
       <div class="learn-right">
-        <div class="learn-def">${entry.d}</div>
-        <div class="learn-ex">${entry.e}</div>
+        <div class="learn-def">${defHTML(ew.d)}</div>
+        <div class="learn-ex">${ew.e}</div>
       </div>
       <button class="learn-mark-btn ${known ? 'known' : ''}" onclick="learnToggleKnown('${entry.w}')">${known ? '✓ Known' : 'Mark known'}</button>`;
     list.appendChild(item);
@@ -2615,9 +2711,93 @@ function speakWord(word, btn) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// DEFINITION EDITOR
+// ═══════════════════════════════════════════════════════════════
+let editingWord = null;
+
+function openEditModal(word) {
+  const raw = WORDS.find(w => w.w === word);
+  if (!raw) return;
+  const entry = applyEdits(raw);
+  editingWord = word;
+
+  document.getElementById('edit-modal-word').textContent = word;
+  const list = document.getElementById('edit-defs-list');
+  list.innerHTML = '';
+  const defs = Array.isArray(entry.d) ? entry.d : [entry.d];
+  defs.forEach(def => appendDefField(def));
+  document.getElementById('edit-example').value = entry.e || '';
+  document.getElementById('edit-modal-overlay').style.display = 'flex';
+}
+
+function appendDefField(value) {
+  const list = document.getElementById('edit-defs-list');
+  const idx = list.children.length;
+  const row = document.createElement('div');
+  row.className = 'edit-def-row';
+  row.innerHTML = `<div class="edit-def-num">${idx + 1}.</div>
+    <textarea class="edit-textarea edit-def-input" rows="2" placeholder="Definition…"></textarea>
+    <button class="edit-remove-btn" onclick="removeDefField(this)" title="Remove">×</button>`;
+  list.appendChild(row);
+  row.querySelector('textarea').value = value || '';
+}
+
+function addDefinitionField() {
+  appendDefField('');
+  renumberDefs();
+  const inputs = document.querySelectorAll('.edit-def-input');
+  inputs[inputs.length - 1].focus();
+}
+
+function removeDefField(btn) {
+  const list = document.getElementById('edit-defs-list');
+  if (list.children.length <= 1) return;
+  btn.closest('.edit-def-row').remove();
+  renumberDefs();
+}
+
+function renumberDefs() {
+  document.querySelectorAll('#edit-defs-list .edit-def-num').forEach((el, i) => {
+    el.textContent = (i + 1) + '.';
+  });
+}
+
+function handleEditOverlayClick(e) {
+  if (e.target === document.getElementById('edit-modal-overlay')) closeEditModal();
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal-overlay').style.display = 'none';
+  editingWord = null;
+}
+
+function saveEdit() {
+  if (!editingWord) return;
+  const defs = [...document.querySelectorAll('.edit-def-input')]
+    .map(t => t.value.trim()).filter(Boolean);
+  if (!defs.length) return;
+  const example = document.getElementById('edit-example').value.trim();
+
+  vocabEdits[editingWord] = {
+    d: defs.length === 1 ? defs[0] : defs,
+    e: example || WORDS.find(w => w.w === editingWord).e
+  };
+  localStorage.setItem('vocab_edits', JSON.stringify(vocabEdits));
+
+  closeEditModal();
+  renderLearnList();
+  if (mode === 'study') renderCard();
+}
+
+// ═══════════════════════════════════════════════════════════════
 // KEYBOARD NAVIGATION
 // ═══════════════════════════════════════════════════════════════
 document.addEventListener('keydown', e => {
+  if (document.getElementById('edit-modal-overlay').style.display !== 'none') {
+    if (e.key === 'Escape') closeEditModal();
+    return;
+  }
   if (mode !== 'study') return;
   if (e.target.tagName === 'INPUT') return;
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigate(1);
@@ -2850,5 +3030,30 @@ auth.onAuthStateChanged(async user => {
   }
 });
 </script>
+
+<!-- ── Edit definition modal ── -->
+<div id="edit-modal-overlay" style="display:none" onclick="handleEditOverlayClick(event)">
+  <div id="edit-modal">
+    <div class="edit-modal-header">
+      <span class="edit-modal-word" id="edit-modal-word"></span>
+      <button class="edit-modal-close" onclick="closeEditModal()">×</button>
+    </div>
+    <div class="edit-modal-body">
+      <div>
+        <div class="edit-modal-label">Meanings / Definitions</div>
+        <div id="edit-defs-list"></div>
+        <button class="edit-add-btn" onclick="addDefinitionField()">+ Add another meaning</button>
+      </div>
+      <div>
+        <div class="edit-modal-label">Example sentence</div>
+        <textarea class="edit-textarea" id="edit-example" rows="2" placeholder="Example sentence…" style="width:100%"></textarea>
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="edit-cancel-btn" onclick="closeEditModal()">Cancel</button>
+      <button class="edit-save-btn" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
